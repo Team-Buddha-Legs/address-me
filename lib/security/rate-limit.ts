@@ -45,7 +45,8 @@ export async function rateLimit(
   config: RateLimitConfig,
 ): Promise<RateLimitResult> {
   // Clean up expired entries periodically
-  if (Math.random() < 0.1) { // 10% chance to cleanup
+  if (Math.random() < 0.1) {
+    // 10% chance to cleanup
     cleanupExpiredEntries();
   }
 
@@ -70,8 +71,8 @@ export async function rateLimit(
 
   if (entry.count >= config.maxRequests) {
     // Rate limit exceeded - log the event
-    logger.logRateLimit(identifier, 'rate_limit_exceeded', 0, entry.resetTime);
-    
+    logger.logRateLimit(identifier, "rate_limit_exceeded", 0, entry.resetTime);
+
     return {
       allowed: false,
       remaining: 0,

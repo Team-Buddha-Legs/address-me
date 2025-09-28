@@ -1,8 +1,8 @@
 "use client";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { ExpandableDetails } from "./ExpandableDetails";
 import type { CityPlan } from "@/types";
+import { ExpandableDetails } from "./ExpandableDetails";
 
 interface MajorUpdatesSectionProps {
   updates: CityPlan[];
@@ -10,13 +10,21 @@ interface MajorUpdatesSectionProps {
   onToggle: () => void;
 }
 
-export function MajorUpdatesSection({ updates, isExpanded, onToggle }: MajorUpdatesSectionProps) {
+export function MajorUpdatesSection({
+  updates,
+  isExpanded,
+  onToggle,
+}: MajorUpdatesSectionProps) {
   const getImpactColor = (impact: string) => {
     switch (impact) {
-      case "high": return "bg-accent-100 text-accent-dark border-accent-200";
-      case "medium": return "bg-primary-100 text-primary-dark border-primary-200";
-      case "low": return "bg-neutral-100 text-neutral-700 border-neutral-200";
-      default: return "bg-neutral-100 text-neutral-700 border-neutral-200";
+      case "high":
+        return "bg-accent-100 text-accent-dark border-accent-200";
+      case "medium":
+        return "bg-primary-100 text-primary-dark border-primary-200";
+      case "low":
+        return "bg-neutral-100 text-neutral-700 border-neutral-200";
+      default:
+        return "bg-neutral-100 text-neutral-700 border-neutral-200";
     }
   };
 
@@ -51,7 +59,9 @@ export function MajorUpdatesSection({ updates, isExpanded, onToggle }: MajorUpda
                     <span className="text-sm text-neutral-600 font-medium">
                       Timeline: {update.timeline}
                     </span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getImpactColor(update.impact)}`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium border ${getImpactColor(update.impact)}`}
+                    >
                       {update.impact} impact
                     </span>
                   </div>

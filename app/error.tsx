@@ -67,7 +67,8 @@ export default function Error({
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-6"
         >
-          We encountered an unexpected error while loading this page. Please try again or return to the home page.
+          We encountered an unexpected error while loading this page. Please try
+          again or return to the home page.
         </motion.p>
 
         {process.env.NODE_ENV === "development" && (

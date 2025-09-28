@@ -1,15 +1,15 @@
 "use server";
 
+import { input } from "framer-motion/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { getSession, updateSession } from "@/lib/session";
 import { generatePersonalizedSummary } from "@/lib/ai";
+import { logger } from "@/lib/privacy";
+import { validateCSRF } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { sanitizeInput } from "@/lib/security/sanitization";
-import { validateCSRF } from "@/lib/security/csrf";
-import { logger } from "@/lib/privacy";
+import { getSession, updateSession } from "@/lib/session";
 import type { PersonalizedSummary } from "@/types";
-import { input } from "framer-motion/client";
 
 // Rate limiting configuration for AI requests
 const AI_RATE_LIMIT = {
@@ -70,7 +70,12 @@ export async function generateSummary(formData: FormData) {
     const validatedSummary = validateSummaryOutput(summary);
 
     // Log successful generation (anonymized)
-    logger.logSummaryGeneration(session.profile, validatedSummary, input.sessionId, duration);
+    logger.logSummaryGeneration(
+      session.profile,
+      validatedSummary,
+      input.sessionId,
+      duration,
+    );
 
     // Update session with generated summary
     await updateSession(input.sessionId, { summary: validatedSummary });
@@ -83,13 +88,21 @@ export async function generateSummary(formData: FormData) {
     }
 
     // Extract clientId safely for logging
-    const clientId = (typeof input !== 'undefined' && input.clientId) || "unknown";
-    logger.error("AI summary generation error", { error: error instanceof Error ? error.message : String(error) }, clientId, "ai_generation");
-    
+    const clientId =
+      (typeof input !== "undefined" && input.clientId) || "unknown";
+    logger.error(
+      "AI summary generation error",
+      { error: error instanceof Error ? error.message : String(error) },
+      clientId,
+      "ai_generation",
+    );
+
     // Return sanitized error response
     return {
       success: false,
-      error: sanitizeAIError(error instanceof Error ? error.message : "AI generation failed"),
+      error: sanitizeAIError(
+        error instanceof Error ? error.message : "AI generation failed",
+      ),
     };
   }
 }
@@ -113,7 +126,10 @@ export async function retryGeneration(sessionId: string, formData: FormData) {
       maxRequests: 2, // 2 retries per 30 minutes
     };
 
-    const rateLimitResult = await rateLimit(`retry_${clientId}`, retryRateLimit);
+    const rateLimitResult = await rateLimit(
+      `retry_${clientId}`,
+      retryRateLimit,
+    );
     if (!rateLimitResult.allowed) {
       throw new Error("Retry rate limit exceeded");
     }
@@ -131,9 +147,11 @@ export async function retryGeneration(sessionId: string, formData: FormData) {
 
     // Clear previous summary and regenerate
     await updateSession(sessionId, { summary: undefined });
-    
+
     // Generate new summary with retry flag
-    const summary = await generatePersonalizedSummary(session.profile, { retry: true });
+    const summary = await generatePersonalizedSummary(session.profile, {
+      retry: true,
+    });
     const validatedSummary = validateSummaryOutput(summary);
 
     // Update session with new summary
@@ -144,11 +162,21 @@ export async function retryGeneration(sessionId: string, formData: FormData) {
       message: "Summary regenerated successfully",
     };
   } catch (error) {
-    logger.error("AI retry generation error", { sessionId, error: error instanceof Error ? error.message : String(error) }, clientId, "ai_retry");
-    
+    logger.error(
+      "AI retry generation error",
+      {
+        sessionId,
+        error: error instanceof Error ? error.message : String(error),
+      },
+      clientId,
+      "ai_retry",
+    );
+
     return {
       success: false,
-      error: sanitizeAIError(error instanceof Error ? error.message : "Retry failed"),
+      error: sanitizeAIError(
+        error instanceof Error ? error.message : "Retry failed",
+      ),
     };
   }
 }
@@ -156,7 +184,9 @@ export async function retryGeneration(sessionId: string, formData: FormData) {
 /**
  * Validate AI-generated summary output
  */
-function validateSummaryOutput(summary: PersonalizedSummary): PersonalizedSummary {
+function validateSummaryOutput(
+  summary: PersonalizedSummary,
+): PersonalizedSummary {
   // Validate overall score
   if (summary.overallScore < 70 || summary.overallScore > 100) {
     throw new Error("Invalid overall score generated");
@@ -174,25 +204,25 @@ function validateSummaryOutput(summary: PersonalizedSummary): PersonalizedSummar
   // Sanitize text content
   const sanitizedSummary: PersonalizedSummary = {
     ...summary,
-    relevantAreas: summary.relevantAreas.map(area => ({
+    relevantAreas: summary.relevantAreas.map((area) => ({
       ...area,
       title: sanitizeInput(area.title),
       summary: sanitizeInput(area.summary),
       details: sanitizeInput(area.details),
-      actionItems: area.actionItems.map(item => sanitizeInput(item)),
+      actionItems: area.actionItems.map((item) => sanitizeInput(item)),
     })),
-    majorUpdates: summary.majorUpdates.map(update => ({
+    majorUpdates: summary.majorUpdates.map((update) => ({
       ...update,
       title: sanitizeInput(update.title),
       description: sanitizeInput(update.description),
       relevanceToUser: sanitizeInput(update.relevanceToUser),
       timeline: sanitizeInput(update.timeline),
     })),
-    recommendations: summary.recommendations.map(rec => ({
+    recommendations: summary.recommendations.map((rec) => ({
       ...rec,
       title: sanitizeInput(rec.title),
       description: sanitizeInput(rec.description),
-      actionSteps: rec.actionSteps.map(step => sanitizeInput(step)),
+      actionSteps: rec.actionSteps.map((step) => sanitizeInput(step)),
     })),
   };
 
@@ -216,13 +246,17 @@ function sanitizeAIError(message: string): string {
     return "AI service temporarily unavailable due to high demand";
   }
 
-  if (sanitized.toLowerCase().includes("authentication") || 
-      sanitized.toLowerCase().includes("unauthorized")) {
+  if (
+    sanitized.toLowerCase().includes("authentication") ||
+    sanitized.toLowerCase().includes("unauthorized")
+  ) {
     return "AI service configuration error";
   }
 
-  if (sanitized.toLowerCase().includes("timeout") || 
-      sanitized.toLowerCase().includes("network")) {
+  if (
+    sanitized.toLowerCase().includes("timeout") ||
+    sanitized.toLowerCase().includes("network")
+  ) {
     return "AI service temporarily unavailable";
   }
 

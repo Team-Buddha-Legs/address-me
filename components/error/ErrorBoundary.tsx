@@ -1,8 +1,9 @@
 "use client";
 
-import React, { Component, ErrorInfo, ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import type React from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -66,7 +67,8 @@ export function DefaultErrorFallback({ error, resetError }: FallbackProps) {
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-6"
         >
-          We encountered an unexpected error. Please try again or return to the home page.
+          We encountered an unexpected error. Please try again or return to the
+          home page.
         </motion.p>
 
         {process.env.NODE_ENV === "development" && (
@@ -123,7 +125,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
-    
+
     // Call the onError callback if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -152,15 +154,20 @@ class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback;
         return (
-          <FallbackComponent 
-            error={this.state.error!} 
-            resetError={this.resetError} 
+          <FallbackComponent
+            error={this.state.error!}
+            resetError={this.resetError}
           />
         );
       }
 
       // Default fallback UI
-      return <DefaultErrorFallback error={this.state.error!} resetError={this.resetError} />;
+      return (
+        <DefaultErrorFallback
+          error={this.state.error!}
+          resetError={this.resetError}
+        />
+      );
     }
 
     return this.props.children;

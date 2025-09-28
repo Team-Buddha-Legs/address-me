@@ -2,20 +2,20 @@
  * Comprehensive error handling utilities for server actions and client-side errors
  */
 
-import { logger } from '@/lib/privacy/logger';
+import { logger } from "@/lib/privacy/logger";
 
 // Error types for better error categorization
 export enum ErrorType {
-  VALIDATION = 'validation',
-  NETWORK = 'network',
-  AI_SERVICE = 'ai_service',
-  RATE_LIMIT = 'rate_limit',
-  AUTHENTICATION = 'authentication',
-  AUTHORIZATION = 'authorization',
-  NOT_FOUND = 'not_found',
-  SERVER = 'server',
-  CLIENT = 'client',
-  UNKNOWN = 'unknown',
+  VALIDATION = "validation",
+  NETWORK = "network",
+  AI_SERVICE = "ai_service",
+  RATE_LIMIT = "rate_limit",
+  AUTHENTICATION = "authentication",
+  AUTHORIZATION = "authorization",
+  NOT_FOUND = "not_found",
+  SERVER = "server",
+  CLIENT = "client",
+  UNKNOWN = "unknown",
 }
 
 // Custom error classes
@@ -30,10 +30,10 @@ export class AppError extends Error {
     type: ErrorType = ErrorType.UNKNOWN,
     statusCode: number = 500,
     isOperational: boolean = true,
-    context?: Record<string, unknown>
+    context?: Record<string, unknown>,
   ) {
     super(message);
-    this.name = 'AppError';
+    this.name = "AppError";
     this.type = type;
     this.statusCode = statusCode;
     this.isOperational = isOperational;
@@ -47,28 +47,28 @@ export class AppError extends Error {
 export class ValidationError extends AppError {
   constructor(message: string, context?: Record<string, unknown>) {
     super(message, ErrorType.VALIDATION, 400, true, context);
-    this.name = 'ValidationError';
+    this.name = "ValidationError";
   }
 }
 
 export class NetworkError extends AppError {
   constructor(message: string, context?: Record<string, unknown>) {
     super(message, ErrorType.NETWORK, 503, true, context);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
   }
 }
 
 export class AIServiceError extends AppError {
   constructor(message: string, context?: Record<string, unknown>) {
     super(message, ErrorType.AI_SERVICE, 503, true, context);
-    this.name = 'AIServiceError';
+    this.name = "AIServiceError";
   }
 }
 
 export class RateLimitError extends AppError {
   constructor(message: string, context?: Record<string, unknown>) {
     super(message, ErrorType.RATE_LIMIT, 429, true, context);
-    this.name = 'RateLimitError';
+    this.name = "RateLimitError";
   }
 }
 
@@ -93,16 +93,16 @@ export type Result<T> = SuccessResult<T> | ErrorResult;
 // Error handler for server actions
 export async function handleServerAction<T>(
   action: () => Promise<T>,
-  context?: string
+  context?: string,
 ): Promise<Result<T>> {
   try {
     const data = await action();
     return { success: true, data };
   } catch (error) {
     const appError = normalizeError(error);
-    
+
     // Log the error
-    logger.error(`Server action error: ${context || 'Unknown'}`, {
+    logger.error(`Server action error: ${context || "Unknown"}`, {
       type: appError.type,
       message: appError.message,
       statusCode: appError.statusCode,
@@ -125,15 +125,15 @@ export async function handleServerAction<T>(
 // Error handler for client-side async operations
 export async function handleClientAction<T>(
   action: () => Promise<T>,
-  context?: string
+  context?: string,
 ): Promise<T | null> {
   try {
     return await action();
   } catch (error) {
     const appError = normalizeError(error);
-    
+
     // Log the error
-    logger.error(`Client action error: ${context || 'Unknown'}`, {
+    logger.error(`Client action error: ${context || "Unknown"}`, {
       type: appError.type,
       message: appError.message,
       context: appError.context,
@@ -153,40 +153,36 @@ export function normalizeError(error: unknown): AppError {
 
   if (error instanceof Error) {
     // Check for specific error patterns
-    if (error.message.includes('fetch') || error.message.includes('network')) {
+    if (error.message.includes("fetch") || error.message.includes("network")) {
       return new NetworkError(error.message, { originalError: error.name });
     }
 
-    if (error.message.includes('rate limit') || error.message.includes('429')) {
+    if (error.message.includes("rate limit") || error.message.includes("429")) {
       return new RateLimitError(error.message, { originalError: error.name });
     }
 
-    if (error.message.includes('AI') || error.message.includes('bedrock')) {
+    if (error.message.includes("AI") || error.message.includes("bedrock")) {
       return new AIServiceError(error.message, { originalError: error.name });
     }
 
-    if (error.message.includes('validation') || error.message.includes('invalid')) {
+    if (
+      error.message.includes("validation") ||
+      error.message.includes("invalid")
+    ) {
       return new ValidationError(error.message, { originalError: error.name });
     }
 
     // Generic error
-    return new AppError(
-      error.message,
-      ErrorType.UNKNOWN,
-      500,
-      true,
-      { originalError: error.name, stack: error.stack }
-    );
+    return new AppError(error.message, ErrorType.UNKNOWN, 500, true, {
+      originalError: error.name,
+      stack: error.stack,
+    });
   }
 
   // Handle non-Error objects
-  return new AppError(
-    String(error),
-    ErrorType.UNKNOWN,
-    500,
-    true,
-    { originalError: typeof error }
-  );
+  return new AppError(String(error), ErrorType.UNKNOWN, 500, true, {
+    originalError: typeof error,
+  });
 }
 
 // Error recovery strategies
@@ -211,7 +207,7 @@ export class ErrorRecoveryManager {
           await strategy.recover(error);
           return true;
         } catch (recoveryError) {
-          logger.warn('Error recovery failed', {
+          logger.warn("Error recovery failed", {
             originalError: error.message,
             recoveryError: String(recoveryError),
           });
@@ -227,7 +223,7 @@ export const networkRecoveryStrategy: RecoveryStrategy = {
   canRecover: (error) => error.type === ErrorType.NETWORK,
   recover: async (error) => {
     // Wait for network to be available
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return new Promise((resolve) => {
         const checkOnline = () => {
           if (navigator.onLine) {
@@ -248,7 +244,7 @@ export const rateLimitRecoveryStrategy: RecoveryStrategy = {
   canRecover: (error) => error.type === ErrorType.RATE_LIMIT,
   recover: async () => {
     // Wait for rate limit to reset (typically 1 minute)
-    await new Promise(resolve => setTimeout(resolve, 60000));
+    await new Promise((resolve) => setTimeout(resolve, 60000));
   },
   maxRetries: 2,
   retryDelay: 60000,
@@ -262,7 +258,7 @@ errorRecoveryManager.addStrategy(rateLimitRecoveryStrategy);
 // Utility functions for error handling in components
 export function getErrorMessage(error: unknown): string {
   const appError = normalizeError(error);
-  
+
   // Return user-friendly messages based on error type
   switch (appError.type) {
     case ErrorType.NETWORK:
@@ -282,7 +278,7 @@ export function getErrorMessage(error: unknown): string {
 
 export function getErrorTitle(error: unknown): string {
   const appError = normalizeError(error);
-  
+
   switch (appError.type) {
     case ErrorType.NETWORK:
       return "Connection Error";
@@ -302,7 +298,8 @@ export function getErrorTitle(error: unknown): string {
 // Hook for handling errors in React components
 export function createErrorHandler(context: string) {
   return {
-    handleAsync: <T>(action: () => Promise<T>) => handleClientAction(action, context),
+    handleAsync: <T>(action: () => Promise<T>) =>
+      handleClientAction(action, context),
     normalize: normalizeError,
     getMessage: getErrorMessage,
     getTitle: getErrorTitle,

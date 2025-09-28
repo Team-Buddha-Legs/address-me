@@ -1,9 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ErrorBoundary from "./ErrorBoundary";
+import { AnimatePresence, motion } from "framer-motion";
+import type React from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { logger } from "@/lib/privacy/logger";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Error context for managing global error state
 interface ErrorContextType {
@@ -18,7 +19,9 @@ const ErrorContext = createContext<ErrorContextType | null>(null);
 export function useErrorHandler() {
   const context = useContext(ErrorContext);
   if (!context) {
-    throw new Error("useErrorHandler must be used within ErrorBoundaryProvider");
+    throw new Error(
+      "useErrorHandler must be used within ErrorBoundaryProvider",
+    );
   }
   return context;
 }
@@ -67,8 +70,18 @@ function ErrorNotification({ error, onDismiss }: ErrorNotificationProps) {
               onClick={onDismiss}
               className="inline-flex text-red-400 hover:text-red-600 focus:outline-none focus:text-red-600"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -84,49 +97,57 @@ interface ErrorBoundaryProviderProps {
   enableGlobalNotifications?: boolean;
 }
 
-export default function ErrorBoundaryProvider({ 
-  children, 
-  enableGlobalNotifications = true 
+export default function ErrorBoundaryProvider({
+  children,
+  enableGlobalNotifications = true,
 }: ErrorBoundaryProviderProps) {
   const [globalError, setGlobalError] = useState<Error | null>(null);
-  const [notificationError, setNotificationError] = useState<Error | null>(null);
+  const [notificationError, setNotificationError] = useState<Error | null>(
+    null,
+  );
 
-  const reportError = useCallback((error: Error, context?: string) => {
-    // Log the error
-    logger.error(`Error reported: ${context || 'Unknown context'}`, {
-      message: error.message,
-      stack: error.stack,
-      context,
-    });
+  const reportError = useCallback(
+    (error: Error, context?: string) => {
+      // Log the error
+      logger.error(`Error reported: ${context || "Unknown context"}`, {
+        message: error.message,
+        stack: error.stack,
+        context,
+      });
 
-    // Set global error state
-    setGlobalError(error);
+      // Set global error state
+      setGlobalError(error);
 
-    // Show notification if enabled
-    if (enableGlobalNotifications) {
-      setNotificationError(error);
-      
-      // Auto-dismiss notification after 5 seconds
-      setTimeout(() => {
-        setNotificationError(null);
-      }, 5000);
-    }
-  }, [enableGlobalNotifications]);
+      // Show notification if enabled
+      if (enableGlobalNotifications) {
+        setNotificationError(error);
+
+        // Auto-dismiss notification after 5 seconds
+        setTimeout(() => {
+          setNotificationError(null);
+        }, 5000);
+      }
+    },
+    [enableGlobalNotifications],
+  );
 
   const clearError = useCallback(() => {
     setGlobalError(null);
     setNotificationError(null);
   }, []);
 
-  const handleErrorBoundaryError = useCallback((error: Error, errorInfo: React.ErrorInfo) => {
-    logger.error("ErrorBoundary caught error", {
-      message: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-    });
-    
-    reportError(error, "ErrorBoundary");
-  }, [reportError]);
+  const handleErrorBoundaryError = useCallback(
+    (error: Error, errorInfo: React.ErrorInfo) => {
+      logger.error("ErrorBoundary caught error", {
+        message: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+      });
+
+      reportError(error, "ErrorBoundary");
+    },
+    [reportError],
+  );
 
   const contextValue: ErrorContextType = {
     reportError,
@@ -139,7 +160,7 @@ export default function ErrorBoundaryProvider({
     <ErrorContext.Provider value={contextValue}>
       <ErrorBoundary onError={handleErrorBoundaryError}>
         {children}
-        
+
         {/* Global error notifications */}
         <AnimatePresence>
           {notificationError && (
@@ -158,21 +179,21 @@ export default function ErrorBoundaryProvider({
 export function useAsyncErrorHandler() {
   const { reportError } = useErrorHandler();
 
-  const handleAsync = useCallback(async (
-    asyncFn: () => Promise<any>,
-    context?: string
-  ): Promise<any> => {
-    try {
-      return await asyncFn();
-    } catch (error) {
-      if (error instanceof Error) {
-        reportError(error, context);
-      } else {
-        reportError(new Error(String(error)), context);
+  const handleAsync = useCallback(
+    async (asyncFn: () => Promise<any>, context?: string): Promise<any> => {
+      try {
+        return await asyncFn();
+      } catch (error) {
+        if (error instanceof Error) {
+          reportError(error, context);
+        } else {
+          reportError(new Error(String(error)), context);
+        }
+        return null;
       }
-      return null;
-    }
-  }, [reportError]);
+    },
+    [reportError],
+  );
 
   return handleAsync;
 }
@@ -180,7 +201,10 @@ export function useAsyncErrorHandler() {
 // Higher-order component for wrapping components with error boundaries
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  fallbackComponent?: React.ComponentType<{ error: Error; resetError: () => void }>
+  fallbackComponent?: React.ComponentType<{
+    error: Error;
+    resetError: () => void;
+  }>,
 ) {
   const WrappedComponent = (props: P) => {
     return (
@@ -191,6 +215,6 @@ export function withErrorBoundary<P extends object>(
   };
 
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }

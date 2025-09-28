@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "@/app/page";
 import ProcessingPage from "@/app/processing/page";
 
@@ -9,7 +9,9 @@ vi.mock("framer-motion", () => ({
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    button: ({ children, ...props }: any) => (
+      <button {...props}>{children}</button>
+    ),
   },
   AnimatePresence: ({ children }: any) => <div>{children}</div>,
 }));
@@ -63,7 +65,11 @@ describe("Complete User Journey", () => {
       expect(screen.getByText(/Policy Address Report/)).toBeInTheDocument();
 
       // Check value proposition
-      expect(screen.getByText(/Discover how Hong Kong's latest Policy Address affects you personally/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Discover how Hong Kong's latest Policy Address affects you personally/,
+        ),
+      ).toBeInTheDocument();
     });
 
     it("should have Start Assessment CTA buttons", () => {
@@ -74,8 +80,10 @@ describe("Complete User Journey", () => {
 
       // Check that buttons link to assessment
       ctaButtons.forEach((button) => {
-        const link = button.closest('a');
-        expect(link?.getAttribute('href')).toContain('/assessment/personal-info');
+        const link = button.closest("a");
+        expect(link?.getAttribute("href")).toContain(
+          "/assessment/personal-info",
+        );
       });
     });
 
@@ -92,9 +100,11 @@ describe("Complete User Journey", () => {
       render(<Home />);
 
       expect(screen.getByText("Personalized Analysis")).toBeInTheDocument();
-      expect(screen.getByText("Actionable Recommendations")).toBeInTheDocument();
+      expect(
+        screen.getByText("Actionable Recommendations"),
+      ).toBeInTheDocument();
       expect(screen.getByText("Instant Results")).toBeInTheDocument();
-      
+
       // Check timing information (text is combined with bullet points)
       expect(screen.getByText(/Takes 3-5 minutes/)).toBeInTheDocument();
       expect(screen.getByText(/Free/)).toBeInTheDocument();
@@ -105,7 +115,9 @@ describe("Complete User Journey", () => {
       const { container } = render(<Home />);
 
       // Check for custom color classes
-      const colorElements = container.querySelectorAll('[class*="primary"], [class*="secondary"], [class*="accent"]');
+      const colorElements = container.querySelectorAll(
+        '[class*="primary"], [class*="secondary"], [class*="accent"]',
+      );
       expect(colorElements.length).toBeGreaterThan(0);
     });
 
@@ -113,7 +125,9 @@ describe("Complete User Journey", () => {
       const { container } = render(<Home />);
 
       // Check for responsive classes
-      const responsiveElements = container.querySelectorAll('[class*="sm:"], [class*="md:"]');
+      const responsiveElements = container.querySelectorAll(
+        '[class*="sm:"], [class*="md:"]',
+      );
       expect(responsiveElements.length).toBeGreaterThan(0);
     });
   });
@@ -122,8 +136,12 @@ describe("Complete User Journey", () => {
     it("should display processing page with progress animations", () => {
       render(<ProcessingPage />);
 
-      expect(screen.getByText("Processing Your Assessment")).toBeInTheDocument();
-      expect(screen.getByText(/We're analyzing your profile/)).toBeInTheDocument();
+      expect(
+        screen.getByText("Processing Your Assessment"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/We're analyzing your profile/),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
     });
 
@@ -143,14 +161,18 @@ describe("Complete User Journey", () => {
     it("should show estimated completion time", () => {
       render(<ProcessingPage />);
 
-      expect(screen.getByText("Estimated time: 30-60 seconds")).toBeInTheDocument();
+      expect(
+        screen.getByText("Estimated time: 30-60 seconds"),
+      ).toBeInTheDocument();
     });
 
     it("should use professional color scheme", () => {
       const { container } = render(<ProcessingPage />);
 
       // Check for custom color classes
-      const colorElements = container.querySelectorAll('[class*="primary"], [class*="secondary"]');
+      const colorElements = container.querySelectorAll(
+        '[class*="primary"], [class*="secondary"]',
+      );
       expect(colorElements.length).toBeGreaterThan(0);
     });
 
@@ -166,12 +188,16 @@ describe("Complete User Journey", () => {
     it("should have smooth transitions between pages", () => {
       // Landing page should have animation classes
       const { container: homeContainer } = render(<Home />);
-      const animatedElements = homeContainer.querySelectorAll('[animate], [initial], [transition]');
+      const animatedElements = homeContainer.querySelectorAll(
+        "[animate], [initial], [transition]",
+      );
       expect(animatedElements.length).toBeGreaterThan(0);
 
       // Processing page should have animation classes
       const { container: processingContainer } = render(<ProcessingPage />);
-      const processingAnimatedElements = processingContainer.querySelectorAll('[animate], [initial], [transition]');
+      const processingAnimatedElements = processingContainer.querySelectorAll(
+        "[animate], [initial], [transition]",
+      );
       expect(processingAnimatedElements.length).toBeGreaterThan(0);
     });
 
@@ -180,22 +206,34 @@ describe("Complete User Journey", () => {
       const { container: processingContainer } = render(<ProcessingPage />);
 
       // Both should use gradient backgrounds
-      expect(homeContainer.querySelector('[class*="bg-gradient"]')).toBeInTheDocument();
-      expect(processingContainer.querySelector('[class*="bg-gradient"]')).toBeInTheDocument();
+      expect(
+        homeContainer.querySelector('[class*="bg-gradient"]'),
+      ).toBeInTheDocument();
+      expect(
+        processingContainer.querySelector('[class*="bg-gradient"]'),
+      ).toBeInTheDocument();
 
       // Both should use professional color scheme
-      expect(homeContainer.querySelector('[class*="primary"]')).toBeInTheDocument();
-      expect(processingContainer.querySelector('[class*="primary"]')).toBeInTheDocument();
+      expect(
+        homeContainer.querySelector('[class*="primary"]'),
+      ).toBeInTheDocument();
+      expect(
+        processingContainer.querySelector('[class*="primary"]'),
+      ).toBeInTheDocument();
     });
 
     it("should provide proper error handling and user feedback", () => {
       render(<ProcessingPage />);
 
       // Processing page should render without errors
-      expect(screen.getByText("Processing Your Assessment")).toBeInTheDocument();
-      
+      expect(
+        screen.getByText("Processing Your Assessment"),
+      ).toBeInTheDocument();
+
       // Should have proper structure for error handling
-      const container = screen.getByText("Processing Your Assessment").closest('div');
+      const container = screen
+        .getByText("Processing Your Assessment")
+        .closest("div");
       expect(container).toBeInTheDocument();
     });
   });
@@ -205,7 +243,7 @@ describe("Complete User Journey", () => {
       render(<Home />);
 
       // Should have main headings (there are multiple h1 elements)
-      const mainHeadings = screen.getAllByRole('heading', { level: 1 });
+      const mainHeadings = screen.getAllByRole("heading", { level: 1 });
       expect(mainHeadings.length).toBeGreaterThan(0);
     });
 
@@ -213,7 +251,7 @@ describe("Complete User Journey", () => {
       render(<ProcessingPage />);
 
       // Should have main heading
-      const mainHeading = screen.getByRole('heading', { level: 1 });
+      const mainHeading = screen.getByRole("heading", { level: 1 });
       expect(mainHeading).toBeInTheDocument();
       expect(mainHeading).toHaveTextContent("Processing Your Assessment");
     });
@@ -235,10 +273,12 @@ describe("Complete User Journey", () => {
 
       // Should show loading spinner
       expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
-      
+
       // Should show progress information
       expect(screen.getByText("Progress")).toBeInTheDocument();
-      expect(screen.getByText("Estimated time: 30-60 seconds")).toBeInTheDocument();
+      expect(
+        screen.getByText("Estimated time: 30-60 seconds"),
+      ).toBeInTheDocument();
     });
   });
 });

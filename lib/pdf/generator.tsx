@@ -1,39 +1,57 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font, pdf } from '@react-pdf/renderer';
-import type { PersonalizedSummary, PolicyArea, CityPlan, Recommendation } from '@/types';
+import {
+  Document,
+  Font,
+  Page,
+  pdf,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer";
+import React from "react";
+import type {
+  CityPlan,
+  PersonalizedSummary,
+  PolicyArea,
+  Recommendation,
+} from "@/types";
 
 // Register fonts for better typography
 Font.register({
-  family: 'Inter',
+  family: "Inter",
   fonts: [
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2' },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2', fontWeight: 600 },
+    {
+      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
+    },
+    {
+      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2",
+      fontWeight: 600,
+    },
   ],
 });
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'column',
-    backgroundColor: '#ffffff',
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
     padding: 40,
-    fontFamily: 'Inter',
+    fontFamily: "Inter",
     fontSize: 11,
     lineHeight: 1.4,
   },
   header: {
     marginBottom: 30,
-    borderBottom: '2px solid #1e40af',
+    borderBottom: "2px solid #1e40af",
     paddingBottom: 15,
   },
   title: {
     fontSize: 24,
     fontWeight: 600,
-    color: '#1e40af',
+    color: "#1e40af",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 12,
-    color: '#6b7280',
+    color: "#6b7280",
     marginBottom: 4,
   },
   section: {
@@ -42,45 +60,45 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 600,
-    color: '#1f2937',
+    color: "#1f2937",
     marginBottom: 12,
-    borderBottom: '1px solid #e5e7eb',
+    borderBottom: "1px solid #e5e7eb",
     paddingBottom: 4,
   },
   scoreContainer: {
-    backgroundColor: '#f0f9ff',
+    backgroundColor: "#f0f9ff",
     padding: 15,
     borderRadius: 8,
     marginBottom: 20,
-    border: '1px solid #bfdbfe',
+    border: "1px solid #bfdbfe",
   },
   scoreText: {
     fontSize: 14,
     fontWeight: 600,
-    color: '#1e40af',
-    textAlign: 'center',
+    color: "#1e40af",
+    textAlign: "center",
   },
   policyArea: {
     marginBottom: 15,
     padding: 12,
-    backgroundColor: '#f9fafb',
+    backgroundColor: "#f9fafb",
     borderRadius: 6,
-    border: '1px solid #e5e7eb',
+    border: "1px solid #e5e7eb",
   },
   policyTitle: {
     fontSize: 13,
     fontWeight: 600,
-    color: '#1f2937',
+    color: "#1f2937",
     marginBottom: 6,
   },
   policyScore: {
     fontSize: 11,
-    color: '#059669',
+    color: "#059669",
     marginBottom: 8,
   },
   policyContent: {
     fontSize: 10,
-    color: '#4b5563',
+    color: "#4b5563",
     marginBottom: 8,
     lineHeight: 1.5,
   },
@@ -89,54 +107,54 @@ const styles = StyleSheet.create({
   },
   actionItem: {
     fontSize: 10,
-    color: '#374151',
+    color: "#374151",
     marginBottom: 3,
     paddingLeft: 10,
   },
   recommendation: {
     marginBottom: 12,
     padding: 10,
-    backgroundColor: '#fef3c7',
+    backgroundColor: "#fef3c7",
     borderRadius: 4,
-    border: '1px solid #fbbf24',
+    border: "1px solid #fbbf24",
   },
   recommendationTitle: {
     fontSize: 12,
     fontWeight: 600,
-    color: '#92400e',
+    color: "#92400e",
     marginBottom: 4,
   },
   recommendationContent: {
     fontSize: 10,
-    color: '#78350f',
+    color: "#78350f",
     marginBottom: 6,
   },
   majorUpdate: {
     marginBottom: 12,
     padding: 10,
-    backgroundColor: '#f0f9ff',
+    backgroundColor: "#f0f9ff",
     borderRadius: 4,
-    border: '1px solid #3b82f6',
+    border: "1px solid #3b82f6",
   },
   majorUpdateTitle: {
     fontSize: 12,
     fontWeight: 600,
-    color: '#1e40af',
+    color: "#1e40af",
     marginBottom: 4,
   },
   majorUpdateContent: {
     fontSize: 10,
-    color: '#1e3a8a',
+    color: "#1e3a8a",
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 30,
     left: 40,
     right: 40,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 9,
-    color: '#9ca3af',
-    borderTop: '1px solid #e5e7eb',
+    color: "#9ca3af",
+    borderTop: "1px solid #e5e7eb",
     paddingTop: 10,
   },
 });
@@ -153,12 +171,13 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       <View style={styles.header}>
         <Text style={styles.title}>Your Personalized Policy Summary</Text>
         <Text style={styles.subtitle}>
-          Generated on {summary.generatedAt.toLocaleDateString('en-HK', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
+          Generated on{" "}
+          {summary.generatedAt.toLocaleDateString("en-HK", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
           })}
         </Text>
         <Text style={styles.subtitle}>Report ID: {reportId}</Text>
@@ -178,13 +197,19 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
           <View key={index} style={styles.policyArea}>
             <Text style={styles.policyTitle}>{area.title}</Text>
             <Text style={styles.policyScore}>
-              Relevance Score: {area.relevanceScore}% | Impact: {area.impact.toUpperCase()}
+              Relevance Score: {area.relevanceScore}% | Impact:{" "}
+              {area.impact.toUpperCase()}
             </Text>
             <Text style={styles.policyContent}>{area.summary}</Text>
             <Text style={styles.policyContent}>{area.details}</Text>
             {area.actionItems.length > 0 && (
               <View style={styles.actionItems}>
-                <Text style={[styles.policyContent, { fontWeight: 600, marginBottom: 4 }]}>
+                <Text
+                  style={[
+                    styles.policyContent,
+                    { fontWeight: 600, marginBottom: 4 },
+                  ]}
+                >
                   Action Items:
                 </Text>
                 {area.actionItems.map((item, itemIndex) => (
@@ -209,7 +234,8 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
               Relevance: {update.relevanceToUser}
             </Text>
             <Text style={styles.majorUpdateContent}>
-              Timeline: {update.timeline} | Impact: {update.impact.toUpperCase()}
+              Timeline: {update.timeline} | Impact:{" "}
+              {update.impact.toUpperCase()}
             </Text>
           </View>
         ))}
@@ -226,7 +252,12 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
             <Text style={styles.recommendationContent}>{rec.description}</Text>
             {rec.actionSteps.length > 0 && (
               <View>
-                <Text style={[styles.recommendationContent, { fontWeight: 600, marginBottom: 4 }]}>
+                <Text
+                  style={[
+                    styles.recommendationContent,
+                    { fontWeight: 600, marginBottom: 4 },
+                  ]}
+                >
                   Action Steps:
                 </Text>
                 {rec.actionSteps.map((step, stepIndex) => (
@@ -242,49 +273,60 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
 
       {/* Footer */}
       <Text style={styles.footer}>
-        This personalized summary is based on your profile information and the Hong Kong Policy Address 2025-2026.
-        {'\n'}For the most up-to-date information, please refer to official government sources.
+        This personalized summary is based on your profile information and the
+        Hong Kong Policy Address 2025-2026.
+        {"\n"}For the most up-to-date information, please refer to official
+        government sources.
       </Text>
     </Page>
   </Document>
 );
 
-export async function generatePDF(summary: PersonalizedSummary, reportId: string): Promise<Blob> {
+export async function generatePDF(
+  summary: PersonalizedSummary,
+  reportId: string,
+): Promise<Blob> {
   try {
     const doc = <PDFDocument summary={summary} reportId={reportId} />;
     const pdfBlob = await pdf(doc).toBlob();
     return pdfBlob;
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    throw new Error('Failed to generate PDF report');
+    console.error("Error generating PDF:", error);
+    throw new Error("Failed to generate PDF report");
   }
 }
 
-export function generateFileName(summary: PersonalizedSummary, reportId: string): string {
-  const date = summary.generatedAt.toISOString().split('T')[0];
+export function generateFileName(
+  summary: PersonalizedSummary,
+  reportId: string,
+): string {
+  const date = summary.generatedAt.toISOString().split("T")[0];
   return `policy-summary-${reportId}-${date}.pdf`;
 }
 
-export async function downloadPDF(summary: PersonalizedSummary, reportId: string): Promise<void> {
+export async function downloadPDF(
+  summary: PersonalizedSummary,
+  reportId: string,
+): Promise<void> {
   try {
     const pdfBlob = await generatePDF(summary, reportId);
     const fileName = generateFileName(summary, reportId);
-    
+
     // Create download link
     const url = URL.createObjectURL(pdfBlob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
-    
+
     // Trigger download
     document.body.appendChild(link);
     link.click();
-    
+
     // Cleanup
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   } catch (error) {
-    console.error('Error downloading PDF:', error);
+    console.error("Error downloading PDF:", error);
     throw error;
   }
 }

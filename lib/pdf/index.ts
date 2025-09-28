@@ -1,2 +1,6 @@
-export { generatePDF, generateFileName, downloadPDF } from './generator';
-export { generateTextReport, generateTextFileName, downloadTextReport } from './text-generator';
+export { downloadPDF, generateFileName, generatePDF } from "./generator";
+export {
+  downloadTextReport,
+  generateTextFileName,
+  generateTextReport,
+} from "./text-generator";

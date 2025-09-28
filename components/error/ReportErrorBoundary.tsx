@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import ErrorBoundary from "./ErrorBoundary";
+import type React from "react";
 import { formSteps } from "@/lib/form-steps";
+import ErrorBoundary from "./ErrorBoundary";
 
 interface ReportErrorFallbackProps {
   error: Error;
@@ -59,7 +59,8 @@ function ReportErrorFallback({ resetError }: ReportErrorFallbackProps) {
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-6"
         >
-          We couldn't generate your personalized report. This might be due to a temporary issue with our AI service or data processing.
+          We couldn't generate your personalized report. This might be due to a
+          temporary issue with our AI service or data processing.
         </motion.p>
 
         <motion.div
@@ -99,7 +100,10 @@ interface ReportErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-export default function ReportErrorBoundary({ children, onError }: ReportErrorBoundaryProps) {
+export default function ReportErrorBoundary({
+  children,
+  onError,
+}: ReportErrorBoundaryProps) {
   return (
     <ErrorBoundary fallback={ReportErrorFallback} onError={onError}>
       {children}

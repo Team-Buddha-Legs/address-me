@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { PrivacyLogger, LogLevel } from "@/lib/privacy/logger";
-import type { UserProfile, PersonalizedSummary } from "@/types";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { LogLevel, PrivacyLogger } from "@/lib/privacy/logger";
+import type { PersonalizedSummary, UserProfile } from "@/types";
 
 describe("Privacy Logger", () => {
   let logger: PrivacyLogger;
@@ -78,10 +78,14 @@ describe("Privacy Logger", () => {
     });
 
     it("should sanitize log messages", () => {
-      logger.info("User email: user@example.com, IP: 192.168.1.1, API key: abc123");
+      logger.info(
+        "User email: user@example.com, IP: 192.168.1.1, API key: abc123",
+      );
 
       const logs = logger.getRecentLogs();
-      expect(logs[0].message).toBe("User email: [EMAIL], IP: [IP], API key: abc123");
+      expect(logs[0].message).toBe(
+        "User email: [EMAIL], IP: [IP], API key: abc123",
+      );
     });
 
     it("should hash session IDs", () => {
@@ -104,7 +108,12 @@ describe("Privacy Logger", () => {
         publicInfo: "Safe data",
       };
 
-      logger.info("Test with sensitive data", sensitiveData, "session-123", "test_operation");
+      logger.info(
+        "Test with sensitive data",
+        sensitiveData,
+        "session-123",
+        "test_operation",
+      );
 
       const logs = logger.getRecentLogs();
       const logData = logs[0].data as any;
@@ -118,17 +127,24 @@ describe("Privacy Logger", () => {
     });
 
     it("should detect and handle privacy violations", () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const violatingData = { age: 30, gender: "male" };
-      logger.info("Test message", violatingData, "session-123", "log_user_data");
+      logger.info(
+        "Test message",
+        violatingData,
+        "session-123",
+        "log_user_data",
+      );
 
       expect(consoleSpy).toHaveBeenCalledWith(
         "Privacy compliance violation:",
         expect.arrayContaining([
           "Sensitive field 'age' should not be logged directly",
           "Sensitive field 'gender' should not be logged directly",
-        ])
+        ]),
       );
 
       consoleSpy.mockRestore();
@@ -137,9 +153,14 @@ describe("Privacy Logger", () => {
 
   describe("User Activity Logging", () => {
     it("should log user activity with anonymized profile", () => {
-      logger.logUserActivity("form_submission", mockUserProfile, "session-123", {
-        step: "personal-info",
-      });
+      logger.logUserActivity(
+        "form_submission",
+        mockUserProfile,
+        "session-123",
+        {
+          step: "personal-info",
+        },
+      );
 
       const logs = logger.getRecentLogs();
       expect(logs).toHaveLength(1);
@@ -156,7 +177,12 @@ describe("Privacy Logger", () => {
 
   describe("AI Summary Logging", () => {
     it("should log summary generation with anonymized data", () => {
-      logger.logSummaryGeneration(mockUserProfile, mockSummary, "session-123", 5000);
+      logger.logSummaryGeneration(
+        mockUserProfile,
+        mockSummary,
+        "session-123",
+        5000,
+      );
 
       const logs = logger.getRecentLogs();
       expect(logs).toHaveLength(1);
@@ -180,7 +206,11 @@ describe("Privacy Logger", () => {
         timestamp: new Date().toISOString(),
       };
 
-      logger.logSecurityEvent("failed_authentication", securityDetails, "session-123");
+      logger.logSecurityEvent(
+        "failed_authentication",
+        securityDetails,
+        "session-123",
+      );
 
       const logs = logger.getRecentLogs();
       expect(logs).toHaveLength(1);

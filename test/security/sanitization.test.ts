@@ -1,15 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
-  sanitizeInput,
-  sanitizeHTML,
-  sanitizeObject,
-  sanitizeEmail,
-  sanitizePhoneNumber,
-  sanitizeNumber,
   sanitizeBoolean,
-  sanitizeURL,
+  sanitizeEmail,
   sanitizeFileName,
+  sanitizeHTML,
+  sanitizeInput,
+  sanitizeNumber,
+  sanitizeObject,
+  sanitizePhoneNumber,
   sanitizeSQLInput,
+  sanitizeURL,
 } from "@/lib/security/sanitization";
 
 describe("Input Sanitization", () => {
@@ -53,13 +53,17 @@ describe("Input Sanitization", () => {
 
   describe("sanitizeHTML", () => {
     it("should preserve safe HTML tags", () => {
-      const input = "<p>Safe <strong>content</strong> with <em>formatting</em></p>";
+      const input =
+        "<p>Safe <strong>content</strong> with <em>formatting</em></p>";
       const result = sanitizeHTML(input);
-      expect(result).toBe("<p>Safe <strong>content</strong> with <em>formatting</em></p>");
+      expect(result).toBe(
+        "<p>Safe <strong>content</strong> with <em>formatting</em></p>",
+      );
     });
 
     it("should remove dangerous HTML tags", () => {
-      const input = "<p>Safe</p><script>alert('xss')</script><div>More safe</div>";
+      const input =
+        "<p>Safe</p><script>alert('xss')</script><div>More safe</div>";
       const result = sanitizeHTML(input);
       expect(result).toBe("<p>Safe</p>More safe");
     });
@@ -83,7 +87,7 @@ describe("Input Sanitization", () => {
       };
 
       const result = sanitizeObject(input);
-      
+
       expect(result.name).toBe("John");
       expect(result.description).toBe("Safe description");
       expect(result.tags).toEqual(["tag1", "tag2"]);
@@ -164,7 +168,9 @@ describe("Input Sanitization", () => {
 
     it("should reject invalid protocols", () => {
       expect(sanitizeURL("javascript:alert(1)")).toBe(null);
-      expect(sanitizeURL("data:text/html,<script>alert(1)</script>")).toBe(null);
+      expect(sanitizeURL("data:text/html,<script>alert(1)</script>")).toBe(
+        null,
+      );
       expect(sanitizeURL("ftp://example.com")).toBe(null);
     });
 
@@ -177,8 +183,10 @@ describe("Input Sanitization", () => {
   describe("sanitizeFileName", () => {
     it("should remove dangerous characters", () => {
       expect(sanitizeFileName("../../../etc/passwd")).toBe("etcpasswd");
-      expect(sanitizeFileName("file<>:\"|?*.txt")).toBe("file.txt");
-      expect(sanitizeFileName("normal-file_name.pdf")).toBe("normal-file_name.pdf");
+      expect(sanitizeFileName('file<>:"|?*.txt')).toBe("file.txt");
+      expect(sanitizeFileName("normal-file_name.pdf")).toBe(
+        "normal-file_name.pdf",
+      );
     });
 
     it("should handle non-string input", () => {
@@ -191,7 +199,9 @@ describe("Input Sanitization", () => {
     it("should remove SQL injection patterns", () => {
       expect(sanitizeSQLInput("'; DROP TABLE users; --")).toBe("TABLE users");
       expect(sanitizeSQLInput("1 OR 1=1")).toBe("1 OR 1=1");
-      expect(sanitizeSQLInput("UNION SELECT * FROM passwords")).toBe("* FROM passwords");
+      expect(sanitizeSQLInput("UNION SELECT * FROM passwords")).toBe(
+        "* FROM passwords",
+      );
     });
 
     it("should preserve safe input", () => {

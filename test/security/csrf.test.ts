@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   generateCSRFToken,
-  validateCSRF,
   generateHashedCSRFToken,
+  validateCSRF,
   validateHashedCSRFToken,
 } from "@/lib/security/csrf";
 
@@ -45,7 +45,7 @@ describe("CSRF Protection", () => {
       const sessionId = "test-session";
       const secret = "test-secret";
       const token = generateHashedCSRFToken(sessionId, secret);
-      
+
       expect(token).toBeDefined();
       expect(typeof token).toBe("string");
       expect(token.length).toBe(64); // SHA256 hex
@@ -56,21 +56,21 @@ describe("CSRF Protection", () => {
       const secret = "test-secret";
       const token1 = generateHashedCSRFToken("session1", secret);
       const token2 = generateHashedCSRFToken("session2", secret);
-      
+
       expect(token1).not.toBe(token2);
     });
 
     it("should generate different tokens at different times", async () => {
       const sessionId = "test-session";
       const secret = "test-secret";
-      
+
       const token1 = generateHashedCSRFToken(sessionId, secret);
-      
+
       // Wait a bit to ensure different timestamp
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       const token2 = generateHashedCSRFToken(sessionId, secret);
-      
+
       expect(token1).not.toBe(token2);
     });
   });
@@ -80,7 +80,7 @@ describe("CSRF Protection", () => {
       const validToken = "a".repeat(64); // 64 hex characters
       const sessionId = "test-session";
       const secret = "test-secret";
-      
+
       const isValid = validateHashedCSRFToken(validToken, sessionId, secret);
       expect(typeof isValid).toBe("boolean");
     });
@@ -88,12 +88,16 @@ describe("CSRF Protection", () => {
     it("should reject invalid tokens", () => {
       const sessionId = "test-session";
       const secret = "test-secret";
-      
+
       expect(validateHashedCSRFToken("", sessionId, secret)).toBe(false);
       expect(validateHashedCSRFToken("short", sessionId, secret)).toBe(false);
-      expect(validateHashedCSRFToken("g".repeat(64), sessionId, secret)).toBe(false);
+      expect(validateHashedCSRFToken("g".repeat(64), sessionId, secret)).toBe(
+        false,
+      );
       expect(validateHashedCSRFToken("a".repeat(64), "", secret)).toBe(false);
-      expect(validateHashedCSRFToken("a".repeat(64), sessionId, "")).toBe(false);
+      expect(validateHashedCSRFToken("a".repeat(64), sessionId, "")).toBe(
+        false,
+      );
     });
 
     it("should handle token with timestamp", () => {
@@ -101,8 +105,12 @@ describe("CSRF Protection", () => {
       const secret = "test-secret";
       const timestamp = Date.now().toString(16);
       const tokenWithTimestamp = `${"a".repeat(56)}.${timestamp}`;
-      
-      const isValid = validateHashedCSRFToken(tokenWithTimestamp, sessionId, secret);
+
+      const isValid = validateHashedCSRFToken(
+        tokenWithTimestamp,
+        sessionId,
+        secret,
+      );
       expect(typeof isValid).toBe("boolean");
     });
 
@@ -112,8 +120,13 @@ describe("CSRF Protection", () => {
       const oldTimestamp = (Date.now() - 2 * 60 * 60 * 1000).toString(16); // 2 hours ago
       const expiredToken = `${"a".repeat(56)}.${oldTimestamp}`;
       const maxAge = 60 * 60 * 1000; // 1 hour
-      
-      const isValid = validateHashedCSRFToken(expiredToken, sessionId, secret, maxAge);
+
+      const isValid = validateHashedCSRFToken(
+        expiredToken,
+        sessionId,
+        secret,
+        maxAge,
+      );
       expect(isValid).toBe(false);
     });
   });

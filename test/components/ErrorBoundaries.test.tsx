@@ -1,15 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ErrorInfo } from 'react';
-import ErrorBoundary from '@/components/error/ErrorBoundary';
-import FormErrorBoundary from '@/components/error/FormErrorBoundary';
-import ReportErrorBoundary from '@/components/error/ReportErrorBoundary';
-import ApiErrorBoundary from '@/components/error/ApiErrorBoundary';
-import NetworkErrorBoundary from '@/components/error/NetworkErrorBoundary';
-import ErrorBoundaryProvider, { useErrorHandler } from '@/components/error/ErrorBoundaryProvider';
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { ErrorInfo } from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import ApiErrorBoundary from "@/components/error/ApiErrorBoundary";
+import ErrorBoundary from "@/components/error/ErrorBoundary";
+import ErrorBoundaryProvider, {
+  useErrorHandler,
+} from "@/components/error/ErrorBoundaryProvider";
+import FormErrorBoundary from "@/components/error/FormErrorBoundary";
+import NetworkErrorBoundary from "@/components/error/NetworkErrorBoundary";
+import ReportErrorBoundary from "@/components/error/ReportErrorBoundary";
 
 // Mock the logger
-vi.mock('@/lib/privacy/logger', () => ({
+vi.mock("@/lib/privacy/logger", () => ({
   logger: {
     error: vi.fn(),
     warn: vi.fn(),
@@ -17,18 +19,20 @@ vi.mock('@/lib/privacy/logger', () => ({
 }));
 
 // Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
+vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    details: ({ children, ...props }: any) => <details {...props}>{children}</details>,
+    details: ({ children, ...props }: any) => (
+      <details {...props}>{children}</details>
+    ),
   },
   AnimatePresence: ({ children }: any) => children,
 }));
 
 // Mock Next.js Link
-vi.mock('next/link', () => ({
+vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
@@ -37,12 +41,12 @@ vi.mock('next/link', () => ({
 }));
 
 // Mock form steps
-vi.mock('@/lib/form-steps', () => ({
-  formSteps: [{ id: 'personal-info' }],
+vi.mock("@/lib/form-steps", () => ({
+  formSteps: [{ id: "personal-info" }],
 }));
 
 // Component that throws an error
-function ThrowError({ shouldThrow = false, errorMessage = 'Test error' }) {
+function ThrowError({ shouldThrow = false, errorMessage = "Test error" }) {
   if (shouldThrow) {
     throw new Error(errorMessage);
   }
@@ -52,52 +56,58 @@ function ThrowError({ shouldThrow = false, errorMessage = 'Test error' }) {
 // Component that uses error handler
 function ErrorHandlerComponent() {
   const { reportError, clearError, hasGlobalError } = useErrorHandler();
-  
+
   return (
     <div>
-      <button onClick={() => reportError(new Error('Manual error'), 'test')}>
+      <button onClick={() => reportError(new Error("Manual error"), "test")}>
         Report Error
       </button>
       <button onClick={clearError}>Clear Error</button>
       <div data-testid="error-status">
-        {hasGlobalError ? 'Has Error' : 'No Error'}
+        {hasGlobalError ? "Has Error" : "No Error"}
       </div>
     </div>
   );
 }
 
-describe('Error Boundaries', () => {
+describe("Error Boundaries", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Suppress console.error for error boundary tests
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  describe('ErrorBoundary', () => {
-    it('should render children when no error occurs', () => {
+  describe("ErrorBoundary", () => {
+    it("should render children when no error occurs", () => {
       render(
         <ErrorBoundary>
           <div>Test content</div>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByText('Test content')).toBeInTheDocument();
+      expect(screen.getByText("Test content")).toBeInTheDocument();
     });
 
-    it('should render default error fallback when error occurs', () => {
+    it("should render default error fallback when error occurs", () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-      expect(screen.getByText('Try Again')).toBeInTheDocument();
-      expect(screen.getByText('Go Home')).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
+      expect(screen.getByText("Try Again")).toBeInTheDocument();
+      expect(screen.getByText("Go Home")).toBeInTheDocument();
     });
 
-    it('should render custom fallback when provided', () => {
-      const CustomFallback = ({ error, resetError }: { error: Error; resetError: () => void }) => (
+    it("should render custom fallback when provided", () => {
+      const CustomFallback = ({
+        error,
+        resetError,
+      }: {
+        error: Error;
+        resetError: () => void;
+      }) => (
         <div>
           <div>Custom Error: {error.message}</div>
           <button onClick={resetError}>Custom Reset</button>
@@ -107,146 +117,158 @@ describe('Error Boundaries', () => {
       render(
         <ErrorBoundary fallback={CustomFallback}>
           <ThrowError shouldThrow={true} errorMessage="Custom error message" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByText('Custom Error: Custom error message')).toBeInTheDocument();
-      expect(screen.getByText('Custom Reset')).toBeInTheDocument();
+      expect(
+        screen.getByText("Custom Error: Custom error message"),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Custom Reset")).toBeInTheDocument();
     });
 
-    it('should call onError callback when error occurs', () => {
+    it("should call onError callback when error occurs", () => {
       const onError = vi.fn();
 
       render(
         <ErrorBoundary onError={onError}>
           <ThrowError shouldThrow={true} errorMessage="Callback test" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalledWith(
-        expect.objectContaining({ message: 'Callback test' }),
-        expect.any(Object)
+        expect.objectContaining({ message: "Callback test" }),
+        expect.any(Object),
       );
     });
 
-    it('should reset error state when Try Again is clicked', async () => {
+    it("should reset error state when Try Again is clicked", async () => {
       let shouldThrow = true;
       const TestComponent = () => <ThrowError shouldThrow={shouldThrow} />;
-      
+
       const { rerender } = render(
         <ErrorBoundary>
           <TestComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
 
       // Click Try Again and update the error state
       shouldThrow = false;
-      fireEvent.click(screen.getByText('Try Again'));
+      fireEvent.click(screen.getByText("Try Again"));
 
       // Re-render with no error
       rerender(
         <ErrorBoundary>
           <TestComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       await waitFor(() => {
-        expect(screen.getByText('No error')).toBeInTheDocument();
+        expect(screen.getByText("No error")).toBeInTheDocument();
       });
     });
   });
 
-  describe('FormErrorBoundary', () => {
-    it('should render form-specific error message', () => {
+  describe("FormErrorBoundary", () => {
+    it("should render form-specific error message", () => {
       render(
         <FormErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </FormErrorBoundary>
+        </FormErrorBoundary>,
       );
 
-      expect(screen.getByText('Form Error')).toBeInTheDocument();
-      expect(screen.getByText(/There was an issue with the assessment form/)).toBeInTheDocument();
-      expect(screen.getByText('Continue Assessment')).toBeInTheDocument();
-      expect(screen.getByText('Start Over')).toBeInTheDocument();
+      expect(screen.getByText("Form Error")).toBeInTheDocument();
+      expect(
+        screen.getByText(/There was an issue with the assessment form/),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Continue Assessment")).toBeInTheDocument();
+      expect(screen.getByText("Start Over")).toBeInTheDocument();
     });
   });
 
-  describe('ReportErrorBoundary', () => {
-    it('should render report-specific error message', () => {
+  describe("ReportErrorBoundary", () => {
+    it("should render report-specific error message", () => {
       render(
         <ReportErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </ReportErrorBoundary>
+        </ReportErrorBoundary>,
       );
 
-      expect(screen.getByText('Report Generation Error')).toBeInTheDocument();
-      expect(screen.getByText(/We couldn't generate your personalized report/)).toBeInTheDocument();
-      expect(screen.getByText('Try Again')).toBeInTheDocument();
-      expect(screen.getByText('Retake Assessment')).toBeInTheDocument();
-      expect(screen.getByText('Go Home')).toBeInTheDocument();
+      expect(screen.getByText("Report Generation Error")).toBeInTheDocument();
+      expect(
+        screen.getByText(/We couldn't generate your personalized report/),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Try Again")).toBeInTheDocument();
+      expect(screen.getByText("Retake Assessment")).toBeInTheDocument();
+      expect(screen.getByText("Go Home")).toBeInTheDocument();
     });
   });
 
-  describe('ApiErrorBoundary', () => {
-    it('should render network error message for fetch errors', () => {
+  describe("ApiErrorBoundary", () => {
+    it("should render network error message for fetch errors", () => {
       render(
         <ApiErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="fetch failed" />
-        </ApiErrorBoundary>
+        </ApiErrorBoundary>,
       );
 
-      expect(screen.getByText('Connection Error')).toBeInTheDocument();
-      expect(screen.getByText(/Unable to connect to our services/)).toBeInTheDocument();
+      expect(screen.getByText("Connection Error")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Unable to connect to our services/),
+      ).toBeInTheDocument();
     });
 
-    it('should render rate limit error message', () => {
+    it("should render rate limit error message", () => {
       render(
         <ApiErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="rate limit exceeded" />
-        </ApiErrorBoundary>
+        </ApiErrorBoundary>,
       );
 
-      expect(screen.getByText('Too Many Requests')).toBeInTheDocument();
-      expect(screen.getByText(/You've made too many requests/)).toBeInTheDocument();
-      expect(screen.getByText('Wait and Retry')).toBeInTheDocument();
+      expect(screen.getByText("Too Many Requests")).toBeInTheDocument();
+      expect(
+        screen.getByText(/You've made too many requests/),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Wait and Retry")).toBeInTheDocument();
     });
 
-    it('should render AI service error message', () => {
+    it("should render AI service error message", () => {
       render(
         <ApiErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="AI service failed" />
-        </ApiErrorBoundary>
+        </ApiErrorBoundary>,
       );
 
-      expect(screen.getByText('AI Service Unavailable')).toBeInTheDocument();
-      expect(screen.getByText(/Our AI analysis service is temporarily unavailable/)).toBeInTheDocument();
+      expect(screen.getByText("AI Service Unavailable")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Our AI analysis service is temporarily unavailable/),
+      ).toBeInTheDocument();
     });
   });
 
-  describe('NetworkErrorBoundary', () => {
+  describe("NetworkErrorBoundary", () => {
     beforeEach(() => {
       // Mock navigator.onLine
-      Object.defineProperty(navigator, 'onLine', {
+      Object.defineProperty(navigator, "onLine", {
         writable: true,
         value: true,
       });
     });
 
-    it('should render network error for fetch failures', () => {
+    it("should render network error for fetch failures", () => {
       render(
         <NetworkErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="fetch failed" />
-        </NetworkErrorBoundary>
+        </NetworkErrorBoundary>,
       );
 
-      expect(screen.getByText('Connection Error')).toBeInTheDocument();
-      expect(screen.getByText('Online')).toBeInTheDocument();
+      expect(screen.getByText("Connection Error")).toBeInTheDocument();
+      expect(screen.getByText("Online")).toBeInTheDocument();
     });
 
-    it('should render offline message when navigator is offline', () => {
-      Object.defineProperty(navigator, 'onLine', {
+    it("should render offline message when navigator is offline", () => {
+      Object.defineProperty(navigator, "onLine", {
         writable: true,
         value: false,
       });
@@ -254,14 +276,14 @@ describe('Error Boundaries', () => {
       render(
         <NetworkErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="network error" />
-        </NetworkErrorBoundary>
+        </NetworkErrorBoundary>,
       );
 
       expect(screen.getByText("You're Offline")).toBeInTheDocument();
-      expect(screen.getByText('Offline')).toBeInTheDocument();
+      expect(screen.getByText("Offline")).toBeInTheDocument();
     });
 
-    it('should re-throw non-network errors', () => {
+    it("should re-throw non-network errors", () => {
       // This should be caught by a parent error boundary
       expect(() => {
         render(
@@ -269,120 +291,124 @@ describe('Error Boundaries', () => {
             <NetworkErrorBoundary>
               <ThrowError shouldThrow={true} errorMessage="validation error" />
             </NetworkErrorBoundary>
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }).not.toThrow();
 
       // Should show the parent error boundary's fallback
-      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
     });
   });
 
-  describe('ErrorBoundaryProvider', () => {
-    it('should provide error handling context', () => {
+  describe("ErrorBoundaryProvider", () => {
+    it("should provide error handling context", () => {
       render(
         <ErrorBoundaryProvider>
           <ErrorHandlerComponent />
-        </ErrorBoundaryProvider>
+        </ErrorBoundaryProvider>,
       );
 
-      expect(screen.getByText('No Error')).toBeInTheDocument();
-      expect(screen.getByText('Report Error')).toBeInTheDocument();
-      expect(screen.getByText('Clear Error')).toBeInTheDocument();
+      expect(screen.getByText("No Error")).toBeInTheDocument();
+      expect(screen.getByText("Report Error")).toBeInTheDocument();
+      expect(screen.getByText("Clear Error")).toBeInTheDocument();
     });
 
-    it('should handle manual error reporting', async () => {
+    it("should handle manual error reporting", async () => {
       render(
         <ErrorBoundaryProvider enableGlobalNotifications={true}>
           <ErrorHandlerComponent />
-        </ErrorBoundaryProvider>
+        </ErrorBoundaryProvider>,
       );
 
-      fireEvent.click(screen.getByText('Report Error'));
+      fireEvent.click(screen.getByText("Report Error"));
 
       await waitFor(() => {
-        expect(screen.getByText('Has Error')).toBeInTheDocument();
+        expect(screen.getByText("Has Error")).toBeInTheDocument();
       });
     });
 
-    it('should clear errors when requested', async () => {
+    it("should clear errors when requested", async () => {
       render(
         <ErrorBoundaryProvider>
           <ErrorHandlerComponent />
-        </ErrorBoundaryProvider>
+        </ErrorBoundaryProvider>,
       );
 
       // Report error
-      fireEvent.click(screen.getByText('Report Error'));
-      
+      fireEvent.click(screen.getByText("Report Error"));
+
       await waitFor(() => {
-        expect(screen.getByText('Has Error')).toBeInTheDocument();
+        expect(screen.getByText("Has Error")).toBeInTheDocument();
       });
 
       // Clear error
-      fireEvent.click(screen.getByText('Clear Error'));
+      fireEvent.click(screen.getByText("Clear Error"));
 
       await waitFor(() => {
-        expect(screen.getByText('No Error')).toBeInTheDocument();
+        expect(screen.getByText("No Error")).toBeInTheDocument();
       });
     });
 
-    it('should show error notifications when enabled', async () => {
+    it("should show error notifications when enabled", async () => {
       render(
         <ErrorBoundaryProvider enableGlobalNotifications={true}>
           <ErrorHandlerComponent />
-        </ErrorBoundaryProvider>
+        </ErrorBoundaryProvider>,
       );
 
-      fireEvent.click(screen.getByText('Report Error'));
+      fireEvent.click(screen.getByText("Report Error"));
 
       await waitFor(() => {
-        expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-        expect(screen.getByText('Manual error')).toBeInTheDocument();
+        expect(screen.getByText("Something went wrong")).toBeInTheDocument();
+        expect(screen.getByText("Manual error")).toBeInTheDocument();
       });
     });
 
-    it('should not show notifications when disabled', () => {
+    it("should not show notifications when disabled", () => {
       render(
         <ErrorBoundaryProvider enableGlobalNotifications={false}>
           <ErrorHandlerComponent />
-        </ErrorBoundaryProvider>
+        </ErrorBoundaryProvider>,
       );
 
-      fireEvent.click(screen.getByText('Report Error'));
+      fireEvent.click(screen.getByText("Report Error"));
 
       // Should not show notification
-      expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Something went wrong"),
+      ).not.toBeInTheDocument();
     });
   });
 
-  describe('Error Boundary Integration', () => {
-    it('should handle nested error boundaries correctly', () => {
+  describe("Error Boundary Integration", () => {
+    it("should handle nested error boundaries correctly", () => {
       render(
         <ErrorBoundary>
           <FormErrorBoundary>
             <ThrowError shouldThrow={true} />
           </FormErrorBoundary>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show the FormErrorBoundary fallback, not the parent
-      expect(screen.getByText('Form Error')).toBeInTheDocument();
-      expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
+      expect(screen.getByText("Form Error")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Something went wrong"),
+      ).not.toBeInTheDocument();
     });
 
-    it('should propagate errors when child boundary cannot handle them', () => {
+    it("should propagate errors when child boundary cannot handle them", () => {
       render(
         <ErrorBoundary>
           <NetworkErrorBoundary>
             <ThrowError shouldThrow={true} errorMessage="validation error" />
           </NetworkErrorBoundary>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // NetworkErrorBoundary should re-throw non-network errors
       // Parent ErrorBoundary should catch it
-      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
     });
   });
 });

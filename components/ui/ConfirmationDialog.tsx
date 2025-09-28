@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { XMarkIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationTriangleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -104,7 +107,9 @@ export function ConfirmationDialog({
         {/* Content */}
         <div className="p-6">
           {/* Icon */}
-          <div className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${styles.iconBg} mb-4`}>
+          <div
+            className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${styles.iconBg} mb-4`}
+          >
             <ExclamationTriangleIcon className={`h-6 w-6 ${styles.icon}`} />
           </div>
 

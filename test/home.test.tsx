@@ -78,13 +78,17 @@ describe("Home Page", () => {
     expect(container.textContent).toContain("Get Your");
     expect(container.textContent).toContain("Personalized");
     expect(container.textContent).toContain("Policy Address Report");
-    expect(container.textContent).toContain("Discover how Hong Kong's latest Policy Address affects you personally");
+    expect(container.textContent).toContain(
+      "Discover how Hong Kong's latest Policy Address affects you personally",
+    );
   });
 
   it("should have responsive design elements", () => {
     const { container } = render(<Home />);
     // Check for responsive classes
-    const responsiveElements = container.querySelectorAll('[class*="sm:"], [class*="md:"]');
+    const responsiveElements = container.querySelectorAll(
+      '[class*="sm:"], [class*="md:"]',
+    );
     expect(responsiveElements.length).toBeGreaterThan(0);
   });
 
@@ -102,7 +106,7 @@ describe("Home Page", () => {
     // Check for navigation elements
     expect(container.textContent).toContain("Features");
     expect(container.textContent).toContain("How it Works");
-    
+
     // Check for anchor links
     const featureLink = container.querySelector('a[href="#features"]');
     const howItWorksLink = container.querySelector('a[href="#how-it-works"]');
@@ -113,7 +117,9 @@ describe("Home Page", () => {
   it("should use professional color scheme", () => {
     const { container } = render(<Home />);
     // Check for custom color classes
-    const colorElements = container.querySelectorAll('[class*="primary"], [class*="secondary"], [class*="accent"]');
+    const colorElements = container.querySelectorAll(
+      '[class*="primary"], [class*="secondary"], [class*="accent"]',
+    );
     expect(colorElements.length).toBeGreaterThan(0);
   });
 });

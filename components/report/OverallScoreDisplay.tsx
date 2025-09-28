@@ -20,9 +20,12 @@ export function OverallScoreDisplay({ score }: OverallScoreDisplayProps) {
   };
 
   const getScoreDescription = (score: number) => {
-    if (score >= 90) return "Excellent match - many policies are highly relevant to you";
-    if (score >= 80) return "Good match - several policies will benefit you significantly";
-    if (score >= 70) return "Moderate match - some policies are relevant to your situation";
+    if (score >= 90)
+      return "Excellent match - many policies are highly relevant to you";
+    if (score >= 80)
+      return "Good match - several policies will benefit you significantly";
+    if (score >= 70)
+      return "Moderate match - some policies are relevant to your situation";
     return "Limited match - few policies directly apply to your profile";
   };
 
@@ -30,14 +33,16 @@ export function OverallScoreDisplay({ score }: OverallScoreDisplayProps) {
     <div className={`rounded-lg border-2 p-6 ${getScoreBackground(score)}`}>
       <div className="text-center">
         <div className="mb-4">
-          <div className={`text-5xl sm:text-6xl font-bold ${getScoreColor(score)}`}>
+          <div
+            className={`text-5xl sm:text-6xl font-bold ${getScoreColor(score)}`}
+          >
             {score}
           </div>
           <div className="text-lg sm:text-xl font-medium text-neutral-700 mt-1">
             Overall Relevance Score
           </div>
         </div>
-        
+
         <div className="max-w-2xl mx-auto">
           <p className="text-neutral-600 text-sm sm:text-base leading-relaxed">
             {getScoreDescription(score)}
@@ -53,13 +58,19 @@ export function OverallScoreDisplay({ score }: OverallScoreDisplayProps) {
             <span>100</span>
           </div>
           <div className="w-full bg-neutral-200 rounded-full h-3 relative">
-            <div 
+            <div
               className={`h-3 rounded-full transition-all duration-500 ${
-                score >= 90 ? "bg-secondary" : 
-                score >= 80 ? "bg-secondary-light" : 
-                score >= 70 ? "bg-accent" : "bg-neutral-400"
+                score >= 90
+                  ? "bg-secondary"
+                  : score >= 80
+                    ? "bg-secondary-light"
+                    : score >= 70
+                      ? "bg-accent"
+                      : "bg-neutral-400"
               }`}
-              style={{ width: `${Math.max(0, Math.min(100, (score - 70) * (100 / 30)))}%` }}
+              style={{
+                width: `${Math.max(0, Math.min(100, (score - 70) * (100 / 30)))}%`,
+              }}
             />
             {/* Score markers */}
             <div className="absolute top-0 left-0 w-full h-3 flex justify-between">

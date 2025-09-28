@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
+import type React from "react";
 import ErrorBoundary from "./ErrorBoundary";
 
 interface FormErrorFallbackProps {
@@ -55,7 +55,8 @@ function FormErrorFallback({ resetError }: FormErrorFallbackProps) {
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-6"
         >
-          There was an issue with the assessment form. Your progress has been saved, and you can try continuing or start over.
+          There was an issue with the assessment form. Your progress has been
+          saved, and you can try continuing or start over.
         </motion.p>
 
         <motion.div
@@ -94,7 +95,10 @@ interface FormErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-export default function FormErrorBoundary({ children, onError }: FormErrorBoundaryProps) {
+export default function FormErrorBoundary({
+  children,
+  onError,
+}: FormErrorBoundaryProps) {
   return (
     <ErrorBoundary fallback={FormErrorFallback} onError={onError}>
       {children}

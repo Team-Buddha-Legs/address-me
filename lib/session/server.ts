@@ -3,7 +3,7 @@
  * Uses in-memory storage for temporary sessions without persistence
  */
 
-import type { UserProfile, PersonalizedSummary, UserSession } from "@/types";
+import type { PersonalizedSummary, UserProfile, UserSession } from "@/types";
 
 // In-memory session storage
 // In production, consider using Redis or similar for distributed systems
@@ -62,14 +62,16 @@ function generateSessionId(): string {
 /**
  * Create a new session
  */
-export async function createSession(initialProfile?: Partial<UserProfile>): Promise<UserSession> {
+export async function createSession(
+  initialProfile?: Partial<UserProfile>,
+): Promise<UserSession> {
   // Initialize cleanup if not already done
   initializeCleanup();
 
   // Check session limit
   if (sessionStore.size >= SESSION_CONFIG.MAX_SESSIONS) {
     cleanupExpiredSessions();
-    
+
     if (sessionStore.size >= SESSION_CONFIG.MAX_SESSIONS) {
       throw new Error("Session limit reached. Please try again later.");
     }
@@ -77,29 +79,31 @@ export async function createSession(initialProfile?: Partial<UserProfile>): Prom
 
   const now = new Date();
   const sessionId = generateSessionId();
-  
+
   const session: UserSession = {
     id: sessionId,
-    profile: initialProfile as UserProfile || {} as UserProfile,
+    profile: (initialProfile as UserProfile) || ({} as UserProfile),
     createdAt: now,
     expiresAt: new Date(now.getTime() + SESSION_CONFIG.EXPIRATION_MS),
   };
 
   sessionStore.set(sessionId, session);
-  
+
   return session;
 }
 
 /**
  * Get session by ID
  */
-export async function getSession(sessionId: string): Promise<UserSession | null> {
+export async function getSession(
+  sessionId: string,
+): Promise<UserSession | null> {
   if (!sessionId || typeof sessionId !== "string") {
     return null;
   }
 
   const session = sessionStore.get(sessionId);
-  
+
   if (!session) {
     return null;
   }
@@ -121,10 +125,10 @@ export async function updateSession(
   updates: {
     profile?: Partial<UserProfile>;
     summary?: PersonalizedSummary;
-  }
+  },
 ): Promise<UserSession | null> {
   const session = await getSession(sessionId);
-  
+
   if (!session) {
     return null;
   }
@@ -142,7 +146,7 @@ export async function updateSession(
   session.expiresAt = new Date(Date.now() + SESSION_CONFIG.EXPIRATION_MS);
 
   sessionStore.set(sessionId, session);
-  
+
   return session;
 }
 
@@ -202,16 +206,18 @@ export async function clearAllSessions(): Promise<void> {
 /**
  * Extend session expiration
  */
-export async function extendSession(sessionId: string): Promise<UserSession | null> {
+export async function extendSession(
+  sessionId: string,
+): Promise<UserSession | null> {
   const session = await getSession(sessionId);
-  
+
   if (!session) {
     return null;
   }
 
   session.expiresAt = new Date(Date.now() + SESSION_CONFIG.EXPIRATION_MS);
   sessionStore.set(sessionId, session);
-  
+
   return session;
 }
 

@@ -1,5 +1,9 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { rateLimit, getRateLimitStatus, resetRateLimit } from "@/lib/security/rate-limit";
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+  getRateLimitStatus,
+  rateLimit,
+  resetRateLimit,
+} from "@/lib/security/rate-limit";
 
 describe("Rate Limiting", () => {
   const testConfig = {
@@ -49,7 +53,9 @@ describe("Rate Limiting", () => {
     expect(blockedResult.allowed).toBe(false);
 
     // Wait for window to expire
-    await new Promise(resolve => setTimeout(resolve, testConfig.windowMs + 100));
+    await new Promise((resolve) =>
+      setTimeout(resolve, testConfig.windowMs + 100),
+    );
 
     // Should be allowed again
     const allowedResult = await rateLimit("test-user", testConfig);

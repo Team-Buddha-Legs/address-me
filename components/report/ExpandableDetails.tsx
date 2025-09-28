@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 interface ExpandableDetailsProps {
   title: string;
@@ -18,7 +18,7 @@ export function ExpandableDetails({
   details,
   icon,
   defaultExpanded = false,
-  variant = "default"
+  variant = "default",
 }: ExpandableDetailsProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
@@ -34,15 +34,15 @@ export function ExpandableDetails({
   };
 
   return (
-    <div className={`rounded-lg border transition-colors duration-200 ${getVariantClasses(variant)}`}>
+    <div
+      className={`rounded-lg border transition-colors duration-200 ${getVariantClasses(variant)}`}
+    >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-4 py-3 flex items-center justify-between text-left"
       >
         <div className="flex items-center space-x-3 flex-1">
-          {icon && (
-            <span className="text-xl flex-shrink-0">{icon}</span>
-          )}
+          {icon && <span className="text-xl flex-shrink-0">{icon}</span>}
           <div className="flex-1 min-w-0">
             <h4 className="font-semibold text-neutral-900 mb-1 leading-tight">
               {title}

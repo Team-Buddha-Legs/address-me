@@ -31,7 +31,7 @@ export class AWSBedrockProvider implements AIProvider {
   async generateResponse(messages: AIMessage[]): Promise<AIResponse> {
     if (!this.validateConfig()) {
       const error: AIServiceError = new Error(
-        "Invalid AWS Bedrock configuration"
+        "Invalid AWS Bedrock configuration",
       ) as AIServiceError;
       error.code = "INVALID_CONFIG";
       error.provider = "aws-bedrock";
@@ -56,7 +56,7 @@ export class AWSBedrockProvider implements AIProvider {
       const aiError: AIServiceError = new Error(
         `AWS Bedrock API error: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       ) as AIServiceError;
       aiError.code = "PROVIDER_ERROR";
       aiError.provider = "aws-bedrock";
@@ -98,7 +98,7 @@ export class AWSBedrockProvider implements AIProvider {
     // Placeholder for actual AWS Bedrock implementation
     // This would use @aws-sdk/client-bedrock-runtime
     throw new Error(
-      "AWS Bedrock implementation requires AWS SDK configuration"
+      "AWS Bedrock implementation requires AWS SDK configuration",
     );
   }
 }

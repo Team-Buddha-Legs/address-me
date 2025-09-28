@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import type { PersonalizedSummary } from "@/types";
+import { MajorUpdatesSection } from "./MajorUpdatesSection";
 import { OverallScoreDisplay } from "./OverallScoreDisplay";
 import { PolicyAreaSection } from "./PolicyAreaSection";
-import { MajorUpdatesSection } from "./MajorUpdatesSection";
 import { RecommendationsSection } from "./RecommendationsSection";
 import { ReportActions } from "./ReportActions";
-import { Typography, Caption } from "./Typography";
 import { Section, VerticalStack } from "./Spacing";
-import type { PersonalizedSummary } from "@/types";
+import { Caption, Typography } from "./Typography";
 
 interface ReportDisplayProps {
   summary: PersonalizedSummary;
@@ -17,11 +17,11 @@ interface ReportDisplayProps {
 
 export function ReportDisplay({ summary, reportId }: ReportDisplayProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(["policy-areas", "major-updates", "recommendations"])
+    new Set(["policy-areas", "major-updates", "recommendations"]),
   );
 
   const toggleSection = (sectionId: string) => {
-    setExpandedSections(prev => {
+    setExpandedSections((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(sectionId)) {
         newSet.delete(sectionId);
@@ -41,12 +41,13 @@ export function ReportDisplay({ summary, reportId }: ReportDisplayProps) {
             Your Personalized Policy Summary
           </Typography>
           <Caption>
-            Generated on {summary.generatedAt.toLocaleDateString("en-HK", {
+            Generated on{" "}
+            {summary.generatedAt.toLocaleDateString("en-HK", {
               year: "numeric",
               month: "long",
               day: "numeric",
               hour: "2-digit",
-              minute: "2-digit"
+              minute: "2-digit",
             })}
           </Caption>
         </Section>

@@ -6,10 +6,10 @@ interface PolicyRelevanceScoreProps {
   showLabel?: boolean;
 }
 
-export function PolicyRelevanceScore({ 
-  score, 
-  size = "md", 
-  showLabel = true 
+export function PolicyRelevanceScore({
+  score,
+  size = "md",
+  showLabel = true,
 }: PolicyRelevanceScoreProps) {
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-secondary-dark";
@@ -27,21 +27,22 @@ export function PolicyRelevanceScore({
 
   const getSizeClasses = (size: string) => {
     switch (size) {
-      case "sm": return "text-sm px-2 py-1";
-      case "lg": return "text-xl px-4 py-2";
-      default: return "text-base px-3 py-1.5";
+      case "sm":
+        return "text-sm px-2 py-1";
+      case "lg":
+        return "text-xl px-4 py-2";
+      default:
+        return "text-base px-3 py-1.5";
     }
   };
 
   return (
-    <div className={`inline-flex items-center rounded-full border ${getScoreBackground(score)} ${getSizeClasses(size)}`}>
-      <div className={`font-bold ${getScoreColor(score)}`}>
-        {score}%
-      </div>
+    <div
+      className={`inline-flex items-center rounded-full border ${getScoreBackground(score)} ${getSizeClasses(size)}`}
+    >
+      <div className={`font-bold ${getScoreColor(score)}`}>{score}%</div>
       {showLabel && (
-        <span className="ml-1 text-neutral-600 text-sm">
-          relevant
-        </span>
+        <span className="ml-1 text-neutral-600 text-sm">relevant</span>
       )}
     </div>
   );

@@ -2,8 +2,8 @@
  * CSRF protection utilities for server actions
  */
 
+import { createHash, randomBytes } from "crypto";
 import { cookies } from "next/headers";
-import { randomBytes, createHash } from "crypto";
 
 const CSRF_TOKEN_LENGTH = 32;
 const CSRF_COOKIE_NAME = "csrf-token";
@@ -22,7 +22,7 @@ export function generateCSRFToken(): string {
 export async function setCSRFToken(): Promise<string> {
   const token = generateCSRFToken();
   const cookieStore = await cookies();
-  
+
   cookieStore.set(CSRF_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -53,13 +53,18 @@ export function validateCSRF(providedToken: string): boolean {
 
   // In a real implementation, you would compare with the token stored in cookies
   // For now, we'll do a basic validation
-  return providedToken.length === CSRF_TOKEN_LENGTH * 2 && /^[a-f0-9]+$/i.test(providedToken);
+  return (
+    providedToken.length === CSRF_TOKEN_LENGTH * 2 &&
+    /^[a-f0-9]+$/i.test(providedToken)
+  );
 }
 
 /**
  * Validate CSRF token against cookie
  */
-export async function validateCSRFWithCookie(providedToken: string): Promise<boolean> {
+export async function validateCSRFWithCookie(
+  providedToken: string,
+): Promise<boolean> {
   if (!providedToken || typeof providedToken !== "string") {
     return false;
   }
@@ -92,7 +97,10 @@ function constantTimeCompare(a: string, b: string): boolean {
 /**
  * Generate a hash-based CSRF token for double-submit cookie pattern
  */
-export function generateHashedCSRFToken(sessionId: string, secret: string): string {
+export function generateHashedCSRFToken(
+  sessionId: string,
+  secret: string,
+): string {
   const hash = createHash("sha256");
   hash.update(sessionId + secret + Date.now().toString());
   return hash.digest("hex");
@@ -146,7 +154,7 @@ export async function checkCSRFFromHeaders(headers: Headers): Promise<boolean> {
  */
 export async function getCSRFTokenForClient(): Promise<string> {
   let token = await getCSRFToken();
-  
+
   if (!token) {
     token = await setCSRFToken();
   }

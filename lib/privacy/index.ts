@@ -3,18 +3,18 @@
  */
 
 export {
-  anonymizeUserProfile,
   anonymizePersonalizedSummary,
-  sanitizeForLogging,
+  anonymizeUserProfile,
   createPrivacyHash,
+  DATA_RETENTION,
+  generateAnalyticsData,
+  sanitizeForLogging,
   shouldExpireData,
   validatePrivacyCompliance,
-  generateAnalyticsData,
-  DATA_RETENTION,
-} from './data-handler';
+} from "./data-handler";
 
 export {
-  PrivacyLogger,
   LogLevel,
   logger,
-} from './logger';
+  PrivacyLogger,
+} from "./logger";

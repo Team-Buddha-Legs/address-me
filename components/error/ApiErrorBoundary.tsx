@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import type React from "react";
 import ErrorBoundary from "./ErrorBoundary";
 
 interface ApiErrorFallbackProps {
@@ -11,24 +11,31 @@ interface ApiErrorFallbackProps {
 }
 
 function ApiErrorFallback({ error, resetError }: ApiErrorFallbackProps) {
-  const isNetworkError = error.message.includes('fetch') || error.message.includes('network');
-  const isRateLimitError = error.message.includes('rate limit') || error.message.includes('429');
-  const isAIServiceError = error.message.includes('AI') || error.message.includes('bedrock');
+  const isNetworkError =
+    error.message.includes("fetch") || error.message.includes("network");
+  const isRateLimitError =
+    error.message.includes("rate limit") || error.message.includes("429");
+  const isAIServiceError =
+    error.message.includes("AI") || error.message.includes("bedrock");
 
   let errorTitle = "Service Error";
-  let errorMessage = "We encountered an issue with our services. Please try again.";
+  let errorMessage =
+    "We encountered an issue with our services. Please try again.";
   let actionText = "Try Again";
 
   if (isNetworkError) {
     errorTitle = "Connection Error";
-    errorMessage = "Unable to connect to our services. Please check your internet connection and try again.";
+    errorMessage =
+      "Unable to connect to our services. Please check your internet connection and try again.";
   } else if (isRateLimitError) {
     errorTitle = "Too Many Requests";
-    errorMessage = "You've made too many requests. Please wait a moment before trying again.";
+    errorMessage =
+      "You've made too many requests. Please wait a moment before trying again.";
     actionText = "Wait and Retry";
   } else if (isAIServiceError) {
     errorTitle = "AI Service Unavailable";
-    errorMessage = "Our AI analysis service is temporarily unavailable. Please try again in a few minutes.";
+    errorMessage =
+      "Our AI analysis service is temporarily unavailable. Please try again in a few minutes.";
   }
 
   return (
@@ -87,7 +94,7 @@ function ApiErrorFallback({ error, resetError }: ApiErrorFallbackProps) {
             className="mb-6 p-4 bg-yellow-50 rounded-lg"
           >
             <p className="text-sm text-yellow-800">
-              Rate limiting helps us maintain service quality for all users. 
+              Rate limiting helps us maintain service quality for all users.
               Please wait a few minutes before trying again.
             </p>
           </motion.div>
@@ -101,8 +108,8 @@ function ApiErrorFallback({ error, resetError }: ApiErrorFallbackProps) {
             className="mb-6 p-4 bg-blue-50 rounded-lg"
           >
             <p className="text-sm text-blue-800">
-              Our AI analysis service is experiencing high demand. 
-              Your assessment data is saved and you can retry shortly.
+              Our AI analysis service is experiencing high demand. Your
+              assessment data is saved and you can retry shortly.
             </p>
           </motion.div>
         )}
@@ -154,7 +161,10 @@ interface ApiErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-export default function ApiErrorBoundary({ children, onError }: ApiErrorBoundaryProps) {
+export default function ApiErrorBoundary({
+  children,
+  onError,
+}: ApiErrorBoundaryProps) {
   return (
     <ErrorBoundary fallback={ApiErrorFallback} onError={onError}>
       {children}

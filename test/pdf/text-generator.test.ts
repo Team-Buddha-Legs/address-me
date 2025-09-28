@@ -1,147 +1,163 @@
-import { describe, it, expect } from 'vitest';
-import { generateTextReport, generateTextFileName } from '@/lib/pdf/text-generator';
-import type { PersonalizedSummary } from '@/types';
+import { describe, expect, it } from "vitest";
+import {
+  generateTextFileName,
+  generateTextReport,
+} from "@/lib/pdf/text-generator";
+import type { PersonalizedSummary } from "@/types";
 
 const mockSummary: PersonalizedSummary = {
   overallScore: 85,
   relevantAreas: [
     {
-      category: 'housing',
-      title: 'Housing Initiatives',
+      category: "housing",
+      title: "Housing Initiatives",
       relevanceScore: 92,
-      summary: 'New public housing developments and rental assistance programs.',
-      details: 'Based on your housing type and income range, you qualify for several new housing initiatives.',
+      summary:
+        "New public housing developments and rental assistance programs.",
+      details:
+        "Based on your housing type and income range, you qualify for several new housing initiatives.",
       actionItems: [
-        'Apply for Enhanced Rental Assistance by March 2025',
-        'Register for priority housing allocation in your district',
+        "Apply for Enhanced Rental Assistance by March 2025",
+        "Register for priority housing allocation in your district",
       ],
-      impact: 'high',
+      impact: "high",
     },
     {
-      category: 'transportation',
-      title: 'Transport Improvements',
+      category: "transportation",
+      title: "Transport Improvements",
       relevanceScore: 78,
-      summary: 'New MTR extensions and bus route improvements.',
-      details: 'The new MTR line extension will reduce your commute time.',
-      actionItems: ['Plan new commute routes when MTR extension opens'],
-      impact: 'medium',
+      summary: "New MTR extensions and bus route improvements.",
+      details: "The new MTR line extension will reduce your commute time.",
+      actionItems: ["Plan new commute routes when MTR extension opens"],
+      impact: "medium",
     },
   ],
   majorUpdates: [
     {
-      id: 'northern-metropolis',
-      title: 'Northern Metropolis Development',
-      description: 'Major urban development project creating new residential and commercial areas.',
-      relevanceToUser: 'May provide new housing and employment opportunities within commuting distance.',
-      timeline: '2025-2030',
-      impact: 'medium',
+      id: "northern-metropolis",
+      title: "Northern Metropolis Development",
+      description:
+        "Major urban development project creating new residential and commercial areas.",
+      relevanceToUser:
+        "May provide new housing and employment opportunities within commuting distance.",
+      timeline: "2025-2030",
+      impact: "medium",
     },
   ],
   recommendations: [
     {
-      id: 'housing-application',
-      title: 'Apply for Housing Assistance',
-      description: 'Take advantage of new rental assistance programs that match your income bracket.',
+      id: "housing-application",
+      title: "Apply for Housing Assistance",
+      description:
+        "Take advantage of new rental assistance programs that match your income bracket.",
       actionSteps: [
-        'Gather required income documentation',
-        'Submit online application before deadline',
+        "Gather required income documentation",
+        "Submit online application before deadline",
       ],
-      priority: 'high',
-      category: 'housing',
+      priority: "high",
+      category: "housing",
     },
   ],
-  generatedAt: new Date('2024-01-15T10:30:00Z'),
+  generatedAt: new Date("2024-01-15T10:30:00Z"),
 };
 
-describe('Text Generator', () => {
-  describe('generateTextReport', () => {
-    it('should generate a properly formatted text report', () => {
-      const reportId = 'test-report-123';
-      
+describe("Text Generator", () => {
+  describe("generateTextReport", () => {
+    it("should generate a properly formatted text report", () => {
+      const reportId = "test-report-123";
+
       const result = generateTextReport(mockSummary, reportId);
-      
+
       // Check header
-      expect(result).toContain('YOUR PERSONALIZED POLICY SUMMARY');
-      expect(result).toContain('Report ID: test-report-123');
-      expect(result).toContain('Generated on:');
-      
+      expect(result).toContain("YOUR PERSONALIZED POLICY SUMMARY");
+      expect(result).toContain("Report ID: test-report-123");
+      expect(result).toContain("Generated on:");
+
       // Check overall score
-      expect(result).toContain('OVERALL POLICY RELEVANCE SCORE');
-      expect(result).toContain('85%');
-      
+      expect(result).toContain("OVERALL POLICY RELEVANCE SCORE");
+      expect(result).toContain("85%");
+
       // Check policy areas
-      expect(result).toContain('RELEVANT POLICY AREAS');
-      expect(result).toContain('1. HOUSING INITIATIVES');
-      expect(result).toContain('Relevance Score: 92%');
-      expect(result).toContain('Impact Level: HIGH');
-      expect(result).toContain('2. TRANSPORT IMPROVEMENTS');
-      expect(result).toContain('Relevance Score: 78%');
-      expect(result).toContain('Impact Level: MEDIUM');
-      
+      expect(result).toContain("RELEVANT POLICY AREAS");
+      expect(result).toContain("1. HOUSING INITIATIVES");
+      expect(result).toContain("Relevance Score: 92%");
+      expect(result).toContain("Impact Level: HIGH");
+      expect(result).toContain("2. TRANSPORT IMPROVEMENTS");
+      expect(result).toContain("Relevance Score: 78%");
+      expect(result).toContain("Impact Level: MEDIUM");
+
       // Check action items
-      expect(result).toContain('Action Items:');
-      expect(result).toContain('• Apply for Enhanced Rental Assistance by March 2025');
-      expect(result).toContain('• Register for priority housing allocation in your district');
-      
+      expect(result).toContain("Action Items:");
+      expect(result).toContain(
+        "• Apply for Enhanced Rental Assistance by March 2025",
+      );
+      expect(result).toContain(
+        "• Register for priority housing allocation in your district",
+      );
+
       // Check major updates
-      expect(result).toContain('MAJOR CITY UPDATES');
-      expect(result).toContain('1. NORTHERN METROPOLIS DEVELOPMENT');
-      expect(result).toContain('Timeline: 2025-2030');
-      
+      expect(result).toContain("MAJOR CITY UPDATES");
+      expect(result).toContain("1. NORTHERN METROPOLIS DEVELOPMENT");
+      expect(result).toContain("Timeline: 2025-2030");
+
       // Check recommendations
-      expect(result).toContain('PERSONALIZED RECOMMENDATIONS');
-      expect(result).toContain('1. APPLY FOR HOUSING ASSISTANCE');
-      expect(result).toContain('Priority: HIGH');
-      expect(result).toContain('Category: HOUSING');
-      
+      expect(result).toContain("PERSONALIZED RECOMMENDATIONS");
+      expect(result).toContain("1. APPLY FOR HOUSING ASSISTANCE");
+      expect(result).toContain("Priority: HIGH");
+      expect(result).toContain("Category: HOUSING");
+
       // Check footer
-      expect(result).toContain('IMPORTANT NOTICE');
-      expect(result).toContain('This personalized summary is based on your profile information');
-      expect(result).toContain('Generated by Address Me - Hong Kong Policy Summary Tool');
+      expect(result).toContain("IMPORTANT NOTICE");
+      expect(result).toContain(
+        "This personalized summary is based on your profile information",
+      );
+      expect(result).toContain(
+        "Generated by Address Me - Hong Kong Policy Summary Tool",
+      );
     });
 
-    it('should handle empty action items and steps gracefully', () => {
+    it("should handle empty action items and steps gracefully", () => {
       const summaryWithoutActions: PersonalizedSummary = {
         ...mockSummary,
         relevantAreas: [
           {
-            category: 'healthcare',
-            title: 'Healthcare Services',
+            category: "healthcare",
+            title: "Healthcare Services",
             relevanceScore: 71,
-            summary: 'Expanded healthcare services.',
-            details: 'New community health centers.',
+            summary: "Expanded healthcare services.",
+            details: "New community health centers.",
             actionItems: [], // Empty action items
-            impact: 'medium',
+            impact: "medium",
           },
         ],
         recommendations: [
           {
-            id: 'health-rec',
-            title: 'Health Recommendation',
-            description: 'A health recommendation.',
+            id: "health-rec",
+            title: "Health Recommendation",
+            description: "A health recommendation.",
             actionSteps: [], // Empty action steps
-            priority: 'low',
-            category: 'healthcare',
+            priority: "low",
+            category: "healthcare",
           },
         ],
       };
-      
-      const result = generateTextReport(summaryWithoutActions, 'test-report');
-      
-      expect(result).toContain('HEALTHCARE SERVICES');
-      expect(result).toContain('HEALTH RECOMMENDATION');
-      expect(result).not.toContain('Action Items:');
-      expect(result).not.toContain('Action Steps:');
+
+      const result = generateTextReport(summaryWithoutActions, "test-report");
+
+      expect(result).toContain("HEALTHCARE SERVICES");
+      expect(result).toContain("HEALTH RECOMMENDATION");
+      expect(result).not.toContain("Action Items:");
+      expect(result).not.toContain("Action Steps:");
     });
 
-    it('should format dates correctly', () => {
+    it("should format dates correctly", () => {
       const summaryWithSpecificDate: PersonalizedSummary = {
         ...mockSummary,
-        generatedAt: new Date('2024-12-25T15:45:30Z'),
+        generatedAt: new Date("2024-12-25T15:45:30Z"),
       };
-      
-      const result = generateTextReport(summaryWithSpecificDate, 'test-report');
-      
+
+      const result = generateTextReport(summaryWithSpecificDate, "test-report");
+
       // The exact format depends on locale, but should contain the date components
       expect(result).toMatch(/Generated on:.*2024/);
       expect(result).toMatch(/Generated on:.*December/);
@@ -149,33 +165,33 @@ describe('Text Generator', () => {
     });
   });
 
-  describe('generateTextFileName', () => {
-    it('should generate correct filename format', () => {
-      const reportId = 'test-report-123';
-      
+  describe("generateTextFileName", () => {
+    it("should generate correct filename format", () => {
+      const reportId = "test-report-123";
+
       const fileName = generateTextFileName(mockSummary, reportId);
-      
-      expect(fileName).toBe('policy-summary-test-report-123-2024-01-15.txt');
+
+      expect(fileName).toBe("policy-summary-test-report-123-2024-01-15.txt");
     });
 
-    it('should handle different report IDs', () => {
-      const reportId = 'another-report-456';
-      
+    it("should handle different report IDs", () => {
+      const reportId = "another-report-456";
+
       const fileName = generateTextFileName(mockSummary, reportId);
-      
-      expect(fileName).toBe('policy-summary-another-report-456-2024-01-15.txt');
+
+      expect(fileName).toBe("policy-summary-another-report-456-2024-01-15.txt");
     });
 
-    it('should use ISO date format', () => {
+    it("should use ISO date format", () => {
       const summaryWithDifferentDate: PersonalizedSummary = {
         ...mockSummary,
-        generatedAt: new Date('2024-12-25T15:45:30Z'),
+        generatedAt: new Date("2024-12-25T15:45:30Z"),
       };
-      const reportId = 'christmas-report';
-      
+      const reportId = "christmas-report";
+
       const fileName = generateTextFileName(summaryWithDifferentDate, reportId);
-      
-      expect(fileName).toBe('policy-summary-christmas-report-2024-12-25.txt');
+
+      expect(fileName).toBe("policy-summary-christmas-report-2024-12-25.txt");
     });
   });
 });

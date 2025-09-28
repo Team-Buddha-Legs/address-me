@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createSession,
-  getSession,
-  updateSession,
-  deleteSession,
-  isValidSession,
-  getSessionStats,
   clearAllSessions,
+  createSession,
+  deleteSession,
   extendSession,
+  getSession,
+  getSessionStats,
   getSessionsByCriteria,
+  isValidSession,
+  updateSession,
 } from "@/lib/session/server";
 import type { UserProfile } from "@/types";
 
@@ -45,7 +45,9 @@ describe("Server Session Management", () => {
       expect(session.id).toMatch(/^sess_/);
       expect(session.createdAt).toBeInstanceOf(Date);
       expect(session.expiresAt).toBeInstanceOf(Date);
-      expect(session.expiresAt.getTime()).toBeGreaterThan(session.createdAt.getTime());
+      expect(session.expiresAt.getTime()).toBeGreaterThan(
+        session.createdAt.getTime(),
+      );
     });
 
     it("should create session with initial profile", async () => {
@@ -84,10 +86,10 @@ describe("Server Session Management", () => {
 
     it("should return null for expired session", async () => {
       const session = await createSession();
-      
+
       // Manually expire the session
       session.expiresAt = new Date(Date.now() - 1000);
-      
+
       // Mock the session store to contain the expired session
       const retrievedSession = await getSession(session.id);
       expect(retrievedSession).toBeNull();
@@ -99,7 +101,9 @@ describe("Server Session Management", () => {
       const session = await createSession();
       const profileUpdate = { age: 35, gender: "female" as const };
 
-      const updatedSession = await updateSession(session.id, { profile: profileUpdate });
+      const updatedSession = await updateSession(session.id, {
+        profile: profileUpdate,
+      });
 
       expect(updatedSession).toBeDefined();
       expect(updatedSession!.profile.age).toBe(35);
@@ -110,7 +114,9 @@ describe("Server Session Management", () => {
       const session = await createSession({ age: 30 } as Partial<UserProfile>);
       const profileUpdate = { gender: "male" as const };
 
-      const updatedSession = await updateSession(session.id, { profile: profileUpdate });
+      const updatedSession = await updateSession(session.id, {
+        profile: profileUpdate,
+      });
 
       expect(updatedSession!.profile.age).toBe(30);
       expect(updatedSession!.profile.gender).toBe("male");
@@ -126,7 +132,9 @@ describe("Server Session Management", () => {
         generatedAt: new Date(),
       };
 
-      const updatedSession = await updateSession(session.id, { summary: mockSummary });
+      const updatedSession = await updateSession(session.id, {
+        summary: mockSummary,
+      });
 
       expect(updatedSession!.summary).toBeDefined();
       expect(updatedSession!.summary!.overallScore).toBe(85);
@@ -137,15 +145,21 @@ describe("Server Session Management", () => {
       const originalExpiration = session.expiresAt.getTime();
 
       // Wait a bit to ensure time difference
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
-      const updatedSession = await updateSession(session.id, { profile: { age: 31 } });
+      const updatedSession = await updateSession(session.id, {
+        profile: { age: 31 },
+      });
 
-      expect(updatedSession!.expiresAt.getTime()).toBeGreaterThan(originalExpiration);
+      expect(updatedSession!.expiresAt.getTime()).toBeGreaterThan(
+        originalExpiration,
+      );
     });
 
     it("should return null for non-existent session update", async () => {
-      const result = await updateSession("non-existent", { profile: { age: 30 } });
+      const result = await updateSession("non-existent", {
+        profile: { age: 30 },
+      });
       expect(result).toBeNull();
     });
   });
@@ -191,12 +205,14 @@ describe("Server Session Management", () => {
       const session = await createSession();
       const originalExpiration = session.expiresAt.getTime();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const extendedSession = await extendSession(session.id);
 
       expect(extendedSession).toBeDefined();
-      expect(extendedSession!.expiresAt.getTime()).toBeGreaterThan(originalExpiration);
+      expect(extendedSession!.expiresAt.getTime()).toBeGreaterThan(
+        originalExpiration,
+      );
     });
 
     it("should return null for non-existent session extension", async () => {
@@ -237,9 +253,9 @@ describe("Server Session Management", () => {
     it("should find sessions by creation date", async () => {
       const now = new Date();
       const session1 = await createSession();
-      
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       const session2 = await createSession();
 
       const recentSessions = await getSessionsByCriteria({
@@ -297,7 +313,7 @@ describe("Server Session Management", () => {
       }
 
       expect(sessions).toHaveLength(10);
-      
+
       const stats = getSessionStats();
       expect(stats.totalSessions).toBe(10);
     });

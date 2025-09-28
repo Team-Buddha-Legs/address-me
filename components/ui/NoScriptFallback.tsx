@@ -27,22 +27,38 @@ export default function NoScriptFallback() {
             </h1>
 
             <p className="text-gray-600 mb-6">
-              Address Me requires JavaScript to provide the interactive assessment experience. 
-              Please enable JavaScript in your browser to continue with the personalized Policy Address summary.
+              Address Me requires JavaScript to provide the interactive
+              assessment experience. Please enable JavaScript in your browser to
+              continue with the personalized Policy Address summary.
             </p>
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-gray-900 mb-3">How to enable JavaScript:</h3>
+              <h3 className="font-medium text-gray-900 mb-3">
+                How to enable JavaScript:
+              </h3>
               <ul className="text-sm text-gray-600 text-left space-y-2">
-                <li>• <strong>Chrome/Edge:</strong> Settings → Privacy and security → Site settings → JavaScript</li>
-                <li>• <strong>Firefox:</strong> about:config → javascript.enabled → true</li>
-                <li>• <strong>Safari:</strong> Preferences → Security → Enable JavaScript</li>
-                <li>• <strong>Mobile browsers:</strong> Usually enabled by default</li>
+                <li>
+                  • <strong>Chrome/Edge:</strong> Settings → Privacy and
+                  security → Site settings → JavaScript
+                </li>
+                <li>
+                  • <strong>Firefox:</strong> about:config → javascript.enabled
+                  → true
+                </li>
+                <li>
+                  • <strong>Safari:</strong> Preferences → Security → Enable
+                  JavaScript
+                </li>
+                <li>
+                  • <strong>Mobile browsers:</strong> Usually enabled by default
+                </li>
               </ul>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-gray-900 mb-2">What you're missing without JavaScript:</h3>
+              <h3 className="font-medium text-gray-900 mb-2">
+                What you're missing without JavaScript:
+              </h3>
               <ul className="text-sm text-gray-600 text-left space-y-1">
                 <li>• Interactive multi-step assessment form</li>
                 <li>• Real-time form validation and progress tracking</li>
@@ -72,15 +88,17 @@ export default function NoScriptFallback() {
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                For the best experience, we recommend using a modern browser with JavaScript enabled.
-                Address Me is designed as a progressive web application that requires JavaScript for core functionality.
+                For the best experience, we recommend using a modern browser
+                with JavaScript enabled. Address Me is designed as a progressive
+                web application that requires JavaScript for core functionality.
               </p>
             </div>
 
             <div className="mt-4 p-4 bg-orange-50 rounded-lg">
               <p className="text-xs text-orange-700">
-                <strong>Alternative:</strong> If you cannot enable JavaScript, please contact our support team 
-                for assistance with accessing Hong Kong Policy Address information through alternative means.
+                <strong>Alternative:</strong> If you cannot enable JavaScript,
+                please contact our support team for assistance with accessing
+                Hong Kong Policy Address information through alternative means.
               </p>
             </div>
           </div>

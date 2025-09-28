@@ -3,7 +3,7 @@
  * Ensures user data is handled according to privacy best practices
  */
 
-import type { UserProfile, PersonalizedSummary } from "@/types";
+import type { PersonalizedSummary, UserProfile } from "@/types";
 
 // Data retention policies
 export const DATA_RETENTION = {
@@ -14,23 +14,25 @@ export const DATA_RETENTION = {
 
 // Fields that should never be logged or exposed
 const SENSITIVE_FIELDS = [
-  'age',
-  'gender',
-  'maritalStatus',
-  'district',
-  'incomeRange',
-  'employmentStatus',
-  'housingType',
-  'childrenAges',
-  'healthConditions',
+  "age",
+  "gender",
+  "maritalStatus",
+  "district",
+  "incomeRange",
+  "employmentStatus",
+  "housingType",
+  "childrenAges",
+  "healthConditions",
 ] as const;
 
 /**
  * Anonymize user profile for logging purposes
  */
-export function anonymizeUserProfile(profile: UserProfile): Record<string, unknown> {
+export function anonymizeUserProfile(
+  profile: UserProfile,
+): Record<string, unknown> {
   return {
-    profileType: 'user_profile',
+    profileType: "user_profile",
     hasAge: !!profile.age,
     hasGender: !!profile.gender,
     hasMaritalStatus: !!profile.maritalStatus,
@@ -50,15 +52,21 @@ export function anonymizeUserProfile(profile: UserProfile): Record<string, unkno
 /**
  * Anonymize personalized summary for logging purposes
  */
-export function anonymizePersonalizedSummary(summary: PersonalizedSummary): Record<string, unknown> {
+export function anonymizePersonalizedSummary(
+  summary: PersonalizedSummary,
+): Record<string, unknown> {
   return {
-    summaryType: 'personalized_summary',
+    summaryType: "personalized_summary",
     overallScore: summary.overallScore,
     relevantAreasCount: summary.relevantAreas.length,
     majorUpdatesCount: summary.majorUpdates.length,
     recommendationsCount: summary.recommendations.length,
-    categories: summary.relevantAreas.map(area => area.category),
-    averageRelevanceScore: summary.relevantAreas.reduce((sum, area) => sum + area.relevanceScore, 0) / summary.relevantAreas.length,
+    categories: summary.relevantAreas.map((area) => area.category),
+    averageRelevanceScore:
+      summary.relevantAreas.reduce(
+        (sum, area) => sum + area.relevanceScore,
+        0,
+      ) / summary.relevantAreas.length,
     generatedAt: summary.generatedAt.toISOString(),
     timestamp: new Date().toISOString(),
   };
@@ -72,30 +80,33 @@ export function sanitizeForLogging(data: unknown): unknown {
     return data;
   }
 
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     // Remove potential PII patterns
     return data
-      .replace(/\b\d{4,}\b/g, '[NUMBER]') // Long numbers
-      .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL]') // Email addresses
-      .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, '[IP]') // IP addresses
-      .replace(/\b\d{8,}\b/g, '[ID]'); // Long numeric IDs
+      .replace(/\b\d{4,}\b/g, "[NUMBER]") // Long numbers
+      .replace(
+        /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+        "[EMAIL]",
+      ) // Email addresses
+      .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, "[IP]") // IP addresses
+      .replace(/\b\d{8,}\b/g, "[ID]"); // Long numeric IDs
   }
 
-  if (typeof data === 'number') {
+  if (typeof data === "number") {
     // Keep numbers but flag if they might be sensitive
     if (data > 1000000) {
-      return '[LARGE_NUMBER]';
+      return "[LARGE_NUMBER]";
     }
     return data;
   }
 
   if (Array.isArray(data)) {
-    return data.map(item => sanitizeForLogging(item));
+    return data.map((item) => sanitizeForLogging(item));
   }
 
-  if (typeof data === 'object') {
+  if (typeof data === "object") {
     const sanitized: Record<string, unknown> = {};
-    
+
     for (const [key, value] of Object.entries(data)) {
       // Skip sensitive fields entirely
       if (SENSITIVE_FIELDS.includes(key as any)) {
@@ -119,17 +130,17 @@ export function sanitizeForLogging(data: unknown): unknown {
 export function createPrivacyHash(profile: UserProfile): string {
   // Create a hash based on non-sensitive demographic patterns
   const hashInput = [
-    profile.hasChildren ? '1' : '0',
-    profile.transportationMode?.length.toString() || '0',
-    profile.healthConditions?.length.toString() || '0',
-    profile.educationLevel ? '1' : '0',
-  ].join('|');
+    profile.hasChildren ? "1" : "0",
+    profile.transportationMode?.length.toString() || "0",
+    profile.healthConditions?.length.toString() || "0",
+    profile.educationLevel ? "1" : "0",
+  ].join("|");
 
   // Simple hash function (in production, use crypto.createHash)
   let hash = 0;
   for (let i = 0; i < hashInput.length; i++) {
     const char = hashInput.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
 
@@ -139,16 +150,19 @@ export function createPrivacyHash(profile: UserProfile): string {
 /**
  * Check if data should be expired based on privacy policies
  */
-export function shouldExpireData(createdAt: Date, dataType: 'session' | 'temp' | 'log'): boolean {
+export function shouldExpireData(
+  createdAt: Date,
+  dataType: "session" | "temp" | "log",
+): boolean {
   const now = Date.now();
   const createdTime = createdAt.getTime();
-  
+
   switch (dataType) {
-    case 'session':
+    case "session":
       return now - createdTime > DATA_RETENTION.SESSION_EXPIRY_MS;
-    case 'temp':
+    case "temp":
       return now - createdTime > DATA_RETENTION.TEMP_DATA_EXPIRY_MS;
-    case 'log':
+    case "log":
       return now - createdTime > DATA_RETENTION.LOG_RETENTION_MS;
     default:
       return true; // Expire unknown data types by default
@@ -158,28 +172,33 @@ export function shouldExpireData(createdAt: Date, dataType: 'session' | 'temp' |
 /**
  * Validate that data handling complies with privacy requirements
  */
-export function validatePrivacyCompliance(operation: string, data: unknown): {
+export function validatePrivacyCompliance(
+  operation: string,
+  data: unknown,
+): {
   compliant: boolean;
   violations: string[];
 } {
   const violations: string[] = [];
 
   // Check for direct exposure of sensitive fields
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data === "object" && data !== null) {
     for (const field of SENSITIVE_FIELDS) {
-      if (field in data && operation.includes('log')) {
-        violations.push(`Sensitive field '${field}' should not be logged directly`);
+      if (field in data && operation.includes("log")) {
+        violations.push(
+          `Sensitive field '${field}' should not be logged directly`,
+        );
       }
     }
   }
 
   // Check for potential PII in strings
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     if (data.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/)) {
-      violations.push('Email address detected in data');
+      violations.push("Email address detected in data");
     }
     if (data.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)) {
-      violations.push('IP address detected in data');
+      violations.push("IP address detected in data");
     }
   }
 
@@ -192,7 +211,10 @@ export function validatePrivacyCompliance(operation: string, data: unknown): {
 /**
  * Generate privacy-compliant analytics data
  */
-export function generateAnalyticsData(profile: UserProfile, summary?: PersonalizedSummary): Record<string, unknown> {
+export function generateAnalyticsData(
+  profile: UserProfile,
+  summary?: PersonalizedSummary,
+): Record<string, unknown> {
   const analytics = {
     session_id: createPrivacyHash(profile),
     profile_completeness: calculateProfileCompleteness(profile),
@@ -218,15 +240,25 @@ export function generateAnalyticsData(profile: UserProfile, summary?: Personaliz
  */
 function calculateProfileCompleteness(profile: UserProfile): number {
   const requiredFields = [
-    'age', 'gender', 'maritalStatus', 'district', 'incomeRange',
-    'employmentStatus', 'housingType', 'hasChildren', 'educationLevel',
-    'transportationMode'
+    "age",
+    "gender",
+    "maritalStatus",
+    "district",
+    "incomeRange",
+    "employmentStatus",
+    "housingType",
+    "hasChildren",
+    "educationLevel",
+    "transportationMode",
   ];
 
-  const completedFields = requiredFields.filter(field => {
+  const completedFields = requiredFields.filter((field) => {
     const value = profile[field as keyof UserProfile];
-    return value !== undefined && value !== null && 
-           (Array.isArray(value) ? value.length > 0 : true);
+    return (
+      value !== undefined &&
+      value !== null &&
+      (Array.isArray(value) ? value.length > 0 : true)
+    );
   });
 
   return Math.round((completedFields.length / requiredFields.length) * 100);
@@ -237,20 +269,24 @@ function calculateProfileCompleteness(profile: UserProfile): number {
  */
 function createDemographicPattern(profile: UserProfile): string {
   const patterns = [
-    profile.hasChildren ? 'family' : 'individual',
-    profile.transportationMode?.includes('mtr') ? 'public_transport' : 'other_transport',
-    profile.healthConditions && profile.healthConditions.length > 0 ? 'health_considerations' : 'standard_health',
+    profile.hasChildren ? "family" : "individual",
+    profile.transportationMode?.includes("mtr")
+      ? "public_transport"
+      : "other_transport",
+    profile.healthConditions && profile.healthConditions.length > 0
+      ? "health_considerations"
+      : "standard_health",
   ];
 
-  return patterns.join('|');
+  return patterns.join("|");
 }
 
 /**
  * Get score range without exposing exact score
  */
 function getScoreRange(score: number): string {
-  if (score >= 90) return '90-100';
-  if (score >= 80) return '80-89';
-  if (score >= 70) return '70-79';
-  return 'below-70';
+  if (score >= 90) return "90-100";
+  if (score >= 80) return "80-89";
+  if (score >= 70) return "70-79";
+  return "below-70";
 }

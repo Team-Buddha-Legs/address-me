@@ -3,20 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import {
-  personalInfoStepSchema,
-  locationStepSchema,
-  economicStepSchema,
-  familyStepSchema,
-  educationTransportStepSchema,
-  healthStepSchema,
-  userProfileSchema,
-} from "@/lib/validation";
-import { createSession, getSession, updateSession } from "@/lib/session";
+import { logger } from "@/lib/privacy";
+import { validateCSRF } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { sanitizeInput } from "@/lib/security/sanitization";
-import { validateCSRF } from "@/lib/security/csrf";
-import { logger } from "@/lib/privacy";
+import { createSession, getSession, updateSession } from "@/lib/session";
+import {
+  economicStepSchema,
+  educationTransportStepSchema,
+  familyStepSchema,
+  healthStepSchema,
+  locationStepSchema,
+  personalInfoStepSchema,
+  userProfileSchema,
+} from "@/lib/validation";
 import type { UserProfile } from "@/types";
 
 // Rate limiting configuration
@@ -107,11 +107,17 @@ export async function processFormStep(
     };
   } catch (error) {
     // Extract clientId safely for logging
-    const clientId = formData.get("clientId") as string || "unknown";
-    logger.error("Form step processing error", { stepId, error: error instanceof Error ? error.message : String(error) }, clientId, "form_processing");
-    
+    const clientId = (formData.get("clientId") as string) || "unknown";
+    logger.error(
+      "Form step processing error",
+      { stepId, error: error instanceof Error ? error.message : String(error) },
+      clientId,
+      "form_processing",
+    );
+
     // Return sanitized error message
-    const errorMessage = error instanceof Error ? error.message : "Processing failed";
+    const errorMessage =
+      error instanceof Error ? error.message : "Processing failed";
     return {
       success: false,
       error: sanitizeErrorMessage(errorMessage),
@@ -122,7 +128,10 @@ export async function processFormStep(
 /**
  * Server action to complete the assessment and redirect to processing
  */
-export async function completeAssessment(sessionId: string, formData: FormData) {
+export async function completeAssessment(
+  sessionId: string,
+  formData: FormData,
+) {
   try {
     // Rate limiting check
     const clientId = formData.get("clientId") as string;
@@ -161,12 +170,22 @@ export async function completeAssessment(sessionId: string, formData: FormData) 
     }
 
     // Extract clientId safely for logging
-    const clientId = formData.get("clientId") as string || "unknown";
-    logger.error("Assessment completion error", { sessionId, error: error instanceof Error ? error.message : String(error) }, clientId, "assessment_completion");
-    
+    const clientId = (formData.get("clientId") as string) || "unknown";
+    logger.error(
+      "Assessment completion error",
+      {
+        sessionId,
+        error: error instanceof Error ? error.message : String(error),
+      },
+      clientId,
+      "assessment_completion",
+    );
+
     return {
       success: false,
-      error: sanitizeErrorMessage(error instanceof Error ? error.message : "Completion failed"),
+      error: sanitizeErrorMessage(
+        error instanceof Error ? error.message : "Completion failed",
+      ),
     };
   }
 }
@@ -174,7 +193,10 @@ export async function completeAssessment(sessionId: string, formData: FormData) 
 /**
  * Process step data based on step type
  */
-function processStepData(stepId: string, rawData: Record<string, unknown>): Record<string, unknown> {
+function processStepData(
+  stepId: string,
+  rawData: Record<string, unknown>,
+): Record<string, unknown> {
   const processed = { ...rawData };
 
   switch (stepId) {
@@ -183,31 +205,40 @@ function processStepData(stepId: string, rawData: Record<string, unknown>): Reco
         processed.age = Number(processed.age);
       }
       break;
-    
+
     case "family":
       if (processed.hasChildren) {
         processed.hasChildren = processed.hasChildren === "true";
       }
-      if (processed.childrenAges && typeof processed.childrenAges === "string") {
+      if (
+        processed.childrenAges &&
+        typeof processed.childrenAges === "string"
+      ) {
         processed.childrenAges = processed.childrenAges
           .split(",")
-          .map(age => Number(age.trim()))
-          .filter(age => !isNaN(age));
+          .map((age) => Number(age.trim()))
+          .filter((age) => !isNaN(age));
       }
       break;
-    
+
     case "education-transport":
-      if (processed.transportationMode && typeof processed.transportationMode === "string") {
+      if (
+        processed.transportationMode &&
+        typeof processed.transportationMode === "string"
+      ) {
         processed.transportationMode = processed.transportationMode.split(",");
       }
       break;
-    
+
     case "health":
-      if (processed.healthConditions && typeof processed.healthConditions === "string") {
+      if (
+        processed.healthConditions &&
+        typeof processed.healthConditions === "string"
+      ) {
         processed.healthConditions = processed.healthConditions
           .split(",")
-          .map(condition => condition.trim())
-          .filter(condition => condition.length > 0);
+          .map((condition) => condition.trim())
+          .filter((condition) => condition.length > 0);
       }
       break;
   }
@@ -221,7 +252,7 @@ function processStepData(stepId: string, rawData: Record<string, unknown>): Reco
 function getNextStep(currentStep: string): string | null {
   const stepOrder = [
     "personal-info",
-    "location", 
+    "location",
     "economic",
     "family",
     "education-transport",

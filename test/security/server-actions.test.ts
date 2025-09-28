@@ -1,6 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { processFormStep, completeAssessment } from "@/lib/actions/form-actions";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { generateSummary } from "@/lib/actions/ai-actions";
+import {
+  completeAssessment,
+  processFormStep,
+} from "@/lib/actions/form-actions";
 
 // Mock dependencies
 vi.mock("@/lib/session", () => ({
@@ -29,11 +32,11 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
 
-import { createSession, getSession, updateSession } from "@/lib/session";
-import { rateLimit } from "@/lib/security/rate-limit";
-import { validateCSRF } from "@/lib/security/csrf";
-import { generatePersonalizedSummary } from "@/lib/ai";
 import { redirect } from "next/navigation";
+import { generatePersonalizedSummary } from "@/lib/ai";
+import { validateCSRF } from "@/lib/security/csrf";
+import { rateLimit } from "@/lib/security/rate-limit";
+import { createSession, getSession, updateSession } from "@/lib/session";
 
 describe("Server Actions Security", () => {
   beforeEach(() => {
@@ -44,9 +47,9 @@ describe("Server Actions Security", () => {
     it("should reject requests without client ID", async () => {
       const formData = new FormData();
       formData.append("csrfToken", "valid-token");
-      
+
       const result = await processFormStep("personal-info", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBe("Client ID is required");
     });
@@ -54,17 +57,17 @@ describe("Server Actions Security", () => {
     it("should reject requests without CSRF token", async () => {
       const formData = new FormData();
       formData.append("clientId", "test-client");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 5,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(false);
-      
+
       const result = await processFormStep("personal-info", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid CSRF token");
     });
@@ -73,15 +76,15 @@ describe("Server Actions Security", () => {
       const formData = new FormData();
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: false,
         remaining: 0,
         resetTime: Date.now() + 60000,
       });
-      
+
       const result = await processFormStep("personal-info", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toContain("Rate limit exceeded");
     });
@@ -90,17 +93,17 @@ describe("Server Actions Security", () => {
       const formData = new FormData();
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 5,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(true);
-      
+
       const result = await processFormStep("invalid-step", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid step ID");
     });
@@ -112,27 +115,27 @@ describe("Server Actions Security", () => {
       formData.append("age", "25");
       formData.append("gender", "male");
       formData.append("maritalStatus", "single");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 5,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(true);
-      
+
       const mockSession = {
         id: "test-session",
         profile: {},
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       };
-      
+
       vi.mocked(createSession).mockResolvedValue(mockSession);
       vi.mocked(updateSession).mockResolvedValue(mockSession);
-      
+
       const result = await processFormStep("personal-info", formData);
-      
+
       expect(result.success).toBe(true);
       expect(result.sessionId).toBe("test-session");
       expect(result.nextStep).toBe("location");
@@ -144,26 +147,26 @@ describe("Server Actions Security", () => {
       const formData = new FormData();
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 5,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(true);
-      
+
       const incompleteSession = {
         id: "test-session",
         profile: { age: 25 }, // Incomplete profile
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       };
-      
+
       vi.mocked(getSession).mockResolvedValue(incompleteSession);
-      
+
       const result = await completeAssessment("test-session", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toContain("Required");
     });
@@ -175,17 +178,19 @@ describe("Server Actions Security", () => {
       formData.append("sessionId", "test-session");
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: false,
         remaining: 0,
         resetTime: Date.now() + 60000,
       });
-      
+
       const result = await generateSummary(formData);
-      
+
       expect(result.success).toBe(false);
-      expect(result.error).toContain("AI service temporarily unavailable due to high demand");
+      expect(result.error).toContain(
+        "AI service temporarily unavailable due to high demand",
+      );
     });
 
     it("should validate session before AI generation", async () => {
@@ -193,18 +198,18 @@ describe("Server Actions Security", () => {
       formData.append("sessionId", "invalid-session");
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 2,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(true);
       vi.mocked(getSession).mockResolvedValue(null);
-      
+
       const result = await generateSummary(formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid session");
     });
@@ -214,15 +219,15 @@ describe("Server Actions Security", () => {
       formData.append("sessionId", "test-session");
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
+
       vi.mocked(rateLimit).mockResolvedValue({
         allowed: true,
         remaining: 2,
         resetTime: Date.now() + 60000,
       });
-      
+
       vi.mocked(validateCSRF).mockReturnValue(true);
-      
+
       const mockSession = {
         id: "test-session",
         profile: {
@@ -240,12 +245,14 @@ describe("Server Actions Security", () => {
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       };
-      
+
       vi.mocked(getSession).mockResolvedValue(mockSession);
-      vi.mocked(generatePersonalizedSummary).mockRejectedValue(new Error("AI service error"));
-      
+      vi.mocked(generatePersonalizedSummary).mockRejectedValue(
+        new Error("AI service error"),
+      );
+
       const result = await generateSummary(formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBe("AI service error");
     });
@@ -256,11 +263,13 @@ describe("Server Actions Security", () => {
       const formData = new FormData();
       formData.append("clientId", "test-client");
       formData.append("csrfToken", "valid-token");
-      
-      vi.mocked(rateLimit).mockRejectedValue(new Error("Database connection failed at 192.168.1.1"));
-      
+
+      vi.mocked(rateLimit).mockRejectedValue(
+        new Error("Database connection failed at 192.168.1.1"),
+      );
+
       const result = await processFormStep("personal-info", formData);
-      
+
       expect(result.success).toBe(false);
       expect(result.error).not.toContain("192.168.1.1");
       expect(result.error).toBe("Service temporarily unavailable");

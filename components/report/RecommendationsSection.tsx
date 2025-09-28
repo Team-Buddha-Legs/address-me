@@ -1,8 +1,8 @@
 "use client";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { ActionableAdvice } from "./ActionableAdvice";
 import type { Recommendation } from "@/types";
+import { ActionableAdvice } from "./ActionableAdvice";
 
 interface RecommendationsSectionProps {
   recommendations: Recommendation[];
@@ -10,13 +10,21 @@ interface RecommendationsSectionProps {
   onToggle: () => void;
 }
 
-export function RecommendationsSection({ recommendations, isExpanded, onToggle }: RecommendationsSectionProps) {
+export function RecommendationsSection({
+  recommendations,
+  isExpanded,
+  onToggle,
+}: RecommendationsSectionProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "bg-accent-100 text-accent-dark border-accent-200";
-      case "medium": return "bg-primary-100 text-primary-dark border-primary-200";
-      case "low": return "bg-neutral-100 text-neutral-700 border-neutral-200";
-      default: return "bg-neutral-100 text-neutral-700 border-neutral-200";
+      case "high":
+        return "bg-accent-100 text-accent-dark border-accent-200";
+      case "medium":
+        return "bg-primary-100 text-primary-dark border-primary-200";
+      case "low":
+        return "bg-neutral-100 text-neutral-700 border-neutral-200";
+      default:
+        return "bg-neutral-100 text-neutral-700 border-neutral-200";
     }
   };
 
@@ -27,17 +35,21 @@ export function RecommendationsSection({ recommendations, isExpanded, onToggle }
       healthcare: "🏥",
       education: "🎓",
       employment: "💼",
-      "social-welfare": "🤝"
+      "social-welfare": "🤝",
     };
     return icons[category] || "📋";
   };
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case "high": return "🔥";
-      case "medium": return "⚡";
-      case "low": return "💡";
-      default: return "📌";
+      case "high":
+        return "🔥";
+      case "medium":
+        return "⚡";
+      case "low":
+        return "💡";
+      default:
+        return "📌";
     }
   };
 

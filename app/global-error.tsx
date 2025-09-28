@@ -68,7 +68,8 @@ export default function GlobalError({
               transition={{ delay: 0.4 }}
               className="text-gray-600 mb-6"
             >
-              A critical error occurred in the application. Please try refreshing the page or contact support if the problem persists.
+              A critical error occurred in the application. Please try
+              refreshing the page or contact support if the problem persists.
             </motion.p>
 
             {process.env.NODE_ENV === "development" && (
@@ -103,7 +104,7 @@ export default function GlobalError({
               </button>
 
               <button
-                onClick={() => window.location.href = "/"}
+                onClick={() => (window.location.href = "/")}
                 className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
               >
                 Go Home

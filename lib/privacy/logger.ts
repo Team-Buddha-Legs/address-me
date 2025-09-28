@@ -3,15 +3,20 @@
  * Ensures no sensitive data is exposed in logs
  */
 
-import { sanitizeForLogging, validatePrivacyCompliance, anonymizeUserProfile, anonymizePersonalizedSummary } from './data-handler';
-import type { UserProfile, PersonalizedSummary } from '@/types';
+import type { PersonalizedSummary, UserProfile } from "@/types";
+import {
+  anonymizePersonalizedSummary,
+  anonymizeUserProfile,
+  sanitizeForLogging,
+  validatePrivacyCompliance,
+} from "./data-handler";
 
 // Log levels
 export enum LogLevel {
-  ERROR = 'error',
-  WARN = 'warn',
-  INFO = 'info',
-  DEBUG = 'debug',
+  ERROR = "error",
+  WARN = "warn",
+  INFO = "info",
+  DEBUG = "debug",
 }
 
 // Log entry interface
@@ -33,7 +38,7 @@ const MAX_LOG_ENTRIES = 1000; // Prevent memory overflow
  */
 export class PrivacyLogger {
   private static instance: PrivacyLogger;
-  private enabled: boolean = process.env.NODE_ENV !== 'test';
+  private enabled: boolean = process.env.NODE_ENV !== "test";
 
   private constructor() {}
 
@@ -47,28 +52,48 @@ export class PrivacyLogger {
   /**
    * Log an error with privacy compliance
    */
-  error(message: string, data?: unknown, sessionId?: string, operation?: string): void {
+  error(
+    message: string,
+    data?: unknown,
+    sessionId?: string,
+    operation?: string,
+  ): void {
     this.log(LogLevel.ERROR, message, data, sessionId, operation);
   }
 
   /**
    * Log a warning with privacy compliance
    */
-  warn(message: string, data?: unknown, sessionId?: string, operation?: string): void {
+  warn(
+    message: string,
+    data?: unknown,
+    sessionId?: string,
+    operation?: string,
+  ): void {
     this.log(LogLevel.WARN, message, data, sessionId, operation);
   }
 
   /**
    * Log info with privacy compliance
    */
-  info(message: string, data?: unknown, sessionId?: string, operation?: string): void {
+  info(
+    message: string,
+    data?: unknown,
+    sessionId?: string,
+    operation?: string,
+  ): void {
     this.log(LogLevel.INFO, message, data, sessionId, operation);
   }
 
   /**
    * Log debug info with privacy compliance
    */
-  debug(message: string, data?: unknown, sessionId?: string, operation?: string): void {
+  debug(
+    message: string,
+    data?: unknown,
+    sessionId?: string,
+    operation?: string,
+  ): void {
     this.log(LogLevel.DEBUG, message, data, sessionId, operation);
   }
 
@@ -79,7 +104,7 @@ export class PrivacyLogger {
     action: string,
     profile: UserProfile,
     sessionId: string,
-    additionalData?: Record<string, unknown>
+    additionalData?: Record<string, unknown>,
   ): void {
     const anonymizedProfile = anonymizeUserProfile(profile);
     const logData = {
@@ -88,7 +113,7 @@ export class PrivacyLogger {
       ...additionalData,
     };
 
-    this.info(`User activity: ${action}`, logData, sessionId, 'user_activity');
+    this.info(`User activity: ${action}`, logData, sessionId, "user_activity");
   }
 
   /**
@@ -98,18 +123,18 @@ export class PrivacyLogger {
     profile: UserProfile,
     summary: PersonalizedSummary,
     sessionId: string,
-    duration?: number
+    duration?: number,
   ): void {
     const anonymizedProfile = anonymizeUserProfile(profile);
     const anonymizedSummary = anonymizePersonalizedSummary(summary);
-    
+
     const logData = {
       profile: anonymizedProfile,
       summary: anonymizedSummary,
       duration_ms: duration,
     };
 
-    this.info('AI summary generated', logData, sessionId, 'ai_generation');
+    this.info("AI summary generated", logData, sessionId, "ai_generation");
   }
 
   /**
@@ -118,12 +143,17 @@ export class PrivacyLogger {
   logSecurityEvent(
     event: string,
     details: Record<string, unknown>,
-    sessionId?: string
+    sessionId?: string,
   ): void {
     // Security events need special handling to avoid exposing attack vectors
     const sanitizedDetails = sanitizeForLogging(details);
-    
-    this.warn(`Security event: ${event}`, sanitizedDetails, sessionId, 'security');
+
+    this.warn(
+      `Security event: ${event}`,
+      sanitizedDetails,
+      sessionId,
+      "security",
+    );
   }
 
   /**
@@ -133,11 +163,11 @@ export class PrivacyLogger {
     identifier: string,
     action: string,
     remaining: number,
-    resetTime: number
+    resetTime: number,
   ): void {
     // Hash the identifier to avoid exposing user identifiers
     const hashedId = this.hashIdentifier(identifier);
-    
+
     const logData = {
       identifier: hashedId,
       action,
@@ -145,7 +175,7 @@ export class PrivacyLogger {
       resetTime: new Date(resetTime).toISOString(),
     };
 
-    this.warn('Rate limit triggered', logData, undefined, 'rate_limit');
+    this.warn("Rate limit triggered", logData, undefined, "rate_limit");
   }
 
   /**
@@ -156,15 +186,15 @@ export class PrivacyLogger {
     message: string,
     data?: unknown,
     sessionId?: string,
-    operation?: string
+    operation?: string,
   ): void {
     if (!this.enabled) return;
 
     // Validate privacy compliance
-    const compliance = validatePrivacyCompliance(operation || 'log', data);
+    const compliance = validatePrivacyCompliance(operation || "log", data);
     if (!compliance.compliant) {
       // Log compliance violations but sanitize the data
-      console.error('Privacy compliance violation:', compliance.violations);
+      console.error("Privacy compliance violation:", compliance.violations);
       data = sanitizeForLogging(data);
     }
 
@@ -182,7 +212,7 @@ export class PrivacyLogger {
     this.storeLogEntry(logEntry);
 
     // Output to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       this.outputToConsole(logEntry);
     }
   }
@@ -204,7 +234,7 @@ export class PrivacyLogger {
    */
   private outputToConsole(entry: LogEntry): void {
     const logMessage = `[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}`;
-    
+
     switch (entry.level) {
       case LogLevel.ERROR:
         console.error(logMessage, entry.data);
@@ -226,11 +256,14 @@ export class PrivacyLogger {
    */
   private sanitizeMessage(message: string): string {
     return message
-      .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL]')
-      .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, '[IP]')
-      .replace(/\b\d{8,}\b/g, '[ID]')
-      .replace(/api[_-]?key/gi, '[API_KEY]')
-      .replace(/token/gi, '[TOKEN]');
+      .replace(
+        /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+        "[EMAIL]",
+      )
+      .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, "[IP]")
+      .replace(/\b\d{8,}\b/g, "[ID]")
+      .replace(/api[_-]?key/gi, "[API_KEY]")
+      .replace(/token/gi, "[TOKEN]");
   }
 
   /**
@@ -241,7 +274,7 @@ export class PrivacyLogger {
     let hash = 0;
     for (let i = 0; i < identifier.length; i++) {
       const char = identifier.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash).toString(36);

@@ -1,14 +1,14 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
-  anonymizeUserProfile,
   anonymizePersonalizedSummary,
-  sanitizeForLogging,
+  anonymizeUserProfile,
   createPrivacyHash,
+  generateAnalyticsData,
+  sanitizeForLogging,
   shouldExpireData,
   validatePrivacyCompliance,
-  generateAnalyticsData,
 } from "@/lib/privacy/data-handler";
-import type { UserProfile, PersonalizedSummary } from "@/types";
+import type { PersonalizedSummary, UserProfile } from "@/types";
 
 describe("Privacy Data Handler", () => {
   const mockUserProfile: UserProfile = {
@@ -123,7 +123,8 @@ describe("Privacy Data Handler", () => {
 
   describe("sanitizeForLogging", () => {
     it("should sanitize strings with PII", () => {
-      const input = "Contact john.doe@example.com at 192.168.1.1 with ID 12345678";
+      const input =
+        "Contact john.doe@example.com at 192.168.1.1 with ID 12345678";
       const result = sanitizeForLogging(input);
 
       expect(result).toBe("Contact [EMAIL] at [IP] with ID [NUMBER]");
@@ -232,8 +233,12 @@ describe("Privacy Data Handler", () => {
       const result = validatePrivacyCompliance("log_user_data", data);
 
       expect(result.compliant).toBe(false);
-      expect(result.violations).toContain("Sensitive field 'age' should not be logged directly");
-      expect(result.violations).toContain("Sensitive field 'gender' should not be logged directly");
+      expect(result.violations).toContain(
+        "Sensitive field 'age' should not be logged directly",
+      );
+      expect(result.violations).toContain(
+        "Sensitive field 'gender' should not be logged directly",
+      );
     });
 
     it("should detect PII in strings", () => {
