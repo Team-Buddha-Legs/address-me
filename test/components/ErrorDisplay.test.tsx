@@ -74,9 +74,9 @@ describe("ErrorDisplay Component", () => {
 
     const icon = container.querySelector("svg");
     expect(icon).toBeTruthy();
-    expect(icon?.className).toContain("h-5");
-    expect(icon?.className).toContain("w-5");
-    expect(icon?.className).toContain("text-red-400");
+    expect(icon?.getAttribute("class")).toContain("h-5");
+    expect(icon?.getAttribute("class")).toContain("w-5");
+    expect(icon?.getAttribute("class")).toContain("text-red-400");
   });
 
   it("should handle undefined errors gracefully", () => {

@@ -69,8 +69,8 @@
   - Write integration tests for complete summary generation flow
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
 
-- [ ] 5. Build report display and interaction system
-- [ ] 5.1 Create report page layout and components
+- [x] 5. Build report display and interaction system
+- [x] 5.1 Create report page layout and components
 
   - Implement single-page report layout with overall score display
   - Build expandable section components for different policy areas
@@ -79,7 +79,7 @@
   - Write component tests for report display and interactions
   - _Requirements: 3.1, 3.2, 3.4, 3.5_
 
-- [ ] 5.2 Implement report content rendering
+- [x] 5.2 Implement report content rendering
 
   - Create components for displaying policy relevance scores and explanations
   - Build recommendation display components with actionable advice

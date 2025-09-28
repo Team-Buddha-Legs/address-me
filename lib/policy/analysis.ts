@@ -13,7 +13,7 @@ import type {
  */
 export function calculatePolicyRelevance(
   userProfile: UserProfile,
-  policySection: PolicySection,
+  policySection: PolicySection
 ): PolicyRelevanceScore {
   let score = 0;
   const reasons: string[] = [];
@@ -24,14 +24,13 @@ export function calculatePolicyRelevance(
 
   // Calculate demographic matches (40% of score)
   const demographicMatches = policySection.targetDemographics.filter((demo) =>
-    userDemographics.includes(demo),
+    userDemographics.includes(demo)
   );
 
   if (demographicMatches.length > 0) {
     const demographicScore = Math.min(
       40,
-      (demographicMatches.length / policySection.targetDemographics.length) *
-        40,
+      (demographicMatches.length / policySection.targetDemographics.length) * 40
     );
     score += demographicScore;
     matchedDemographics.push(...demographicMatches);
@@ -41,7 +40,7 @@ export function calculatePolicyRelevance(
   // Calculate category relevance (30% of score)
   const categoryRelevance = getCategoryRelevanceForUser(
     userProfile,
-    policySection.category,
+    policySection.category
   );
   score += categoryRelevance * 30;
   if (categoryRelevance > 0.5) {
@@ -53,8 +52,8 @@ export function calculatePolicyRelevance(
     policySection.impactLevel === "high"
       ? 20
       : policySection.impactLevel === "medium"
-        ? 12
-        : 8;
+      ? 12
+      : 8;
   score += impactBonus;
   reasons.push(`${policySection.impactLevel} impact level`);
 
@@ -62,7 +61,7 @@ export function calculatePolicyRelevance(
   if (policySection.eligibilityCriteria) {
     const eligibilityScore = calculateEligibilityScore(
       userProfile,
-      policySection.eligibilityCriteria,
+      policySection.eligibilityCriteria
     );
     score += eligibilityScore * 10;
     if (eligibilityScore > 0.7) {
@@ -74,7 +73,7 @@ export function calculatePolicyRelevance(
   const impactAssessment = generateImpactAssessment(
     userProfile,
     policySection,
-    score,
+    score
   );
 
   return {
@@ -91,7 +90,7 @@ export function calculatePolicyRelevance(
  */
 export function analyzePolicyForUser(
   userProfile: UserProfile,
-  policyContent: PolicyContent,
+  policyContent: PolicyContent
 ): PolicyAnalysis {
   // Calculate relevance scores for all sections
   const relevantSections = policyContent.sections
@@ -105,14 +104,14 @@ export function analyzePolicyForUser(
   // Identify top categories
   const topCategories = getTopCategories(
     relevantSections,
-    policyContent.sections,
+    policyContent.sections
   );
 
   // Generate recommended actions
   const recommendedActions = generateRecommendedActions(
     userProfile,
     relevantSections,
-    policyContent.sections,
+    policyContent.sections
   );
 
   return {
@@ -146,18 +145,19 @@ function getUserDemographics(userProfile: UserProfile): TargetDemographic[] {
 
   // Income-based demographics
   if (
-    userProfile.incomeRange === "below-20k" ||
-    userProfile.incomeRange === "20k-40k"
+    userProfile.incomeRange === "below-10k" ||
+    userProfile.incomeRange === "10k-20k" ||
+    userProfile.incomeRange === "20k-30k"
   ) {
     demographics.push("low-income");
   } else if (
-    userProfile.incomeRange === "40k-60k" ||
-    userProfile.incomeRange === "60k-80k"
+    userProfile.incomeRange === "30k-50k" ||
+    userProfile.incomeRange === "50k-80k"
   ) {
     demographics.push("middle-income");
   } else if (
-    userProfile.incomeRange === "80k-100k" ||
-    userProfile.incomeRange === "above-100k"
+    userProfile.incomeRange === "80k-120k" ||
+    userProfile.incomeRange === "above-120k"
   ) {
     demographics.push("high-income");
   }
@@ -166,7 +166,8 @@ function getUserDemographics(userProfile: UserProfile): TargetDemographic[] {
   if (userProfile.employmentStatus === "unemployed") {
     demographics.push("unemployed");
   } else if (
-    userProfile.employmentStatus === "employed" ||
+    userProfile.employmentStatus === "employed-full-time" ||
+    userProfile.employmentStatus === "employed-part-time" ||
     userProfile.employmentStatus === "self-employed"
   ) {
     demographics.push("professionals");
@@ -187,7 +188,7 @@ function getUserDemographics(userProfile: UserProfile): TargetDemographic[] {
  */
 function getCategoryRelevanceForUser(
   userProfile: UserProfile,
-  category: PolicyCategory,
+  category: PolicyCategory
 ): number {
   switch (category) {
     case "housing":
@@ -205,7 +206,8 @@ function getCategoryRelevanceForUser(
     case "transportation":
       // High relevance for working professionals and families
       if (
-        userProfile.employmentStatus === "employed" ||
+        userProfile.employmentStatus === "employed-full-time" ||
+        userProfile.employmentStatus === "employed-part-time" ||
         userProfile.employmentStatus === "self-employed" ||
         userProfile.hasChildren
       ) {
@@ -250,8 +252,9 @@ function getCategoryRelevanceForUser(
       // High relevance for elderly, low-income, and families
       if (
         userProfile.age >= 60 ||
-        userProfile.incomeRange === "below-20k" ||
-        userProfile.incomeRange === "20k-40k" ||
+        userProfile.incomeRange === "below-10k" ||
+        userProfile.incomeRange === "10k-20k" ||
+        userProfile.incomeRange === "20k-30k" ||
         userProfile.hasChildren
       ) {
         return 0.9;
@@ -268,7 +271,7 @@ function getCategoryRelevanceForUser(
  */
 function calculateEligibilityScore(
   userProfile: UserProfile,
-  criteria: string[],
+  criteria: string[]
 ): number {
   // This is a simplified eligibility check
   // In a real implementation, this would parse and evaluate actual criteria
@@ -277,7 +280,7 @@ function calculateEligibilityScore(
   // Adjust based on common criteria patterns
   if (criteria.some((c) => c.toLowerCase().includes("income"))) {
     // Income-based criteria - assume middle and low income qualify
-    if (userProfile.incomeRange !== "above-100k") {
+    if (userProfile.incomeRange !== "above-120k") {
       score += 0.2;
     }
   }
@@ -294,7 +297,7 @@ function calculateEligibilityScore(
  * Calculate overall score from relevant sections
  */
 function calculateOverallScore(
-  relevantSections: PolicyRelevanceScore[],
+  relevantSections: PolicyRelevanceScore[]
 ): number {
   if (relevantSections.length === 0) return 70;
 
@@ -317,7 +320,7 @@ function calculateOverallScore(
  */
 function getTopCategories(
   relevantSections: PolicyRelevanceScore[],
-  allSections: PolicySection[],
+  allSections: PolicySection[]
 ): PolicyCategory[] {
   const categoryScores = new Map<PolicyCategory, number>();
 
@@ -327,7 +330,7 @@ function getTopCategories(
       const currentScore = categoryScores.get(section.category) || 0;
       categoryScores.set(
         section.category,
-        currentScore + relevantSection.score,
+        currentScore + relevantSection.score
       );
     }
   });
@@ -344,7 +347,7 @@ function getTopCategories(
 function generateRecommendedActions(
   userProfile: UserProfile,
   relevantSections: PolicyRelevanceScore[],
-  allSections: PolicySection[],
+  allSections: PolicySection[]
 ): string[] {
   const actions: string[] = [];
 
@@ -357,7 +360,7 @@ function generateRecommendedActions(
       // Generate action based on the section's key benefits
       const primaryBenefit = section.keyBenefits[0];
       actions.push(
-        `Explore ${section.title.toLowerCase()} to access ${primaryBenefit.toLowerCase()}`,
+        `Explore ${section.title.toLowerCase()} to access ${primaryBenefit.toLowerCase()}`
       );
     }
   });
@@ -365,7 +368,7 @@ function generateRecommendedActions(
   // Add general recommendations based on user profile
   if (userProfile.age <= 35 && userProfile.housingType !== "private-owned") {
     actions.push(
-      "Consider applying for first-time home buyer assistance programs",
+      "Consider applying for first-time home buyer assistance programs"
     );
   }
 
@@ -386,7 +389,7 @@ function generateRecommendedActions(
 function generateImpactAssessment(
   userProfile: UserProfile,
   policySection: PolicySection,
-  score: number,
+  score: number
 ): string {
   if (score >= 80) {
     return `This policy will have a significant positive impact on your situation, particularly in ${policySection.category}.`;
