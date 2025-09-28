@@ -2,7 +2,7 @@
  * CSRF protection utilities for server actions
  */
 
-import { createHash, randomBytes } from "crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 
 const CSRF_TOKEN_LENGTH = 32;

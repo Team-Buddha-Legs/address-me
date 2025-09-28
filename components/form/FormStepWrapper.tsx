@@ -29,7 +29,6 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const {
-    register,
     handleSubmit,
     watch,
     setValue,
@@ -60,7 +59,7 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
   const currentStepNumber = getCompletedSteps(step.id);
   const totalSteps = getTotalSteps();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Record<string, unknown>) => {
     setIsSubmitting(true);
 
     try {
@@ -241,7 +240,7 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
 }
 
 // Helper functions for session storage
-function getStoredStepData(stepId: string): Record<string, any> {
+function getStoredStepData(stepId: string): Record<string, unknown> {
   if (typeof window === "undefined") return {};
 
   try {
@@ -252,7 +251,7 @@ function getStoredStepData(stepId: string): Record<string, any> {
   }
 }
 
-function saveStepData(stepId: string, data: Record<string, any>): void {
+function saveStepData(stepId: string, data: Record<string, unknown>): void {
   if (typeof window === "undefined") return;
 
   try {

@@ -1,4 +1,4 @@
-import type { PolicyCategory, PolicyRelevanceScore } from "@/lib/policy/types";
+import type { PolicyCategory } from "@/lib/policy/types";
 
 /**
  * Types for personalized summary generation

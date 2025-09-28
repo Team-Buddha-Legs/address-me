@@ -43,9 +43,11 @@ export const getStepValidationErrors = (
   try {
     schema.parse(data);
     return [];
-  } catch (error: any) {
-    if (error.errors) {
-      return error.errors.map((err: any) => err.message);
+  } catch (error: unknown) {
+    if (error && typeof error === "object" && "errors" in error) {
+      return (error as { errors: { message: string }[] }).errors.map(
+        (err) => err.message,
+      );
     }
     return ["Validation failed"];
   }

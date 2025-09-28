@@ -109,7 +109,7 @@ export function sanitizeForLogging(data: unknown): unknown {
 
     for (const [key, value] of Object.entries(data)) {
       // Skip sensitive fields entirely
-      if (SENSITIVE_FIELDS.includes(key as any)) {
+      if (SENSITIVE_FIELDS.includes(key as (typeof SENSITIVE_FIELDS)[number])) {
         sanitized[`${key}_present`] = value !== undefined && value !== null;
         continue;
       }

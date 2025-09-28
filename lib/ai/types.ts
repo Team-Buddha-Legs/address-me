@@ -9,7 +9,7 @@ export interface AIProviderConfig {
   apiKey?: string;
   region?: string;
   model: string;
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 export interface AIMessage {

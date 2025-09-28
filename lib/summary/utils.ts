@@ -196,7 +196,7 @@ export function createSummaryExcerpt(
 
   if (excerpt.length <= maxLength) return excerpt;
 
-  return excerpt.substring(0, maxLength - 3) + "...";
+  return `${excerpt.substring(0, maxLength - 3)}...`;
 }
 
 /**

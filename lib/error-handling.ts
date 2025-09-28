@@ -221,7 +221,7 @@ export class ErrorRecoveryManager {
 // Default recovery strategies
 export const networkRecoveryStrategy: RecoveryStrategy = {
   canRecover: (error) => error.type === ErrorType.NETWORK,
-  recover: async (error) => {
+  recover: async (_error) => {
     // Wait for network to be available
     if (typeof window !== "undefined") {
       return new Promise((resolve) => {

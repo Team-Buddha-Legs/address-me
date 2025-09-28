@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   clearAllSessions,
   createSession,
@@ -71,7 +71,7 @@ describe("Server Session Management", () => {
       const retrievedSession = await getSession(createdSession.id);
 
       expect(retrievedSession).toBeDefined();
-      expect(retrievedSession!.id).toBe(createdSession.id);
+      expect(retrievedSession?.id).toBe(createdSession.id);
     });
 
     it("should return null for non-existent session", async () => {
@@ -106,8 +106,8 @@ describe("Server Session Management", () => {
       });
 
       expect(updatedSession).toBeDefined();
-      expect(updatedSession!.profile.age).toBe(35);
-      expect(updatedSession!.profile.gender).toBe("female");
+      expect(updatedSession?.profile.age).toBe(35);
+      expect(updatedSession?.profile.gender).toBe("female");
     });
 
     it("should merge profile updates", async () => {
@@ -118,8 +118,8 @@ describe("Server Session Management", () => {
         profile: profileUpdate,
       });
 
-      expect(updatedSession!.profile.age).toBe(30);
-      expect(updatedSession!.profile.gender).toBe("male");
+      expect(updatedSession?.profile.age).toBe(30);
+      expect(updatedSession?.profile.gender).toBe("male");
     });
 
     it("should update session summary", async () => {
@@ -136,8 +136,8 @@ describe("Server Session Management", () => {
         summary: mockSummary,
       });
 
-      expect(updatedSession!.summary).toBeDefined();
-      expect(updatedSession!.summary!.overallScore).toBe(85);
+      expect(updatedSession?.summary).toBeDefined();
+      expect(updatedSession?.summary?.overallScore).toBe(85);
     });
 
     it("should extend expiration on update", async () => {
@@ -151,7 +151,7 @@ describe("Server Session Management", () => {
         profile: { age: 31 },
       });
 
-      expect(updatedSession!.expiresAt.getTime()).toBeGreaterThan(
+      expect(updatedSession?.expiresAt.getTime()).toBeGreaterThan(
         originalExpiration,
       );
     });
@@ -210,7 +210,7 @@ describe("Server Session Management", () => {
       const extendedSession = await extendSession(session.id);
 
       expect(extendedSession).toBeDefined();
-      expect(extendedSession!.expiresAt.getTime()).toBeGreaterThan(
+      expect(extendedSession?.expiresAt.getTime()).toBeGreaterThan(
         originalExpiration,
       );
     });
@@ -236,7 +236,7 @@ describe("Server Session Management", () => {
 
     it("should count expired sessions correctly", async () => {
       const session1 = await createSession();
-      const session2 = await createSession();
+      const _session2 = await createSession();
 
       // Manually expire one session for testing
       session1.expiresAt = new Date(Date.now() - 1000);
@@ -252,7 +252,7 @@ describe("Server Session Management", () => {
   describe("Session Queries", () => {
     it("should find sessions by creation date", async () => {
       const now = new Date();
-      const session1 = await createSession();
+      const _session1 = await createSession();
 
       await new Promise((resolve) => setTimeout(resolve, 10));
 

@@ -1,8 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 import { logger } from "@/lib/privacy";
 import { validateCSRF } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/rate-limit";
@@ -17,7 +15,7 @@ import {
   personalInfoStepSchema,
   userProfileSchema,
 } from "@/lib/validation";
-import type { UserProfile } from "@/types";
+import type { UserSession } from "@/types";
 
 // Rate limiting configuration
 const FORM_RATE_LIMIT = {
@@ -86,7 +84,7 @@ export async function processFormStep(
     const validatedData = schema.parse(processedData);
 
     // Get or create session
-    let session: any;
+    let session: UserSession;
     if (sessionId) {
       session = await getSession(sessionId);
       if (!session) {
@@ -219,7 +217,7 @@ function processStepData(
         processed.childrenAges = processed.childrenAges
           .split(",")
           .map((age) => Number(age.trim()))
-          .filter((age) => !isNaN(age));
+          .filter((age) => !Number.isNaN(age));
       }
       break;
 

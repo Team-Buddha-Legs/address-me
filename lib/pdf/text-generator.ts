@@ -50,14 +50,14 @@ export function generateTextReport(
 
     if (area.actionItems.length > 0) {
       lines.push(`   Action Items:`);
-      area.actionItems.forEach((item, itemIndex) => {
+      area.actionItems.forEach((item, _itemIndex) => {
         lines.push(`   • ${item}`);
       });
       lines.push("");
     }
 
     if (index < summary.relevantAreas.length - 1) {
-      lines.push("   " + "-".repeat(35));
+      lines.push(`   ${"-".repeat(35)}`);
       lines.push("");
     }
   });
@@ -81,7 +81,7 @@ export function generateTextReport(
     lines.push("");
 
     if (index < summary.majorUpdates.length - 1) {
-      lines.push("   " + "-".repeat(35));
+      lines.push(`   ${"-".repeat(35)}`);
       lines.push("");
     }
   });
@@ -110,7 +110,7 @@ export function generateTextReport(
     }
 
     if (index < summary.recommendations.length - 1) {
-      lines.push("   " + "-".repeat(35));
+      lines.push(`   ${"-".repeat(35)}`);
       lines.push("");
     }
   });

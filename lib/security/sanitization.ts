@@ -37,7 +37,7 @@ export function sanitizeHTML(html: string): string {
   }
 
   // Allow only safe HTML tags
-  const allowedTags = [
+  const _allowedTags = [
     "p",
     "br",
     "strong",
@@ -140,7 +140,7 @@ export function sanitizePhoneNumber(phone: string): string {
  */
 export function sanitizeNumber(input: string | number): number | null {
   if (typeof input === "number") {
-    return isFinite(input) ? input : null;
+    return Number.isFinite(input) ? input : null;
   }
 
   if (typeof input !== "string") {
@@ -150,7 +150,7 @@ export function sanitizeNumber(input: string | number): number | null {
   const sanitized = sanitizeInput(input);
   const number = Number(sanitized);
 
-  return isFinite(number) ? number : null;
+  return Number.isFinite(number) ? number : null;
 }
 
 /**

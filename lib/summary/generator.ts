@@ -1,7 +1,7 @@
 import type { AIService } from "@/lib/ai/service";
 import { analyzePolicyForUser } from "@/lib/policy/analysis";
 import { mockPolicyContent } from "@/lib/policy/mock-data";
-import type { PolicyAnalysis, PolicyContent } from "@/lib/policy/types";
+import type { PolicyAnalysis } from "@/lib/policy/types";
 import type { UserProfile } from "@/types";
 import type {
   CityPlan,
@@ -158,7 +158,7 @@ export class SummaryGenerator {
         };
 
         areas.push(policyArea);
-      } catch (error) {
+      } catch (_error) {
         // Fallback to basic policy area if AI enhancement fails
         const basicArea: PolicyArea = {
           category: policySection.category,
@@ -185,7 +185,7 @@ export class SummaryGenerator {
   private async generateCityPlans(
     userProfile: UserProfile,
     policyAnalysis: PolicyAnalysis,
-    options: SummaryGenerationOptions,
+    _options: SummaryGenerationOptions,
   ): Promise<CityPlan[]> {
     const plans: CityPlan[] = [];
 
@@ -221,7 +221,7 @@ export class SummaryGenerator {
    * Generate personalized recommendations
    */
   private async generateRecommendations(
-    userProfile: UserProfile,
+    _userProfile: UserProfile,
     policyAnalysis: PolicyAnalysis,
     options: SummaryGenerationOptions,
   ): Promise<Recommendation[]> {
@@ -342,7 +342,7 @@ Please provide a concise, personalized summary (2-3 sentences) explaining how th
   /**
    * Generate action steps for recommendations
    */
-  private generateActionSteps(action: string, policySection: any): string[] {
+  private generateActionSteps(action: string, _policySection: any): string[] {
     const steps: string[] = [];
 
     if (action.toLowerCase().includes("apply")) {

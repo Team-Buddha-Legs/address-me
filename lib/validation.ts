@@ -1,15 +1,4 @@
 import { z } from "zod";
-import type {
-  EducationLevel,
-  EmploymentStatus,
-  FormStep,
-  HongKongDistrict,
-  HousingType,
-  IncomeRange,
-  PolicyCategory,
-  TransportationMode,
-  UserProfile,
-} from "@/types";
 
 // Hong Kong specific enum schemas
 export const hongKongDistrictSchema = z.enum([

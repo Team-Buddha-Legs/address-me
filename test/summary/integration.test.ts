@@ -92,8 +92,8 @@ describe("Summary Generation Integration", () => {
       expect(validateSummary(elderlyResult.summary).isValid).toBe(true);
 
       // Should have different focus areas
-      const youngStats = generateSummaryStatistics(youngResult.summary);
-      const elderlyStats = generateSummaryStatistics(elderlyResult.summary);
+      const _youngStats = generateSummaryStatistics(youngResult.summary);
+      const _elderlyStats = generateSummaryStatistics(elderlyResult.summary);
 
       // Young professional likely to have housing/employment focus
       const youngCategories = youngResult.summary.relevantAreas.map(
@@ -127,8 +127,8 @@ describe("Summary Generation Integration", () => {
       expect(scoreDifference).toBeLessThanOrEqual(5); // Allow small variation
 
       // Should identify similar top categories
-      const stats1 = generateSummaryStatistics(result1.summary);
-      const stats2 = generateSummaryStatistics(result2.summary);
+      const _stats1 = generateSummaryStatistics(result1.summary);
+      const _stats2 = generateSummaryStatistics(result2.summary);
 
       // At least some overlap in relevant areas
       const categories1 = result1.summary.relevantAreas.map((a) => a.category);

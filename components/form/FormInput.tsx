@@ -6,8 +6,8 @@ import type { FormField } from "@/types";
 
 interface FormInputProps {
   field: FormField;
-  value: any;
-  onChange: (value: any) => void;
+  value: unknown;
+  onChange: (value: unknown) => void;
   error?: string;
   disabled?: boolean;
 }
@@ -48,7 +48,7 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                   : value || ""
               }
               onChange={(e) => {
-                let newValue: any = e.target.value;
+                let newValue: unknown = e.target.value;
 
                 if (field.type === "number") {
                   newValue =

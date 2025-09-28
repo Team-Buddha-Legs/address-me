@@ -1,18 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   economicStepSchema,
-  educationLevelSchema,
   educationTransportStepSchema,
-  employmentStatusSchema,
   familyStepSchema,
   formStepSchema,
   healthStepSchema,
   hongKongDistrictSchema,
-  housingTypeSchema,
   incomeRangeSchema,
   locationStepSchema,
   personalInfoStepSchema,
-  transportationModeSchema,
   userProfileSchema,
 } from "@/lib/validation";
 import type { UserProfile } from "@/types";

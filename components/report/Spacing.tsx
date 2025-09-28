@@ -34,7 +34,7 @@ export function Spacing({
     ];
   };
 
-  const containerClass = direction === "all" ? "flex flex-col" : "div";
+  const _containerClass = direction === "all" ? "flex flex-col" : "div";
 
   return (
     <div className={`${getSpacingClasses(size, direction)} ${className}`}>

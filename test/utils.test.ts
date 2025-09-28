@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  calculateEligibilityFlags,
   calculateFormProgress,
   calculatePolicyRelevance,
   formatDistrict,
@@ -11,14 +10,11 @@ import {
   getNextStepId,
   getPreviousStepId,
   identifyRiskFactors,
-  isComprehensiveSocialSecurityEligible,
   isContinuingEducationFundEligible,
   isElderlyAllowanceEligible,
   isHealthcareVoucherEligible,
   isHomeOwnershipSchemeEligible,
   isPublicHousingEligible,
-  isPublicTransportFareConcessionsEligible,
-  isRetrainingProgrammeEligible,
   processUserProfile,
   validateUserProfile,
 } from "@/lib/utils";

@@ -2,7 +2,6 @@
 
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import type { PolicyArea } from "@/types";
-import { ExpandableDetails } from "./ExpandableDetails";
 import { PolicyRelevanceScore } from "./PolicyRelevanceScore";
 
 interface PolicyAreaSectionProps {
@@ -41,7 +40,7 @@ export function PolicyAreaSection({
     }
   };
 
-  const getScoreColor = (score: number) => {
+  const _getScoreColor = (score: number) => {
     if (score >= 90) return "text-secondary-dark";
     if (score >= 80) return "text-secondary";
     if (score >= 70) return "text-accent";

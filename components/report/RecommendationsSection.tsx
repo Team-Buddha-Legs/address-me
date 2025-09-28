@@ -15,7 +15,7 @@ export function RecommendationsSection({
   isExpanded,
   onToggle,
 }: RecommendationsSectionProps) {
-  const getPriorityColor = (priority: string) => {
+  const _getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
         return "bg-accent-100 text-accent-dark border-accent-200";
@@ -28,7 +28,7 @@ export function RecommendationsSection({
     }
   };
 
-  const getCategoryIcon = (category: string) => {
+  const _getCategoryIcon = (category: string) => {
     const icons: Record<string, string> = {
       housing: "🏠",
       transportation: "🚇",
@@ -40,7 +40,7 @@ export function RecommendationsSection({
     return icons[category] || "📋";
   };
 
-  const getPriorityIcon = (priority: string) => {
+  const _getPriorityIcon = (priority: string) => {
     switch (priority) {
       case "high":
         return "🔥";

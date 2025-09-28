@@ -80,7 +80,7 @@ export class AWSBedrockProvider implements AIProvider {
       .join("\n\n");
   }
 
-  private async callBedrockAPI(prompt: string): Promise<{
+  private async callBedrockAPI(_prompt: string): Promise<{
     content: string;
     usage?: { inputTokens: number; outputTokens: number };
     finishReason?: "stop" | "length" | "content_filter";

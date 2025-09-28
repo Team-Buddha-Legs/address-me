@@ -32,7 +32,6 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
 
-import { redirect } from "next/navigation";
 import { generatePersonalizedSummary } from "@/lib/ai";
 import { validateCSRF } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/rate-limit";

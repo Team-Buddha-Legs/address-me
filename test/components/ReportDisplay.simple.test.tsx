@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ReportDisplay } from "@/components/report/ReportDisplay";
 import type { PersonalizedSummary } from "@/types";
 

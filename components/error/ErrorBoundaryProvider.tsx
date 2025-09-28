@@ -185,7 +185,10 @@ export function useAsyncErrorHandler() {
   const { reportError } = useErrorHandler();
 
   const handleAsync = useCallback(
-    async (asyncFn: () => Promise<any>, context?: string): Promise<any> => {
+    async (
+      asyncFn: () => Promise<unknown>,
+      context?: string,
+    ): Promise<unknown> => {
       try {
         return await asyncFn();
       } catch (error) {

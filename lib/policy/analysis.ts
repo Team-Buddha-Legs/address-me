@@ -388,7 +388,7 @@ function generateRecommendedActions(
  * Generate impact assessment for a policy section
  */
 function generateImpactAssessment(
-  userProfile: UserProfile,
+  _userProfile: UserProfile,
   policySection: PolicySection,
   score: number,
 ): string {

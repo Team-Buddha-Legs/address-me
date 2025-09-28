@@ -161,8 +161,9 @@ describe("SummaryGenerator", () => {
       const elderlyResult = await generator.generateSummary(elderlyProfile);
 
       // Should have different top categories
-      const familyTopCategory = familyResult.summary.relevantAreas[0]?.category;
-      const elderlyTopCategory =
+      const _familyTopCategory =
+        familyResult.summary.relevantAreas[0]?.category;
+      const _elderlyTopCategory =
         elderlyResult.summary.relevantAreas[0]?.category;
 
       // Elderly should prioritize healthcare and social welfare
@@ -231,7 +232,7 @@ describe("SummaryGenerator", () => {
       );
 
       // Create a profile that would cause issues in analysis
-      const problematicProfile = {
+      const _problematicProfile = {
         age: null,
         district: null,
       } as any as UserProfile;
