@@ -16,8 +16,8 @@
   - Create Hong Kong specific enums (districts, income ranges, housing types)
   - _Requirements: 1.3, 1.4, 5.4_
 
-- [ ] 3. Build multi-page form system foundation
-- [ ] 3.1 Create form step configuration and routing
+- [x] 3. Build multi-page form system foundation
+- [x] 3.1 Create form step configuration and routing
 
   - Define form step configuration with questions, validation, and flow logic
   - Implement dynamic routing structure for `/assessment/[step]` pages
@@ -25,7 +25,7 @@
   - Write unit tests for form step logic and navigation
   - _Requirements: 1.1, 1.2_
 
-- [ ] 3.2 Implement form components and validation
+- [x] 3.2 Implement form components and validation
 
   - Build reusable form input components (select, radio, checkbox, number input)
   - Implement form step wrapper component with progress indicator
@@ -34,7 +34,7 @@
   - Write component tests for form inputs and validation
   - _Requirements: 1.3, 1.4, 3.1_
 
-- [ ] 3.3 Add animations and responsive design
+- [x] 3.3 Add animations and responsive design
 
   - Implement smooth page transitions using Framer Motion
   - Create responsive mobile-first layouts for form pages

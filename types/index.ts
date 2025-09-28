@@ -156,7 +156,7 @@ export interface FormStep {
   title: string;
   description: string;
   fields: FormField[];
-  validation: unknown; // Zod schema
+  validation?: unknown; // Zod schema (optional for server-side compatibility)
 }
 
 // AI Provider Interfaces
