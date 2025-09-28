@@ -51,6 +51,7 @@ export function PolicyAreaSection({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-neutral-200">
       <button
+        type="button"
         onClick={onToggle}
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 transition-colors duration-200"
       >
@@ -128,7 +129,7 @@ export function PolicyAreaSection({
                       <ul className="space-y-2">
                         {area.actionItems.map((item, itemIndex) => (
                           <li
-                            key={itemIndex}
+                            key={`item-${itemIndex}-${item.slice(0, 10)}`}
                             className="flex items-start space-x-2"
                           >
                             <span className="text-primary text-sm mt-1">•</span>

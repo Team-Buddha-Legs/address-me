@@ -29,6 +29,8 @@ function FormErrorFallback({ resetError }: FormErrorFallbackProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              role="img"
+              aria-label="Form error icon"
             >
               <path
                 strokeLinecap="round"
@@ -66,6 +68,7 @@ function FormErrorFallback({ resetError }: FormErrorFallbackProps) {
           className="space-y-4"
         >
           <button
+            type="button"
             onClick={resetError}
             className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
           >
@@ -73,6 +76,7 @@ function FormErrorFallback({ resetError }: FormErrorFallbackProps) {
           </button>
 
           <button
+            type="button"
             onClick={() => {
               // Clear form data and redirect to start
               if (typeof window !== "undefined") {

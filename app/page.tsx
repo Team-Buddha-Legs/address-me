@@ -78,6 +78,8 @@ export default function Home() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Arrow right"
               >
                 <path
                   strokeLinecap="round"
@@ -108,6 +110,8 @@ export default function Home() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="Assessment icon"
                 >
                   <path
                     strokeLinecap="round"
@@ -133,6 +137,8 @@ export default function Home() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="Analysis icon"
                 >
                   <path
                     strokeLinecap="round"
@@ -157,6 +163,8 @@ export default function Home() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="Report icon"
                 >
                   <path
                     strokeLinecap="round"
@@ -251,6 +259,8 @@ export default function Home() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Arrow right"
               >
                 <path
                   strokeLinecap="round"
@@ -275,13 +285,22 @@ export default function Home() {
               <span className="text-gray-600">Address Me</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-600">
-              <a href="#" className="hover:text-gray-900 transition-colors">
+              <a
+                href="/privacy"
+                className="hover:text-gray-900 transition-colors"
+              >
                 Privacy Policy
               </a>
-              <a href="#" className="hover:text-gray-900 transition-colors">
+              <a
+                href="/terms"
+                className="hover:text-gray-900 transition-colors"
+              >
                 Terms of Service
               </a>
-              <a href="#" className="hover:text-gray-900 transition-colors">
+              <a
+                href="/contact"
+                className="hover:text-gray-900 transition-colors"
+              >
                 Contact
               </a>
             </div>

@@ -48,6 +48,8 @@ function ErrorNotification({ error, onDismiss }: ErrorNotificationProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              role="img"
+              aria-label="Error alert icon"
             >
               <path
                 strokeLinecap="round"
@@ -67,6 +69,7 @@ function ErrorNotification({ error, onDismiss }: ErrorNotificationProps) {
           </div>
           <div className="ml-4 flex-shrink-0">
             <button
+              type="button"
               onClick={onDismiss}
               className="inline-flex text-red-400 hover:text-red-600 focus:outline-none focus:text-red-600"
             >
@@ -75,6 +78,8 @@ function ErrorNotification({ error, onDismiss }: ErrorNotificationProps) {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Close error"
               >
                 <path
                   strokeLinecap="round"

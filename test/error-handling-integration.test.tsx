@@ -61,9 +61,15 @@ function TestComponent() {
       <div data-testid="error-status">
         {hasGlobalError ? "Has Error" : "No Error"}
       </div>
-      <button onClick={handleServerError}>Trigger Server Error</button>
-      <button onClick={handleClientError}>Trigger Client Error</button>
-      <button onClick={clearError}>Clear Error</button>
+      <button type="button" onClick={handleServerError}>
+        Trigger Server Error
+      </button>
+      <button type="button" onClick={handleClientError}>
+        Trigger Client Error
+      </button>
+      <button type="button" onClick={clearError}>
+        Clear Error
+      </button>
     </div>
   );
 }

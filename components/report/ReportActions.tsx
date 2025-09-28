@@ -79,6 +79,7 @@ export function ReportActions({ summary, reportId }: ReportActionsProps) {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
+              type="button"
               onClick={handleDownloadPDF}
               disabled={isDownloading}
               className="flex items-center justify-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -90,6 +91,7 @@ export function ReportActions({ summary, reportId }: ReportActionsProps) {
             </button>
 
             <button
+              type="button"
               onClick={handleDownloadText}
               disabled={isDownloading}
               className="flex items-center justify-center space-x-2 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -118,6 +120,7 @@ export function ReportActions({ summary, reportId }: ReportActionsProps) {
           </p>
 
           <button
+            type="button"
             onClick={() => setShowRetakeConfirm(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-neutral-100 text-neutral-700 rounded-lg hover:bg-neutral-200 transition-colors duration-200"
           >

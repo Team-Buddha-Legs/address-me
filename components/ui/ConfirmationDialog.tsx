@@ -97,6 +97,7 @@ export function ConfirmationDialog({
       <div className="relative w-full max-w-md bg-white rounded-lg shadow-xl">
         {/* Close button */}
         <button
+          type="button"
           onClick={onClose}
           className="absolute top-4 right-4 p-1 text-neutral-400 hover:text-neutral-600 transition-colors duration-200"
           aria-label="Close dialog"
@@ -132,12 +133,14 @@ export function ConfirmationDialog({
           {/* Actions */}
           <div className="flex flex-col-reverse sm:flex-row sm:justify-center gap-3">
             <button
+              type="button"
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-neutral-700 bg-neutral-100 border border-neutral-300 rounded-lg hover:bg-neutral-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
             >
               {cancelText}
             </button>
             <button
+              type="button"
               onClick={handleConfirm}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${styles.confirmButton}`}
             >

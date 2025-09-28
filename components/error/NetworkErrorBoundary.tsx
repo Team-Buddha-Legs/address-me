@@ -72,6 +72,8 @@ function NetworkErrorFallback({
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Network error icon"
               >
                 <path
                   strokeLinecap="round"
@@ -86,6 +88,8 @@ function NetworkErrorFallback({
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Offline icon"
               >
                 <path
                   strokeLinecap="round"
@@ -156,6 +160,7 @@ function NetworkErrorFallback({
           className="space-y-4"
         >
           <button
+            type="button"
             onClick={handleRetry}
             disabled={!isOnline}
             className={`w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
@@ -168,7 +173,10 @@ function NetworkErrorFallback({
           </button>
 
           <button
-            onClick={() => (window.location.href = "/")}
+            type="button"
+            onClick={() => {
+              window.location.href = "/";
+            }}
             className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >
             Go Home

@@ -26,6 +26,8 @@ export default function NotFound() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              role="img"
+              aria-label="Page not found icon"
             >
               <path
                 strokeLinecap="round"

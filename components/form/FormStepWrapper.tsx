@@ -54,7 +54,7 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
   useEffect(() => {
     const currentData = getValues();
     saveStepData(step.id, currentData);
-  }, [watchedValues, step.id, getValues]);
+  }, [step.id, getValues]);
 
   const progress = calculateProgress(step.id);
   const currentStepNumber = getCompletedSteps(step.id);
@@ -213,6 +213,8 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="Loading"
                 >
                   <circle
                     className="opacity-25"

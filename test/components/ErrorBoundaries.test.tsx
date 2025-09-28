@@ -59,10 +59,15 @@ function ErrorHandlerComponent() {
 
   return (
     <div>
-      <button onClick={() => reportError(new Error("Manual error"), "test")}>
+      <button
+        type="button"
+        onClick={() => reportError(new Error("Manual error"), "test")}
+      >
         Report Error
       </button>
-      <button onClick={clearError}>Clear Error</button>
+      <button type="button" onClick={clearError}>
+        Clear Error
+      </button>
       <div data-testid="error-status">
         {hasGlobalError ? "Has Error" : "No Error"}
       </div>
@@ -110,7 +115,9 @@ describe("Error Boundaries", () => {
       }) => (
         <div>
           <div>Custom Error: {error.message}</div>
-          <button onClick={resetError}>Custom Reset</button>
+          <button type="button" onClick={resetError}>
+            Custom Reset
+          </button>
         </div>
       );
 

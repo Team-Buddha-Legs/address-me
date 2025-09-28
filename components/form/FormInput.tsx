@@ -60,8 +60,8 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                   } else {
                     newValue = e.target.value
                       .split(",")
-                      .map((age) => parseInt(age.trim()))
-                      .filter((age) => !isNaN(age));
+                      .map((age) => parseInt(age.trim(), 10))
+                      .filter((age) => !Number.isNaN(age));
                   }
                 } else if (field.id === "healthConditions") {
                   // Convert comma-separated string to array of strings

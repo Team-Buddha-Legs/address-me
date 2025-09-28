@@ -42,7 +42,7 @@ export default function ErrorDisplay({
             ) : (
               <ul className="list-disc list-inside space-y-1">
                 {errors.map((error, index) => (
-                  <li key={index}>{error}</li>
+                  <li key={`error-${index}-${error.slice(0, 10)}`}>{error}</li>
                 ))}
               </ul>
             )}

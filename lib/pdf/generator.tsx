@@ -194,7 +194,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Relevant Policy Areas</Text>
         {summary.relevantAreas.map((area, index) => (
-          <View key={index} style={styles.policyArea}>
+          <View
+            key={`area-${index}-${area.title.slice(0, 10)}`}
+            style={styles.policyArea}
+          >
             <Text style={styles.policyTitle}>{area.title}</Text>
             <Text style={styles.policyScore}>
               Relevance Score: {area.relevanceScore}% | Impact:{" "}
@@ -213,7 +216,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
                   Action Items:
                 </Text>
                 {area.actionItems.map((item, itemIndex) => (
-                  <Text key={itemIndex} style={styles.actionItem}>
+                  <Text
+                    key={`item-${itemIndex}-${item.slice(0, 10)}`}
+                    style={styles.actionItem}
+                  >
                     • {item}
                   </Text>
                 ))}
@@ -227,7 +233,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Major City Updates</Text>
         {summary.majorUpdates.map((update, index) => (
-          <View key={index} style={styles.majorUpdate}>
+          <View
+            key={`update-${index}-${update.title.slice(0, 10)}`}
+            style={styles.majorUpdate}
+          >
             <Text style={styles.majorUpdateTitle}>{update.title}</Text>
             <Text style={styles.majorUpdateContent}>{update.description}</Text>
             <Text style={styles.majorUpdateContent}>
@@ -245,7 +254,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Personalized Recommendations</Text>
         {summary.recommendations.map((rec, index) => (
-          <View key={index} style={styles.recommendation}>
+          <View
+            key={`rec-${index}-${rec.title.slice(0, 10)}`}
+            style={styles.recommendation}
+          >
             <Text style={styles.recommendationTitle}>
               {rec.title} (Priority: {rec.priority.toUpperCase()})
             </Text>
@@ -261,7 +273,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
                   Action Steps:
                 </Text>
                 {rec.actionSteps.map((step, stepIndex) => (
-                  <Text key={stepIndex} style={styles.actionItem}>
+                  <Text
+                    key={`step-${stepIndex}-${step.slice(0, 10)}`}
+                    style={styles.actionItem}
+                  >
                     {stepIndex + 1}. {step}
                   </Text>
                 ))}

@@ -38,6 +38,7 @@ export function ExpandableDetails({
       className={`rounded-lg border transition-colors duration-200 ${getVariantClasses(variant)}`}
     >
       <button
+        type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-4 py-3 flex items-center justify-between text-left"
       >

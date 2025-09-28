@@ -47,7 +47,7 @@ export default function ProcessingPage() {
             setTimeout(() => {
               try {
                 router.push("/report/sample"); // Placeholder route
-              } catch (err) {
+              } catch (_err) {
                 setError("Failed to navigate to report. Please try again.");
               }
             }, 1500);
@@ -57,7 +57,7 @@ export default function ProcessingPage() {
           return newProgress;
         });
       }, 500);
-    } catch (err) {
+    } catch (_err) {
       setError(
         "An error occurred while processing your assessment. Please try again.",
       );
@@ -94,6 +94,8 @@ export default function ProcessingPage() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Error icon"
               >
                 <path
                   strokeLinecap="round"
@@ -113,12 +115,14 @@ export default function ProcessingPage() {
 
           <div className="space-y-3">
             <button
+              type="button"
               onClick={() => window.location.reload()}
               className="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
             >
               Try Again
             </button>
             <button
+              type="button"
               onClick={() => router.push("/")}
               className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
@@ -150,6 +154,8 @@ export default function ProcessingPage() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
+                aria-label="Success icon"
               >
                 <path
                   strokeLinecap="round"

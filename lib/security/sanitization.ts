@@ -209,7 +209,8 @@ export function sanitizeFileName(fileName: string): string {
       // Remove potentially dangerous characters
       .replace(/[<>:"|?*]/g, "")
       // Remove control characters
-      .replace(/[\x00-\x1f\x80-\x9f]/g, "")
+      // biome-ignore lint: Intended
+      .replace(/[\u0000-\u001f\u0080-\u009f]/g, "")
       .trim()
   );
 }

@@ -41,6 +41,8 @@ export function DefaultErrorFallback({ error, resetError }: FallbackProps) {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              role="img"
+              aria-label="Error icon"
             >
               <path
                 strokeLinecap="round"
@@ -95,6 +97,7 @@ export function DefaultErrorFallback({ error, resetError }: FallbackProps) {
           className="space-y-4"
         >
           <button
+            type="button"
             onClick={resetError}
             className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
           >
@@ -155,7 +158,7 @@ class ErrorBoundary extends Component<Props, State> {
         const FallbackComponent = this.props.fallback;
         return (
           <FallbackComponent
-            error={this.state.error!}
+            error={this.state.error as Error}
             resetError={this.resetError}
           />
         );
@@ -164,7 +167,7 @@ class ErrorBoundary extends Component<Props, State> {
       // Default fallback UI
       return (
         <DefaultErrorFallback
-          error={this.state.error!}
+          error={this.state.error as Error}
           resetError={this.resetError}
         />
       );

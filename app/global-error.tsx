@@ -42,6 +42,8 @@ export default function GlobalError({
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
+                  aria-label="Critical error icon"
                 >
                   <path
                     strokeLinecap="round"
@@ -97,6 +99,7 @@ export default function GlobalError({
               className="space-y-4"
             >
               <button
+                type="button"
                 onClick={reset}
                 className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
               >
@@ -104,7 +107,10 @@ export default function GlobalError({
               </button>
 
               <button
-                onClick={() => (window.location.href = "/")}
+                type="button"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
                 className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
               >
                 Go Home

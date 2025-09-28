@@ -6,9 +6,7 @@ import type { FormField } from "@/types";
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
-    input: ({ children, ...props }: any) => (
-      <input {...props}>{children}</input>
-    ),
+    input: ({ ...props }: any) => <input {...props} />,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
   },

@@ -53,7 +53,9 @@ export async function processFormStep(
     const rateLimitResult = await rateLimit(clientId, FORM_RATE_LIMIT);
     if (!rateLimitResult.allowed) {
       throw new Error(
-        `Rate limit exceeded. Try again in ${Math.ceil(rateLimitResult.resetTime / 1000)} seconds`,
+        `Rate limit exceeded. Try again in ${Math.ceil(
+          rateLimitResult.resetTime / 1000,
+        )} seconds`,
       );
     }
 
@@ -84,7 +86,7 @@ export async function processFormStep(
     const validatedData = schema.parse(processedData);
 
     // Get or create session
-    let session;
+    let session: any;
     if (sessionId) {
       session = await getSession(sessionId);
       if (!session) {

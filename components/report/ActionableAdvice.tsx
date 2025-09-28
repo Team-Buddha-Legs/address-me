@@ -110,7 +110,10 @@ export function ActionableAdvice({
         </h5>
         <div className="space-y-3">
           {actionSteps.map((step, index) => (
-            <div key={index} className="flex items-start space-x-3">
+            <div
+              key={`step-${index}-${step.slice(0, 10)}`}
+              className="flex items-start space-x-3"
+            >
               <div className="flex-shrink-0 w-6 h-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center mt-0.5">
                 {index + 1}
               </div>

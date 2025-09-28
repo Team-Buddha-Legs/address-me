@@ -56,6 +56,7 @@ export function RecommendationsSection({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-neutral-200">
       <button
+        type="button"
         onClick={onToggle}
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 transition-colors duration-200"
       >
