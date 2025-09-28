@@ -3,6 +3,42 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Professional Blue - Primary Color */
+  --primary-blue: #1e40af;
+  --primary-blue-light: #3b82f6;
+  --primary-blue-dark: #1e3a8a;
+  --primary-blue-50: #eff6ff;
+  --primary-blue-100: #dbeafe;
+  --primary-blue-200: #bfdbfe;
+
+  /* Green - Secondary Color */
+  --secondary-green: #059669;
+  --secondary-green-light: #10b981;
+  --secondary-green-dark: #047857;
+  --secondary-green-50: #ecfdf5;
+  --secondary-green-100: #d1fae5;
+  --secondary-green-200: #a7f3d0;
+
+  /* Orange - Accent Color */
+  --accent-orange: #ea580c;
+  --accent-orange-light: #f97316;
+  --accent-orange-dark: #c2410c;
+  --accent-orange-50: #fff7ed;
+  --accent-orange-100: #ffedd5;
+  --accent-orange-200: #fed7aa;
+
+  /* Neutral Colors */
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
 }
 
 @theme inline {
@@ -10,12 +46,61 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Primary Blue Colors */
+  --color-primary: var(--primary-blue);
+  --color-primary-light: var(--primary-blue-light);
+  --color-primary-dark: var(--primary-blue-dark);
+  --color-primary-50: var(--primary-blue-50);
+  --color-primary-100: var(--primary-blue-100);
+  --color-primary-200: var(--primary-blue-200);
+
+  /* Secondary Green Colors */
+  --color-secondary: var(--secondary-green);
+  --color-secondary-light: var(--secondary-green-light);
+  --color-secondary-dark: var(--secondary-green-dark);
+  --color-secondary-50: var(--secondary-green-50);
+  --color-secondary-100: var(--secondary-green-100);
+  --color-secondary-200: var(--secondary-green-200);
+
+  /* Accent Orange Colors */
+  --color-accent: var(--accent-orange);
+  --color-accent-light: var(--accent-orange-light);
+  --color-accent-dark: var(--accent-orange-dark);
+  --color-accent-50: var(--accent-orange-50);
+  --color-accent-100: var(--accent-orange-100);
+  --color-accent-200: var(--accent-orange-200);
+
+  /* Neutral Colors */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* Adjust colors for dark mode while maintaining brand identity */
+    --primary-blue: #3b82f6;
+    --primary-blue-light: #60a5fa;
+    --primary-blue-dark: #2563eb;
+
+    --secondary-green: #10b981;
+    --secondary-green-light: #34d399;
+    --secondary-green-dark: #059669;
+
+    --accent-orange: #f97316;
+    --accent-orange-light: #fb923c;
+    --accent-orange-dark: #ea580c;
   }
 }
 
