@@ -1,20 +1,23 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
+  calculateProgress,
   formSteps,
-  getStepIndex,
-  getStepById,
+  getCompletedSteps,
   getNextStepId,
+  getNextStepRoute,
   getPreviousStepId,
+  getPreviousStepRoute,
+  getStepById,
+  getStepIndex,
+  getStepRoute,
+  getTotalSteps,
   isFirstStep,
   isLastStep,
-  calculateProgress,
-  getTotalSteps,
-  getCompletedSteps,
-  getStepRoute,
-  getNextStepRoute,
-  getPreviousStepRoute,
 } from "@/lib/form-steps";
-import { validateStepData, getStepValidationErrors } from "@/lib/form-validation";
+import {
+  getStepValidationErrors,
+  validateStepData,
+} from "@/lib/form-validation";
 
 describe("Form Steps Configuration", () => {
   it("should have the correct number of form steps", () => {
@@ -160,7 +163,9 @@ describe("Route Generation", () => {
 
   describe("getPreviousStepRoute", () => {
     it("should generate correct previous step route", () => {
-      expect(getPreviousStepRoute("location")).toBe("/assessment/personal-info");
+      expect(getPreviousStepRoute("location")).toBe(
+        "/assessment/personal-info",
+      );
       expect(getPreviousStepRoute("economic")).toBe("/assessment/location");
     });
 
@@ -241,12 +246,12 @@ describe("Form Step Field Configuration", () => {
   it("should have correct field types for personal info step", () => {
     const personalInfoStep = getStepById("personal-info");
     expect(personalInfoStep?.fields).toHaveLength(3);
-    
-    const ageField = personalInfoStep?.fields.find(f => f.id === "age");
+
+    const ageField = personalInfoStep?.fields.find((f) => f.id === "age");
     expect(ageField?.type).toBe("number");
     expect(ageField?.required).toBe(true);
-    
-    const genderField = personalInfoStep?.fields.find(f => f.id === "gender");
+
+    const genderField = personalInfoStep?.fields.find((f) => f.id === "gender");
     expect(genderField?.type).toBe("radio");
     expect(genderField?.options).toHaveLength(4);
   });
@@ -254,8 +259,8 @@ describe("Form Step Field Configuration", () => {
   it("should have correct field types for location step", () => {
     const locationStep = getStepById("location");
     expect(locationStep?.fields).toHaveLength(1);
-    
-    const districtField = locationStep?.fields.find(f => f.id === "district");
+
+    const districtField = locationStep?.fields.find((f) => f.id === "district");
     expect(districtField?.type).toBe("select");
     expect(districtField?.options).toHaveLength(17); // All HK districts
   });
@@ -263,11 +268,15 @@ describe("Form Step Field Configuration", () => {
   it("should have correct field types for education-transport step", () => {
     const educationTransportStep = getStepById("education-transport");
     expect(educationTransportStep?.fields).toHaveLength(2);
-    
-    const educationField = educationTransportStep?.fields.find(f => f.id === "educationLevel");
+
+    const educationField = educationTransportStep?.fields.find(
+      (f) => f.id === "educationLevel",
+    );
     expect(educationField?.type).toBe("select");
-    
-    const transportField = educationTransportStep?.fields.find(f => f.id === "transportationMode");
+
+    const transportField = educationTransportStep?.fields.find(
+      (f) => f.id === "transportationMode",
+    );
     expect(transportField?.type).toBe("checkbox");
     expect(transportField?.options).toHaveLength(7); // All transport modes
   });

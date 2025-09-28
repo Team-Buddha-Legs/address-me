@@ -1,12 +1,12 @@
 import { z } from "zod";
 import type {
-  UserProfile,
-  ProcessedProfile,
-  HongKongDistrict,
-  IncomeRange,
   EmploymentStatus,
+  HongKongDistrict,
   HousingType,
+  IncomeRange,
   PolicyCategory,
+  ProcessedProfile,
+  UserProfile,
 } from "@/types";
 import { userProfileSchema } from "./validation";
 
@@ -66,7 +66,7 @@ export const identifyRiskFactors = (profile: UserProfile): string[] => {
 
   // Family-based risk factors
   if (profile.hasChildren && profile.childrenAges) {
-    const hasYoungChildren = profile.childrenAges.some(age => age < 6);
+    const hasYoungChildren = profile.childrenAges.some((age) => age < 6);
     if (hasYoungChildren) {
       riskFactors.push("young-children");
     }
@@ -82,28 +82,30 @@ export const identifyRiskFactors = (profile: UserProfile): string[] => {
 
 // Calculate eligibility flags for various programs/policies
 export const calculateEligibilityFlags = (
-  profile: UserProfile
+  profile: UserProfile,
 ): Record<string, boolean> => {
   return {
     // Housing eligibility
     publicHousingEligible: isPublicHousingEligible(profile),
     homeOwnershipSchemeEligible: isHomeOwnershipSchemeEligible(profile),
-    
+
     // Social welfare eligibility
-    comprehensiveSocialSecurityEligible: isComprehensiveSocialSecurityEligible(profile),
+    comprehensiveSocialSecurityEligible:
+      isComprehensiveSocialSecurityEligible(profile),
     elderlyAllowanceEligible: isElderlyAllowanceEligible(profile),
-    
+
     // Education eligibility
     continuingEducationFundEligible: isContinuingEducationFundEligible(profile),
-    
+
     // Employment eligibility
     retrainingProgrammeEligible: isRetrainingProgrammeEligible(profile),
-    
+
     // Healthcare eligibility
     healthcareVoucherEligible: isHealthcareVoucherEligible(profile),
-    
+
     // Transportation eligibility
-    publicTransportFareConcessionsEligible: isPublicTransportFareConcessionsEligible(profile),
+    publicTransportFareConcessionsEligible:
+      isPublicTransportFareConcessionsEligible(profile),
   };
 };
 
@@ -116,20 +118,27 @@ export const isPublicHousingEligible = (profile: UserProfile): boolean => {
   );
 };
 
-export const isHomeOwnershipSchemeEligible = (profile: UserProfile): boolean => {
+export const isHomeOwnershipSchemeEligible = (
+  profile: UserProfile,
+): boolean => {
   const eligibleIncomeRanges: IncomeRange[] = ["20k-30k", "30k-50k", "50k-80k"];
   return (
     eligibleIncomeRanges.includes(profile.incomeRange) &&
     !["private-owned", "subsidized-sale"].includes(profile.housingType) &&
-    ["employed-full-time", "employed-part-time", "self-employed"].includes(profile.employmentStatus)
+    ["employed-full-time", "employed-part-time", "self-employed"].includes(
+      profile.employmentStatus,
+    )
   );
 };
 
-export const isComprehensiveSocialSecurityEligible = (profile: UserProfile): boolean => {
+export const isComprehensiveSocialSecurityEligible = (
+  profile: UserProfile,
+): boolean => {
   return (
     profile.incomeRange === "below-10k" ||
     profile.employmentStatus === "unemployed" ||
-    (profile.age >= 60 && ["below-10k", "10k-20k"].includes(profile.incomeRange))
+    (profile.age >= 60 &&
+      ["below-10k", "10k-20k"].includes(profile.incomeRange))
   );
 };
 
@@ -137,15 +146,24 @@ export const isElderlyAllowanceEligible = (profile: UserProfile): boolean => {
   return profile.age >= 65;
 };
 
-export const isContinuingEducationFundEligible = (profile: UserProfile): boolean => {
+export const isContinuingEducationFundEligible = (
+  profile: UserProfile,
+): boolean => {
   return (
     profile.age >= 18 &&
     profile.age <= 70 &&
-    ["employed-full-time", "employed-part-time", "self-employed", "unemployed"].includes(profile.employmentStatus)
+    [
+      "employed-full-time",
+      "employed-part-time",
+      "self-employed",
+      "unemployed",
+    ].includes(profile.employmentStatus)
   );
 };
 
-export const isRetrainingProgrammeEligible = (profile: UserProfile): boolean => {
+export const isRetrainingProgrammeEligible = (
+  profile: UserProfile,
+): boolean => {
   return (
     profile.age >= 15 &&
     ["unemployed", "employed-part-time"].includes(profile.employmentStatus) &&
@@ -157,26 +175,33 @@ export const isHealthcareVoucherEligible = (profile: UserProfile): boolean => {
   return profile.age >= 65;
 };
 
-export const isPublicTransportFareConcessionsEligible = (profile: UserProfile): boolean => {
+export const isPublicTransportFareConcessionsEligible = (
+  profile: UserProfile,
+): boolean => {
   return (
     profile.age >= 65 ||
     profile.employmentStatus === "student" ||
-    (profile.hasChildren && profile.childrenAges?.some(age => age < 12) === true)
+    (profile.hasChildren &&
+      profile.childrenAges?.some((age) => age < 12) === true)
   );
 };
 
 // Data validation utilities
-export const validateUserProfile = (data: unknown): { 
-  success: boolean; 
-  data?: UserProfile; 
-  errors?: string[] 
+export const validateUserProfile = (
+  data: unknown,
+): {
+  success: boolean;
+  data?: UserProfile;
+  errors?: string[];
 } => {
   try {
     const validatedData = userProfileSchema.parse(data);
     return { success: true, data: validatedData };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errors = error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`);
+      const errors = error.issues.map(
+        (issue) => `${issue.path.join(".")}: ${issue.message}`,
+      );
       return { success: false, errors };
     }
     return { success: false, errors: ["Unknown validation error"] };
@@ -184,11 +209,17 @@ export const validateUserProfile = (data: unknown): {
 };
 
 // Form step utilities
-export const calculateFormProgress = (currentStep: number, totalSteps: number): number => {
+export const calculateFormProgress = (
+  currentStep: number,
+  totalSteps: number,
+): number => {
   return Math.round((currentStep / totalSteps) * 100);
 };
 
-export const getNextStepId = (currentStepId: string, stepIds: string[]): string | null => {
+export const getNextStepId = (
+  currentStepId: string,
+  stepIds: string[],
+): string | null => {
   const currentIndex = stepIds.indexOf(currentStepId);
   if (currentIndex === -1 || currentIndex === stepIds.length - 1) {
     return null;
@@ -196,7 +227,10 @@ export const getNextStepId = (currentStepId: string, stepIds: string[]): string 
   return stepIds[currentIndex + 1];
 };
 
-export const getPreviousStepId = (currentStepId: string, stepIds: string[]): string | null => {
+export const getPreviousStepId = (
+  currentStepId: string,
+  stepIds: string[],
+): string | null => {
   const currentIndex = stepIds.indexOf(currentStepId);
   if (currentIndex <= 0) {
     return null;
@@ -207,44 +241,61 @@ export const getPreviousStepId = (currentStepId: string, stepIds: string[]): str
 // Policy relevance utilities
 export const calculatePolicyRelevance = (
   profile: UserProfile,
-  policyCategory: PolicyCategory
+  policyCategory: PolicyCategory,
 ): number => {
   const processedProfile = processUserProfile(profile);
   let relevanceScore = 50; // Base score
 
   switch (policyCategory) {
     case "housing":
-      if (processedProfile.eligibilityFlags.publicHousingEligible) relevanceScore += 30;
-      if (processedProfile.eligibilityFlags.homeOwnershipSchemeEligible) relevanceScore += 25;
-      if (processedProfile.riskFactors.includes("housing-insecurity")) relevanceScore += 20;
+      if (processedProfile.eligibilityFlags.publicHousingEligible)
+        relevanceScore += 30;
+      if (processedProfile.eligibilityFlags.homeOwnershipSchemeEligible)
+        relevanceScore += 25;
+      if (processedProfile.riskFactors.includes("housing-insecurity"))
+        relevanceScore += 20;
       break;
 
     case "healthcare":
-      if (processedProfile.eligibilityFlags.healthcareVoucherEligible) relevanceScore += 25;
-      if (processedProfile.riskFactors.includes("elderly")) relevanceScore += 20;
-      if (processedProfile.riskFactors.includes("health-conditions")) relevanceScore += 30;
+      if (processedProfile.eligibilityFlags.healthcareVoucherEligible)
+        relevanceScore += 25;
+      if (processedProfile.riskFactors.includes("elderly"))
+        relevanceScore += 20;
+      if (processedProfile.riskFactors.includes("health-conditions"))
+        relevanceScore += 30;
       break;
 
     case "education":
-      if (processedProfile.eligibilityFlags.continuingEducationFundEligible) relevanceScore += 25;
+      if (processedProfile.eligibilityFlags.continuingEducationFundEligible)
+        relevanceScore += 25;
       if (profile.employmentStatus === "student") relevanceScore += 30;
-      if (processedProfile.riskFactors.includes("young-adult")) relevanceScore += 15;
+      if (processedProfile.riskFactors.includes("young-adult"))
+        relevanceScore += 15;
       break;
 
     case "employment":
-      if (processedProfile.eligibilityFlags.retrainingProgrammeEligible) relevanceScore += 30;
-      if (processedProfile.riskFactors.includes("unemployment")) relevanceScore += 35;
-      if (profile.employmentStatus === "employed-part-time") relevanceScore += 20;
+      if (processedProfile.eligibilityFlags.retrainingProgrammeEligible)
+        relevanceScore += 30;
+      if (processedProfile.riskFactors.includes("unemployment"))
+        relevanceScore += 35;
+      if (profile.employmentStatus === "employed-part-time")
+        relevanceScore += 20;
       break;
 
     case "social-welfare":
-      if (processedProfile.eligibilityFlags.comprehensiveSocialSecurityEligible) relevanceScore += 35;
-      if (processedProfile.eligibilityFlags.elderlyAllowanceEligible) relevanceScore += 25;
-      if (processedProfile.riskFactors.includes("low-income")) relevanceScore += 20;
+      if (processedProfile.eligibilityFlags.comprehensiveSocialSecurityEligible)
+        relevanceScore += 35;
+      if (processedProfile.eligibilityFlags.elderlyAllowanceEligible)
+        relevanceScore += 25;
+      if (processedProfile.riskFactors.includes("low-income"))
+        relevanceScore += 20;
       break;
 
     case "transportation":
-      if (processedProfile.eligibilityFlags.publicTransportFareConcessionsEligible) relevanceScore += 25;
+      if (
+        processedProfile.eligibilityFlags.publicTransportFareConcessionsEligible
+      )
+        relevanceScore += 25;
       if (profile.transportationMode.includes("mtr")) relevanceScore += 15;
       if (profile.transportationMode.includes("bus")) relevanceScore += 10;
       break;
@@ -275,8 +326,8 @@ export const formatDistrict = (district: HongKongDistrict): string => {
   const formatMap: Record<HongKongDistrict, string> = {
     "central-western": "Central and Western",
     "wan-chai": "Wan Chai",
-    "eastern": "Eastern",
-    "southern": "Southern",
+    eastern: "Eastern",
+    southern: "Southern",
     "yau-tsim-mong": "Yau Tsim Mong",
     "sham-shui-po": "Sham Shui Po",
     "kowloon-city": "Kowloon City",
@@ -285,11 +336,11 @@ export const formatDistrict = (district: HongKongDistrict): string => {
     "tsuen-wan": "Tsuen Wan",
     "tuen-mun": "Tuen Mun",
     "yuen-long": "Yuen Long",
-    "north": "North",
+    north: "North",
     "tai-po": "Tai Po",
     "sha-tin": "Sha Tin",
     "sai-kung": "Sai Kung",
-    "islands": "Islands",
+    islands: "Islands",
   };
   return formatMap[district];
 };
@@ -299,9 +350,9 @@ export const formatEmploymentStatus = (status: EmploymentStatus): string => {
     "employed-full-time": "Employed (Full-time)",
     "employed-part-time": "Employed (Part-time)",
     "self-employed": "Self-employed",
-    "unemployed": "Unemployed",
-    "student": "Student",
-    "retired": "Retired",
+    unemployed: "Unemployed",
+    student: "Student",
+    retired: "Retired",
   };
   return formatMap[status];
 };
@@ -312,8 +363,8 @@ export const formatHousingType = (housingType: HousingType): string => {
     "subsidized-sale": "Subsidized Sale Housing",
     "private-rental": "Private Rental",
     "private-owned": "Private Owned",
-    "temporary": "Temporary Housing",
-    "other": "Other",
+    temporary: "Temporary Housing",
+    other: "Other",
   };
   return formatMap[housingType];
 };

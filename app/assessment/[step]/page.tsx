@@ -1,5 +1,5 @@
-import { formSteps } from "@/lib/form-steps";
 import AssessmentStepClient from "@/components/form/AssessmentStepClient";
+import { formSteps } from "@/lib/form-steps";
 
 export async function generateStaticParams() {
   return formSteps.map((step) => ({
@@ -14,6 +14,7 @@ export default function AssessmentStepPage() {
 export function generateMetadata() {
   return {
     title: "Assessment - Address Me",
-    description: "Complete your profile assessment to receive personalized Policy Address insights",
+    description:
+      "Complete your profile assessment to receive personalized Policy Address insights",
   };
 }

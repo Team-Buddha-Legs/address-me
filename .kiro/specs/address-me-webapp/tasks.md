@@ -43,8 +43,8 @@
   - Test animations and responsiveness across different screen sizes
   - _Requirements: 1.2, 3.4, 3.5_
 
-- [ ] 4. Create AI integration and policy analysis system
-- [ ] 4.1 Implement swappable AI provider architecture
+- [x] 4. Create AI integration and policy analysis system
+- [x] 4.1 Implement swappable AI provider architecture
 
   - Create functional AI provider interface with configuration types
   - Implement AWS Bedrock provider as initial AI service (Claude or Titan models)
@@ -52,7 +52,7 @@
   - Write unit tests with mocked AI responses
   - _Requirements: 2.1, 5.3_
 
-- [ ] 4.2 Build policy content processing functions
+- [x] 4.2 Build policy content processing functions
 
   - Create mock policy content data structure for Hong Kong Policy Address
   - Implement policy analysis functions that match user profiles to relevant content
@@ -60,7 +60,7 @@
   - Write unit tests for policy matching and scoring logic
   - _Requirements: 2.1, 2.2_
 
-- [ ] 4.3 Implement personalized summary generation
+- [x] 4.3 Implement personalized summary generation
 
   - Create summary generation function that combines user profile with policy analysis
   - Implement recommendation engine for actionable advice

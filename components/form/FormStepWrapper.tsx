@@ -1,23 +1,23 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import type { FormStep } from "@/types";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   calculateProgress,
   getCompletedSteps,
-  getTotalSteps,
   getNextStepRoute,
   getPreviousStepRoute,
+  getTotalSteps,
   isFirstStep,
   isLastStep,
 } from "@/lib/form-steps";
 import { getStepValidationErrors } from "@/lib/form-validation";
+import type { FormStep } from "@/types";
+import ErrorDisplay from "./ErrorDisplay";
 import FormInput from "./FormInput";
 import ProgressIndicator from "./ProgressIndicator";
-import ErrorDisplay from "./ErrorDisplay";
 
 interface FormStepWrapperProps {
   step: Omit<FormStep, "validation">;

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { validateStepData } from "@/lib/form-validation";
 
 describe("Health Form Conversion", () => {
@@ -40,9 +40,9 @@ describe("Health Form Conversion", () => {
       const validData = {
         healthConditions: [
           "Type 2 Diabetes",
-          "High Blood Pressure", 
+          "High Blood Pressure",
           "Chronic Back Pain",
-          "Asthma"
+          "Asthma",
         ],
       };
       expect(validateStepData("health", validData)).toBe(true);

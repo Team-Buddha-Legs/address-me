@@ -1,7 +1,7 @@
 import type { FormStep } from "@/types";
 
 // Form step configuration with questions and flow logic (without validation schemas)
-export const formSteps: Omit<FormStep, 'validation'>[] = [
+export const formSteps: Omit<FormStep, "validation">[] = [
   {
     id: "personal-info",
     title: "Personal Information",
@@ -193,7 +193,8 @@ export const formSteps: Omit<FormStep, 'validation'>[] = [
       {
         id: "healthConditions",
         type: "text",
-        label: "Do you have any health conditions we should consider? (optional)",
+        label:
+          "Do you have any health conditions we should consider? (optional)",
         placeholder: "e.g., diabetes, mobility issues, chronic conditions",
         required: false,
       },
@@ -206,7 +207,9 @@ export const getStepIndex = (stepId: string): number => {
   return formSteps.findIndex((step) => step.id === stepId);
 };
 
-export const getStepById = (stepId: string): Omit<FormStep, 'validation'> | undefined => {
+export const getStepById = (
+  stepId: string,
+): Omit<FormStep, "validation"> | undefined => {
   return formSteps.find((step) => step.id === stepId);
 };
 

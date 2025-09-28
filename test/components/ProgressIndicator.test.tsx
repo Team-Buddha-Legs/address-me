@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import ProgressIndicator from "@/components/form/ProgressIndicator";
 
 describe("ProgressIndicator Component", () => {
@@ -10,7 +10,7 @@ describe("ProgressIndicator Component", () => {
         totalSteps={6}
         progress={50}
         stepTitle="Economic Status"
-      />
+      />,
     );
 
     expect(container.textContent).toContain("Step 3 of 6");
@@ -25,7 +25,7 @@ describe("ProgressIndicator Component", () => {
         totalSteps={6}
         progress={17}
         stepTitle="Personal Information"
-      />
+      />,
     );
 
     const progressBar = container.querySelector('[style*="width: 17%"]');
@@ -39,7 +39,7 @@ describe("ProgressIndicator Component", () => {
         totalSteps={6}
         progress={0}
         stepTitle="Getting Started"
-      />
+      />,
     );
 
     expect(container.textContent).toContain("0% Complete");
@@ -54,7 +54,7 @@ describe("ProgressIndicator Component", () => {
         totalSteps={6}
         progress={100}
         stepTitle="Health Information"
-      />
+      />,
     );
 
     expect(container.textContent).toContain("100% Complete");
@@ -69,11 +69,13 @@ describe("ProgressIndicator Component", () => {
         totalSteps={6}
         progress={33}
         stepTitle="Location"
-      />
+      />,
     );
 
     // Check for gradient classes on progress bar
-    const progressBar = container.querySelector('.bg-gradient-to-r.from-blue-500.to-blue-600');
+    const progressBar = container.querySelector(
+      ".bg-gradient-to-r.from-blue-500.to-blue-600",
+    );
     expect(progressBar).toBeTruthy();
 
     // Check for step title

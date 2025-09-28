@@ -1,7 +1,7 @@
 "use client";
 
-import { forwardRef } from "react";
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import type { FormField } from "@/types";
 
 interface FormInputProps {
@@ -41,15 +41,18 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
               type={field.type}
               placeholder={field.placeholder}
               value={
-                (field.id === "childrenAges" || field.id === "healthConditions") && Array.isArray(value)
+                (field.id === "childrenAges" ||
+                  field.id === "healthConditions") &&
+                Array.isArray(value)
                   ? value.join(", ")
                   : value || ""
               }
               onChange={(e) => {
                 let newValue: any = e.target.value;
-                
+
                 if (field.type === "number") {
-                  newValue = e.target.value === "" ? "" : Number(e.target.value);
+                  newValue =
+                    e.target.value === "" ? "" : Number(e.target.value);
                 } else if (field.id === "childrenAges") {
                   // Convert comma-separated string to array of numbers
                   if (e.target.value.trim() === "") {
@@ -57,8 +60,8 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                   } else {
                     newValue = e.target.value
                       .split(",")
-                      .map(age => parseInt(age.trim()))
-                      .filter(age => !isNaN(age));
+                      .map((age) => parseInt(age.trim()))
+                      .filter((age) => !isNaN(age));
                   }
                 } else if (field.id === "healthConditions") {
                   // Convert comma-separated string to array of strings
@@ -67,11 +70,11 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                   } else {
                     newValue = e.target.value
                       .split(",")
-                      .map(condition => condition.trim())
-                      .filter(condition => condition.length > 0);
+                      .map((condition) => condition.trim())
+                      .filter((condition) => condition.length > 0);
                   }
                 }
-                
+
                 onChange(newValue);
               }}
               disabled={disabled}
@@ -156,7 +159,7 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                       type="radio"
                       value={option.value}
                       checked={
-                        field.id === "hasChildren" 
+                        field.id === "hasChildren"
                           ? value === (option.value === "true")
                           : value === option.value
                       }
@@ -220,13 +223,17 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                       name={field.id}
                       type="checkbox"
                       value={option.value}
-                      checked={Array.isArray(value) && value.includes(option.value)}
+                      checked={
+                        Array.isArray(value) && value.includes(option.value)
+                      }
                       onChange={(e) => {
                         const currentValues = Array.isArray(value) ? value : [];
                         if (e.target.checked) {
                           onChange([...currentValues, option.value]);
                         } else {
-                          onChange(currentValues.filter((v) => v !== option.value));
+                          onChange(
+                            currentValues.filter((v) => v !== option.value),
+                          );
                         }
                       }}
                       disabled={disabled}
@@ -263,7 +270,7 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
           </div>
         );
     }
-  }
+  },
 );
 
 FormInput.displayName = "FormInput";

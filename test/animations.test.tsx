@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 describe("Animation Components", () => {
@@ -11,12 +11,16 @@ describe("Animation Components", () => {
     });
 
     it("should apply correct size classes", () => {
-      const { container: smallContainer } = render(<LoadingSpinner size="sm" />);
-      const { container: largeContainer } = render(<LoadingSpinner size="lg" />);
-      
+      const { container: smallContainer } = render(
+        <LoadingSpinner size="sm" />,
+      );
+      const { container: largeContainer } = render(
+        <LoadingSpinner size="lg" />,
+      );
+
       const smallSpinner = smallContainer.firstChild as HTMLElement;
       const largeSpinner = largeContainer.firstChild as HTMLElement;
-      
+
       expect(smallSpinner.className).toContain("h-4 w-4");
       expect(largeSpinner.className).toContain("h-8 w-8");
     });

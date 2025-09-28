@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import ErrorDisplay from "@/components/form/ErrorDisplay";
 
 describe("ErrorDisplay Component", () => {
@@ -14,7 +14,9 @@ describe("ErrorDisplay Component", () => {
   });
 
   it("should render single error correctly", () => {
-    const { container } = render(<ErrorDisplay errors={["This field is required"]} />);
+    const { container } = render(
+      <ErrorDisplay errors={["This field is required"]} />,
+    );
 
     expect(container.textContent).toContain("There was an error:");
     expect(container.textContent).toContain("This field is required");
@@ -49,7 +51,7 @@ describe("ErrorDisplay Component", () => {
 
   it("should apply custom className", () => {
     const { container } = render(
-      <ErrorDisplay errors={["Test error"]} className="custom-class" />
+      <ErrorDisplay errors={["Test error"]} className="custom-class" />,
     );
 
     const errorDiv = container.firstChild as HTMLElement;

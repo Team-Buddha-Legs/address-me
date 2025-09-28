@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function ProcessingPage() {
@@ -21,7 +21,7 @@ export default function ProcessingPage() {
     const interval = setInterval(() => {
       setProgress((prev) => {
         const newProgress = prev + Math.random() * 15;
-        
+
         // Update step based on progress
         if (newProgress < 25) {
           setCurrentStep(steps[0]);
@@ -80,7 +80,8 @@ export default function ProcessingPage() {
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-8"
         >
-          We're analyzing your profile and matching it with the latest Policy Address content to create your personalized report.
+          We're analyzing your profile and matching it with the latest Policy
+          Address content to create your personalized report.
         </motion.p>
 
         {/* Progress bar */}

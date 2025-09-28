@@ -1,29 +1,29 @@
 "use client";
 
 import {
-  personalInfoStepSchema,
-  locationStepSchema,
   economicStepSchema,
-  familyStepSchema,
   educationTransportStepSchema,
+  familyStepSchema,
   healthStepSchema,
+  locationStepSchema,
+  personalInfoStepSchema,
 } from "@/lib/validation";
 
 // Validation schema mapping for client-side use
 const validationSchemas = {
   "personal-info": personalInfoStepSchema,
-  "location": locationStepSchema,
-  "economic": economicStepSchema,
-  "family": familyStepSchema,
+  location: locationStepSchema,
+  economic: economicStepSchema,
+  family: familyStepSchema,
   "education-transport": educationTransportStepSchema,
-  "health": healthStepSchema,
+  health: healthStepSchema,
 } as const;
 
 // Validation helpers for client components
 export const validateStepData = (stepId: string, data: unknown): boolean => {
   const schema = validationSchemas[stepId as keyof typeof validationSchemas];
   if (!schema) return false;
-  
+
   try {
     schema.parse(data);
     return true;
@@ -32,11 +32,14 @@ export const validateStepData = (stepId: string, data: unknown): boolean => {
   }
 };
 
-export const getStepValidationErrors = (stepId: string, data: unknown): string[] => {
-  console.log('getStepValidationErrors: stepId, data', stepId, data);
+export const getStepValidationErrors = (
+  stepId: string,
+  data: unknown,
+): string[] => {
+  console.log("getStepValidationErrors: stepId, data", stepId, data);
   const schema = validationSchemas[stepId as keyof typeof validationSchemas];
   if (!schema) return ["Invalid step"];
-  
+
   try {
     schema.parse(data);
     return [];

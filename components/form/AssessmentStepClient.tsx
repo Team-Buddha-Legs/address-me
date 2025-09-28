@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getStepById } from "@/lib/form-steps";
-import FormStepWrapper from "./FormStepWrapper";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { getStepById } from "@/lib/form-steps";
 import type { FormStep } from "@/types";
+import FormStepWrapper from "./FormStepWrapper";
 
 export default function AssessmentStepClient() {
   const params = useParams();
-  const [stepConfig, setStepConfig] = useState<Omit<FormStep, 'validation'> | null>(null);
+  const [stepConfig, setStepConfig] = useState<Omit<
+    FormStep,
+    "validation"
+  > | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,8 +36,12 @@ export default function AssessmentStepClient() {
   if (!stepConfig) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Step Not Found</h2>
-        <p className="text-gray-600">The requested assessment step could not be found.</p>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Step Not Found
+        </h2>
+        <p className="text-gray-600">
+          The requested assessment step could not be found.
+        </p>
       </div>
     );
   }

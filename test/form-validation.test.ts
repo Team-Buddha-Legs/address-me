@@ -1,5 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { validateStepData, getStepValidationErrors } from "@/lib/form-validation";
+import { describe, expect, it } from "vitest";
+import {
+  getStepValidationErrors,
+  validateStepData,
+} from "@/lib/form-validation";
 
 describe("Form Validation", () => {
   describe("validateStepData", () => {

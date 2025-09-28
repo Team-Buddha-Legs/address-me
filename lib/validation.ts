@@ -1,14 +1,14 @@
 import { z } from "zod";
 import type {
-  HongKongDistrict,
-  IncomeRange,
-  EmploymentStatus,
-  HousingType,
   EducationLevel,
+  EmploymentStatus,
+  FormStep,
+  HongKongDistrict,
+  HousingType,
+  IncomeRange,
+  PolicyCategory,
   TransportationMode,
   UserProfile,
-  FormStep,
-  PolicyCategory,
 } from "@/types";
 
 // Hong Kong specific enum schemas
@@ -89,42 +89,51 @@ export const policyCategorySchema = z.enum([
 ]);
 
 // User Profile validation schema
-export const userProfileSchema = z.object({
-  age: z
-    .number()
-    .int()
-    .min(18, "Must be at least 18 years old")
-    .max(120, "Age must be realistic"),
-  gender: z.enum(["male", "female", "other", "prefer-not-to-say"]),
-  maritalStatus: z.enum(["single", "married", "divorced", "widowed"]),
-  district: hongKongDistrictSchema,
-  incomeRange: incomeRangeSchema,
-  employmentStatus: employmentStatusSchema,
-  housingType: housingTypeSchema,
-  hasChildren: z.boolean(),
-  childrenAges: z.array(z.number().int().min(0).max(25)).optional(),
-  educationLevel: educationLevelSchema,
-  healthConditions: z.array(z.string()).optional(),
-  transportationMode: z
-    .array(transportationModeSchema)
-    .min(1, "At least one transportation mode must be selected"),
-}).superRefine((data, ctx) => {
-  // Validate children ages based on hasChildren flag
-  if (data.hasChildren && (!data.childrenAges || data.childrenAges.length === 0)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Children ages must be provided if hasChildren is true",
-      path: ["childrenAges"],
-    });
-  }
-  if (!data.hasChildren && data.childrenAges && data.childrenAges.length > 0) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Children ages should not be provided if hasChildren is false",
-      path: ["childrenAges"],
-    });
-  }
-});
+export const userProfileSchema = z
+  .object({
+    age: z
+      .number()
+      .int()
+      .min(18, "Must be at least 18 years old")
+      .max(120, "Age must be realistic"),
+    gender: z.enum(["male", "female", "other", "prefer-not-to-say"]),
+    maritalStatus: z.enum(["single", "married", "divorced", "widowed"]),
+    district: hongKongDistrictSchema,
+    incomeRange: incomeRangeSchema,
+    employmentStatus: employmentStatusSchema,
+    housingType: housingTypeSchema,
+    hasChildren: z.boolean(),
+    childrenAges: z.array(z.number().int().min(0).max(25)).optional(),
+    educationLevel: educationLevelSchema,
+    healthConditions: z.array(z.string()).optional(),
+    transportationMode: z
+      .array(transportationModeSchema)
+      .min(1, "At least one transportation mode must be selected"),
+  })
+  .superRefine((data, ctx) => {
+    // Validate children ages based on hasChildren flag
+    if (
+      data.hasChildren &&
+      (!data.childrenAges || data.childrenAges.length === 0)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Children ages must be provided if hasChildren is true",
+        path: ["childrenAges"],
+      });
+    }
+    if (
+      !data.hasChildren &&
+      data.childrenAges &&
+      data.childrenAges.length > 0
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Children ages should not be provided if hasChildren is false",
+        path: ["childrenAges"],
+      });
+    }
+  });
 
 // Form field validation schema
 export const formFieldSchema = z.object({
@@ -137,7 +146,7 @@ export const formFieldSchema = z.object({
       z.object({
         value: z.string(),
         label: z.string(),
-      })
+      }),
     )
     .optional(),
   required: z.boolean(),
@@ -170,26 +179,35 @@ export const economicStepSchema = z.object({
   housingType: housingTypeSchema,
 });
 
-export const familyStepSchema = z.object({
-  hasChildren: z.boolean(),
-  childrenAges: z.array(z.number().int().min(0).max(25)).optional(),
-}).superRefine((data, ctx) => {
-  // Validate children ages based on hasChildren flag
-  if (data.hasChildren && (!data.childrenAges || data.childrenAges.length === 0)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Children ages must be provided if hasChildren is true",
-      path: ["childrenAges"],
-    });
-  }
-  if (!data.hasChildren && data.childrenAges && data.childrenAges.length > 0) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Children ages should not be provided if hasChildren is false",
-      path: ["childrenAges"],
-    });
-  }
-});
+export const familyStepSchema = z
+  .object({
+    hasChildren: z.boolean(),
+    childrenAges: z.array(z.number().int().min(0).max(25)).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Validate children ages based on hasChildren flag
+    if (
+      data.hasChildren &&
+      (!data.childrenAges || data.childrenAges.length === 0)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Children ages must be provided if hasChildren is true",
+        path: ["childrenAges"],
+      });
+    }
+    if (
+      !data.hasChildren &&
+      data.childrenAges &&
+      data.childrenAges.length > 0
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Children ages should not be provided if hasChildren is false",
+        path: ["childrenAges"],
+      });
+    }
+  });
 
 export const educationTransportStepSchema = z.object({
   educationLevel: educationLevelSchema,
@@ -210,5 +228,7 @@ export type PersonalInfoStepInput = z.infer<typeof personalInfoStepSchema>;
 export type LocationStepInput = z.infer<typeof locationStepSchema>;
 export type EconomicStepInput = z.infer<typeof economicStepSchema>;
 export type FamilyStepInput = z.infer<typeof familyStepSchema>;
-export type EducationTransportStepInput = z.infer<typeof educationTransportStepSchema>;
+export type EducationTransportStepInput = z.infer<
+  typeof educationTransportStepSchema
+>;
 export type HealthStepInput = z.infer<typeof healthStepSchema>;

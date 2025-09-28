@@ -1,12 +1,14 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import FormInput from "@/components/form/FormInput";
 import type { FormField } from "@/types";
 
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
-    input: ({ children, ...props }: any) => <input {...props}>{children}</input>,
+    input: ({ children, ...props }: any) => (
+      <input {...props}>{children}</input>
+    ),
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
   },
@@ -32,15 +34,17 @@ describe("Family Form Integration", () => {
         field={hasChildrenField}
         value={false}
         onChange={mockOnChange}
-      />
+      />,
     );
 
     // Click the "Yes" radio button
-    const yesRadio = container.querySelector('input[value="true"]') as HTMLInputElement;
+    const yesRadio = container.querySelector(
+      'input[value="true"]',
+    ) as HTMLInputElement;
     expect(yesRadio).toBeTruthy();
-    
+
     fireEvent.click(yesRadio);
-    
+
     // Should call onChange with boolean true, not string "true"
     expect(mockOnChange).toHaveBeenCalledWith(true);
   });
@@ -61,14 +65,16 @@ describe("Family Form Integration", () => {
         field={childrenAgesField}
         value={[]}
         onChange={mockOnChange}
-      />
+      />,
     );
 
-    const textInput = container.querySelector('input[type="text"]') as HTMLInputElement;
+    const textInput = container.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
     expect(textInput).toBeTruthy();
-    
+
     fireEvent.change(textInput, { target: { value: "5, 8, 12" } });
-    
+
     // Should call onChange with array of numbers
     expect(mockOnChange).toHaveBeenCalledWith([5, 8, 12]);
   });
@@ -89,13 +95,15 @@ describe("Family Form Integration", () => {
         field={childrenAgesField}
         value={[5, 8]}
         onChange={mockOnChange}
-      />
+      />,
     );
 
-    const textInput = container.querySelector('input[type="text"]') as HTMLInputElement;
-    
+    const textInput = container.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
+
     fireEvent.change(textInput, { target: { value: "" } });
-    
+
     // Should call onChange with empty array
     expect(mockOnChange).toHaveBeenCalledWith([]);
   });
@@ -116,10 +124,12 @@ describe("Family Form Integration", () => {
         field={childrenAgesField}
         value={[5, 8, 12]}
         onChange={mockOnChange}
-      />
+      />,
     );
 
-    const textInput = container.querySelector('input[type="text"]') as HTMLInputElement;
+    const textInput = container.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
     expect(textInput.value).toBe("5, 8, 12");
   });
 
@@ -139,16 +149,24 @@ describe("Family Form Integration", () => {
         field={healthConditionsField}
         value={[]}
         onChange={mockOnChange}
-      />
+      />,
     );
 
-    const textInput = container.querySelector('input[type="text"]') as HTMLInputElement;
+    const textInput = container.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
     expect(textInput).toBeTruthy();
-    
-    fireEvent.change(textInput, { target: { value: "diabetes, hypertension, asthma" } });
-    
+
+    fireEvent.change(textInput, {
+      target: { value: "diabetes, hypertension, asthma" },
+    });
+
     // Should call onChange with array of strings
-    expect(mockOnChange).toHaveBeenCalledWith(["diabetes", "hypertension", "asthma"]);
+    expect(mockOnChange).toHaveBeenCalledWith([
+      "diabetes",
+      "hypertension",
+      "asthma",
+    ]);
   });
 
   it("should display healthConditions array as comma-separated string", () => {
@@ -167,10 +185,12 @@ describe("Family Form Integration", () => {
         field={healthConditionsField}
         value={["diabetes", "hypertension"]}
         onChange={mockOnChange}
-      />
+      />,
     );
 
-    const textInput = container.querySelector('input[type="text"]') as HTMLInputElement;
+    const textInput = container.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
     expect(textInput.value).toBe("diabetes, hypertension");
   });
 });

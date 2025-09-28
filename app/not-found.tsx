@@ -52,7 +52,8 @@ export default function NotFound() {
           transition={{ delay: 0.4 }}
           className="text-gray-600 mb-8"
         >
-          The page you're looking for doesn't exist. Let's get you back on track with your assessment.
+          The page you're looking for doesn't exist. Let's get you back on track
+          with your assessment.
         </motion.p>
 
         <motion.div
@@ -67,7 +68,7 @@ export default function NotFound() {
           >
             Start Assessment
           </Link>
-          
+
           <Link
             href="/"
             className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"

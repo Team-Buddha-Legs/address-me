@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import AssessmentStepClient from "@/components/form/AssessmentStepClient";
 
 // Mock useParams
@@ -18,16 +18,16 @@ vi.mock("framer-motion", () => ({
 describe("AssessmentStepClient", () => {
   it("should show loading state initially", () => {
     mockUseParams.mockReturnValue({ step: "personal-info" });
-    
+
     const { container } = render(<AssessmentStepClient />);
     expect(container.textContent).toContain("Loading assessment step");
   });
 
   it("should show error for invalid step", () => {
     mockUseParams.mockReturnValue({ step: "invalid-step" });
-    
+
     const { container } = render(<AssessmentStepClient />);
-    
+
     // Wait for the effect to run
     setTimeout(() => {
       expect(container.textContent).toContain("Step Not Found");

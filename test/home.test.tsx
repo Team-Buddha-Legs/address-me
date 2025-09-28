@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import Home from "@/app/page";
 
 // Mock framer-motion to avoid animation issues in tests
@@ -52,7 +52,7 @@ describe("Home Page", () => {
     const { container } = render(<Home />);
     const links = container.querySelectorAll('a[href*="/assessment/"]');
     expect(links.length).toBeGreaterThan(0);
-    
+
     // Check that links point to the first step
     links.forEach((link) => {
       expect(link.getAttribute("href")).toContain("/assessment/personal-info");
