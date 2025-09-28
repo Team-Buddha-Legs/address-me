@@ -88,17 +88,16 @@
   - Test content rendering with various summary data structures
   - _Requirements: 2.2, 2.3, 2.4, 2.5, 2.6, 3.3_
 
-- [ ] 6. Add download and retry functionality
-- [ ] 6.1 Implement report download system
+- [x] 6. Add download and retry functionality
+- [x] 6.1 Implement report download system
 
   - Create PDF generation function using React-PDF
-  - Implement text export functionality for summary content
   - Build download trigger components with proper file naming
   - Add loading states and error handling for download operations
-  - Write tests for PDF generation and text export
+  - Write tests for PDF generation
   - _Requirements: 4.1, 4.2_
 
-- [ ] 6.2 Add assessment retry functionality
+- [x] 6.2 Add assessment retry functionality
 
   - Implement "retake assessment" functionality with data clearing
   - Create session management for temporary data storage

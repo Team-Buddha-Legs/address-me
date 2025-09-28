@@ -13,12 +13,12 @@ describe("Policy Analysis", () => {
     gender: "female",
     maritalStatus: "married",
     district: "central-western",
-    incomeRange: "40k-60k",
-    employmentStatus: "employed",
+    incomeRange: "30k-50k", // Changed to match middle-income classification
+    employmentStatus: "employed-full-time",
     housingType: "private-rental",
     hasChildren: true,
     childrenAges: [3, 6],
-    educationLevel: "university",
+    educationLevel: "bachelor",
     transportationMode: ["mtr", "bus"],
   };
 
