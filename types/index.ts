@@ -85,7 +85,10 @@ export type PolicyCategory =
   | "healthcare"
   | "education"
   | "employment"
-  | "social-welfare";
+  | "social-welfare"
+  | "environment"
+  | "economy"
+  | "technology";
 
 export interface PolicySection {
   id: string;

@@ -1,6 +1,5 @@
 "use server";
 
-import { input } from "framer-motion/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { generatePersonalizedSummary } from "@/lib/ai";
@@ -88,8 +87,7 @@ export async function generateSummary(formData: FormData) {
     }
 
     // Extract clientId safely for logging
-    const clientId =
-      (typeof input !== "undefined" && input.clientId) || "unknown";
+    const clientId = "unknown"; // Default fallback since input is not available in catch scope
     logger.error(
       "AI summary generation error",
       { error: error instanceof Error ? error.message : String(error) },
@@ -111,9 +109,9 @@ export async function generateSummary(formData: FormData) {
  * Server action to retry AI generation with different parameters
  */
 export async function retryGeneration(sessionId: string, formData: FormData) {
+  const clientId = formData.get("clientId") as string || "unknown";
   try {
     // Extract and validate input
-    const clientId = formData.get("clientId") as string;
     const csrfToken = formData.get("csrfToken") as string;
 
     if (!clientId || !csrfToken) {

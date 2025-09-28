@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { ZodError } from "zod";
 import { logger } from "@/lib/privacy";
 import { validateCSRF } from "@/lib/security/csrf";
 import { rateLimit } from "@/lib/security/rate-limit";
@@ -86,10 +87,11 @@ export async function processFormStep(
     // Get or create session
     let session: UserSession;
     if (sessionId) {
-      session = await getSession(sessionId);
-      if (!session) {
+      const existingSession = await getSession(sessionId);
+      if (!existingSession) {
         throw new Error("Invalid session");
       }
+      session = existingSession;
     } else {
       session = await createSession();
     }
@@ -184,7 +186,9 @@ export async function completeAssessment(
     return {
       success: false,
       error: sanitizeErrorMessage(
-        error instanceof Error ? error.message : "Completion failed",
+        error instanceof ZodError 
+          ? `Required fields missing or invalid: ${error.issues.map(issue => issue.message).join(", ")}`
+          : error instanceof Error ? error.message : "Completion failed",
       ),
     };
   }

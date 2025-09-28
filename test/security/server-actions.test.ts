@@ -125,7 +125,18 @@ describe("Server Actions Security", () => {
 
       const mockSession = {
         id: "test-session",
-        profile: {},
+        profile: {
+          age: 30,
+          gender: "male" as const,
+          maritalStatus: "single" as const,
+          district: "central-western" as const,
+          incomeRange: "30k-50k" as const,
+          employmentStatus: "employed-full-time" as const,
+          housingType: "private-rental" as const,
+          hasChildren: false,
+          educationLevel: "bachelor" as const,
+          transportationMode: ["mtr" as const],
+        },
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       };
@@ -157,7 +168,18 @@ describe("Server Actions Security", () => {
 
       const incompleteSession = {
         id: "test-session",
-        profile: { age: 25 }, // Incomplete profile
+        profile: {
+          age: 17, // Invalid age - below 18
+          gender: "male" as const,
+          maritalStatus: "single" as const,
+          district: "central-western" as const,
+          incomeRange: "30k-50k" as const,
+          employmentStatus: "employed-full-time" as const,
+          housingType: "private-rental" as const,
+          hasChildren: false,
+          educationLevel: "bachelor" as const,
+          transportationMode: ["mtr" as const],
+        },
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       };
@@ -167,7 +189,7 @@ describe("Server Actions Security", () => {
       const result = await completeAssessment("test-session", formData);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain("Required");
+      expect(result.error).toContain("Must be at least 18 years old");
     });
   });
 

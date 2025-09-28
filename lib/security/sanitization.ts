@@ -84,7 +84,7 @@ export function sanitizeHTML(html: string): string {
  * Sanitize object by recursively sanitizing all string values
  */
 export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
-  const sanitized = { ...obj };
+  const sanitized = { ...obj } as Record<string, unknown>;
 
   for (const [key, value] of Object.entries(sanitized)) {
     if (typeof value === "string") {
@@ -92,15 +92,15 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
     } else if (Array.isArray(value)) {
       sanitized[key] = value.map((item) =>
         typeof item === "string" ? sanitizeInput(item) : item,
-      ) as T[typeof key];
+      );
     } else if (value && typeof value === "object") {
       sanitized[key] = sanitizeObject(
         value as Record<string, unknown>,
-      ) as T[typeof key];
+      );
     }
   }
 
-  return sanitized;
+  return sanitized as T;
 }
 
 /**

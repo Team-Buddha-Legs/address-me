@@ -28,12 +28,12 @@ describe("SummaryGenerator", () => {
       gender: "female",
       maritalStatus: "married",
       district: "central-western",
-      incomeRange: "40k-60k",
-      employmentStatus: "employed",
+      incomeRange: "50k-80k",
+      employmentStatus: "employed-full-time",
       housingType: "private-rental",
       hasChildren: true,
       childrenAges: [5],
-      educationLevel: "university",
+      educationLevel: "bachelor",
       transportationMode: ["mtr", "bus"],
     };
 
@@ -148,7 +148,7 @@ describe("SummaryGenerator", () => {
         gender: "male",
         maritalStatus: "widowed",
         district: "wan-chai",
-        incomeRange: "20k-40k",
+        incomeRange: "20k-30k",
         employmentStatus: "retired",
         housingType: "public-rental",
         hasChildren: false,
@@ -207,11 +207,11 @@ describe("SummaryGenerator", () => {
         gender: "other",
         maritalStatus: "single",
         district: "islands",
-        incomeRange: "above-100k",
+        incomeRange: "above-120k",
         employmentStatus: "self-employed",
         housingType: "private-owned",
         hasChildren: false,
-        educationLevel: "postgraduate",
+        educationLevel: "doctorate",
         transportationMode: ["private-car"],
       };
 

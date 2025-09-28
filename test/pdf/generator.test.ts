@@ -88,7 +88,14 @@ describe("PDF Generator", () => {
     it("should handle PDF generation errors", async () => {
       const { pdf } = await import("@react-pdf/renderer");
       vi.mocked(pdf).mockImplementation(() => ({
+        container: null,
+        isDirty: vi.fn().mockReturnValue(false),
+        toString: vi.fn().mockReturnValue(""),
         toBlob: vi.fn().mockRejectedValue(new Error("PDF generation failed")),
+        toBuffer: vi.fn().mockResolvedValue(new ReadableStream()),
+        on: vi.fn(),
+        updateContainer: vi.fn(),
+        removeListener: vi.fn(),
       }));
 
       const reportId = "test-report-123";

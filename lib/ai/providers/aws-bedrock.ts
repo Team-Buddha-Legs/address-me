@@ -20,8 +20,8 @@ export class AWSBedrockProvider implements AIProvider {
 
     this.model = config.model;
     this.region = config.region || "us-east-1";
-    this.accessKeyId = config.options?.accessKeyId;
-    this.secretAccessKey = config.options?.secretAccessKey;
+    this.accessKeyId = typeof config.options?.accessKeyId === 'string' ? config.options.accessKeyId : undefined;
+    this.secretAccessKey = typeof config.options?.secretAccessKey === 'string' ? config.options.secretAccessKey : undefined;
   }
 
   validateConfig(): boolean {

@@ -56,7 +56,7 @@ describe("Policy Analysis", () => {
         ...mockUserProfile,
         age: 70,
         hasChildren: false,
-        incomeRange: "above-100k",
+        incomeRange: "above-120k",
         employmentStatus: "retired",
       };
 
@@ -182,7 +182,7 @@ describe("Policy Analysis", () => {
         gender: "male",
         maritalStatus: "widowed",
         district: "wan-chai",
-        incomeRange: "20k-40k",
+        incomeRange: "20k-30k",
         employmentStatus: "retired",
         housingType: "public-rental",
         hasChildren: false,
@@ -217,11 +217,11 @@ describe("Policy Analysis", () => {
         gender: "other",
         maritalStatus: "single",
         district: "islands",
-        incomeRange: "above-100k",
+        incomeRange: "above-120k",
         employmentStatus: "self-employed",
         housingType: "private-owned",
         hasChildren: false,
-        educationLevel: "postgraduate",
+        educationLevel: "doctorate",
         transportationMode: ["private-car"],
       };
 

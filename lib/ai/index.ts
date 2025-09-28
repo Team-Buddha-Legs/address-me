@@ -10,10 +10,7 @@ export {
 export { AWSBedrockProvider } from "./providers/aws-bedrock";
 
 // Main service
-export {
-  AIService,
-  createDefaultAIService,
-} from "./service";
+export { AIService, createDefaultAIService } from "./service";
 export type {
   AIMessage,
   AIProvider,
@@ -22,3 +19,6 @@ export type {
   AIResponse,
   AIServiceError,
 } from "./types";
+
+// Summary generation
+export { generatePersonalizedSummary } from "./summary-wrapper";

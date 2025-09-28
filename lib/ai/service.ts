@@ -11,6 +11,7 @@ import type {
  */
 export class AIService {
   private provider: AIProvider;
+  private config: AIProviderConfig;
 
   constructor(config: AIProviderConfig) {
     this.config = config;

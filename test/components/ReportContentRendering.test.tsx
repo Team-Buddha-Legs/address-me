@@ -113,10 +113,10 @@ describe("Report Content Rendering Components", () => {
 
     it("renders without timeframe when not provided", () => {
       const adviceWithoutTimeframe = { ...mockAdvice };
-      delete adviceWithoutTimeframe.timeframe;
+      const { timeframe, ...adviceWithoutTimeframeProps } = adviceWithoutTimeframe;
 
       const { container } = render(
-        <ActionableAdvice {...adviceWithoutTimeframe} />,
+        <ActionableAdvice {...adviceWithoutTimeframeProps} />,
       );
       expect(container.textContent).not.toContain("Timeframe:");
     });

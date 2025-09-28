@@ -227,10 +227,10 @@ export class SessionManager {
   static clearAssessmentData(): void {
     if (typeof window === "undefined") return;
 
-    const keysToKeep = [SESSION_KEYS.SESSION_ID, SESSION_KEYS.SESSION_CREATED];
+    const keysToKeep = [SESSION_KEYS.SESSION_ID, SESSION_KEYS.SESSION_CREATED] as const;
 
     Object.values(SESSION_KEYS).forEach((key) => {
-      if (!keysToKeep.includes(key)) {
+      if (!keysToKeep.includes(key as typeof keysToKeep[number])) {
         sessionStorage.removeItem(key);
       }
     });
@@ -252,7 +252,7 @@ export class SessionManager {
     return {
       id: sessionId,
       profile: profile!,
-      summary,
+      summary: summary || undefined,
       createdAt: new Date(createdAt),
       expiresAt: new Date(
         new Date(createdAt).getTime() + SESSION_EXPIRATION_MS,

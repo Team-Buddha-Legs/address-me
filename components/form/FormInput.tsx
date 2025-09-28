@@ -45,7 +45,7 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
                   field.id === "healthConditions") &&
                 Array.isArray(value)
                   ? value.join(", ")
-                  : value || ""
+                  : (typeof value === 'string' || typeof value === 'number') ? value : ""
               }
               onChange={(e) => {
                 let newValue: unknown = e.target.value;
@@ -106,7 +106,7 @@ const FormInput = forwardRef<HTMLElement, FormInputProps>(
               ref={ref as React.Ref<HTMLSelectElement>}
               id={field.id}
               name={field.id}
-              value={value || ""}
+              value={typeof value === 'string' ? value : ""}
               onChange={(e) => onChange(e.target.value)}
               disabled={disabled}
               className={baseInputClasses}
