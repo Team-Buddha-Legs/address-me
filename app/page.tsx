@@ -8,7 +8,7 @@ export default function Home() {
   const firstStepId = formSteps[0]?.id || "personal-info";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <motion.div
@@ -17,7 +17,7 @@ export default function Home() {
           className="flex items-center justify-between"
         >
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AM</span>
             </div>
             <h1 className="text-xl font-bold text-gray-900">Address Me</h1>
@@ -49,7 +49,7 @@ export default function Home() {
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
               Get Your{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
                 Personalized
               </span>{" "}
               Policy Address Report
@@ -70,7 +70,7 @@ export default function Home() {
           >
             <Link
               href={`/assessment/${firstStepId}`}
-              className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-primary to-primary-dark rounded-lg hover:from-primary-dark hover:to-primary transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Start Your Assessment
               <svg
@@ -102,9 +102,9 @@ export default function Home() {
             className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-16"
           >
             <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -127,9 +127,9 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-secondary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <svg
-                  className="w-6 h-6 text-green-600"
+                  className="w-6 h-6 text-secondary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -151,9 +151,9 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-accent"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -188,7 +188,7 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   1
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -201,7 +201,7 @@ export default function Home() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   2
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -214,7 +214,7 @@ export default function Home() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   3
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -232,18 +232,18 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.6 }}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 sm:p-12 text-white"
+            className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl p-8 sm:p-12 text-white"
           >
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Ready to Discover What's in Store for You?
             </h2>
-            <p className="text-blue-100 mb-6 text-lg">
+            <p className="text-primary-100 mb-6 text-lg">
               Join thousands of Hong Kong residents who have already discovered
               their personalized Policy Address insights.
             </p>
             <Link
               href={`/assessment/${firstStepId}`}
-              className="inline-flex items-center px-8 py-4 text-lg font-semibold text-blue-600 bg-white rounded-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="inline-flex items-center px-8 py-4 text-lg font-semibold text-primary bg-white rounded-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
               Start Assessment Now
               <svg
@@ -269,7 +269,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded flex items-center justify-center">
+              <div className="w-6 h-6 bg-gradient-to-r from-primary to-primary-dark rounded flex items-center justify-center">
                 <span className="text-white font-bold text-xs">AM</span>
               </div>
               <span className="text-gray-600">Address Me</span>
