@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ErrorBoundaryProvider from "@/components/error/ErrorBoundaryProvider";
+import NoScriptFallback from "@/components/ui/NoScriptFallback";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,7 +80,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
       >
-        {children}
+        <NoScriptFallback />
+        <ErrorBoundaryProvider enableGlobalNotifications={true}>
+          {children}
+        </ErrorBoundaryProvider>
       </body>
     </html>
   );

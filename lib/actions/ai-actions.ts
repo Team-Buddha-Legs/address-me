@@ -10,7 +10,6 @@ import { validateCSRF } from "@/lib/security/csrf";
 import { logger } from "@/lib/privacy";
 import type { PersonalizedSummary } from "@/types";
 import { input } from "framer-motion/client";
-import { input } from "framer-motion/client";
 
 // Rate limiting configuration for AI requests
 const AI_RATE_LIMIT = {
