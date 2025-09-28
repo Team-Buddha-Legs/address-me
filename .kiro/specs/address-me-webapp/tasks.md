@@ -8,12 +8,12 @@
   - Update root layout with proper metadata and color scheme
   - _Requirements: 1.1, 3.1, 5.3_
 
-- [ ] 2. Implement core utility functions and validation
+- [x] 2. Implement core utility functions and validation
 
   - Create Zod schemas for form validation (user profile, form steps)
   - Implement pure utility functions for data processing and validation
   - Write unit tests for validation functions and utility helpers
-  - ~~Create Hong Kong specific enums (districts, income ranges, housing types)~~ ✅ Already completed in types/index.ts
+  - Create Hong Kong specific enums (districts, income ranges, housing types)
   - _Requirements: 1.3, 1.4, 5.4_
 
 - [ ] 3. Build multi-page form system foundation
