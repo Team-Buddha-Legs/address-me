@@ -13,9 +13,10 @@ import { Caption, Typography } from "./Typography";
 interface ReportDisplayProps {
   summary: PersonalizedSummary;
   reportId: string;
+  onStartOver?: () => void;
 }
 
-export function ReportDisplay({ summary, reportId }: ReportDisplayProps) {
+export function ReportDisplay({ summary, reportId, onStartOver }: ReportDisplayProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(["policy-areas", "major-updates", "recommendations"]),
   );
@@ -86,7 +87,7 @@ export function ReportDisplay({ summary, reportId }: ReportDisplayProps) {
 
         {/* Actions */}
         <Section className="mt-4">
-          <ReportActions summary={summary} reportId={reportId} />
+          <ReportActions summary={summary} reportId={reportId} onStartOver={onStartOver} />
         </Section>
       </VerticalStack>
     </div>

@@ -10,7 +10,7 @@ export class AWSBedrockProvider implements AIProvider {
   readonly name = "aws-bedrock" as const;
   readonly model: string;
   private readonly region: string;
-  private readonly apiKey?: string;
+  private readonly apiKey: string;
 
   constructor(config: AIProviderConfig) {
     if (config.name !== "aws-bedrock") {
@@ -18,8 +18,8 @@ export class AWSBedrockProvider implements AIProvider {
     }
 
     this.model = config.model;
-    this.region = config.region || "us-west-2";
-    this.apiKey = config.apiKey;
+    this.region = config.region || "us-east-1";
+    this.apiKey = config.apiKey || "";
   }
 
   validateConfig(): boolean {
@@ -29,7 +29,7 @@ export class AWSBedrockProvider implements AIProvider {
   async generateResponse(messages: AIMessage[]): Promise<AIResponse> {
     if (!this.validateConfig()) {
       const error: AIServiceError = new Error(
-        "Invalid AWS Bedrock configuration - missing API key",
+        "Invalid AWS Bedrock configuration - missing API key, model, or region"
       ) as AIServiceError;
       error.code = "INVALID_CONFIG";
       error.provider = "aws-bedrock";
@@ -49,7 +49,7 @@ export class AWSBedrockProvider implements AIProvider {
       const aiError: AIServiceError = new Error(
         `AWS Bedrock API error: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`,
+        }`
       ) as AIServiceError;
       aiError.code = "PROVIDER_ERROR";
       aiError.provider = "aws-bedrock";
@@ -72,46 +72,84 @@ export class AWSBedrockProvider implements AIProvider {
       };
     }
 
-    // Real AWS Bedrock implementation using fetch API
-    const endpoint = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${this.model}/invoke`;
-    
-    // Format messages for Claude models
-    const systemMessage = messages.find(m => m.role === "system");
-    const conversationMessages = messages.filter(m => m.role !== "system");
-    
-    const requestBody = {
-      anthropic_version: "bedrock-2023-05-31",
+    // Bedrock endpoint for model invocation
+    const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${this.model}/invoke`;
+
+    // Request payload using OpenAI-like format for DeepSeek models
+    const payload = {
+      messages: messages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      temperature: 0.7,
+      top_p: 0.9,
       max_tokens: 4000,
-      system: systemMessage?.content || "",
-      messages: conversationMessages.map(msg => ({
-        role: msg.role === "user" ? "user" : "assistant",
-        content: msg.content
-      }))
+      // Remove the stop parameter that was causing premature termination
+      // stop: ["\n"],
     };
 
-    const response = await fetch(endpoint, {
+    // Headers with Bearer token
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+
+    const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.apiKey}`,
-        "X-Amz-Target": "BedrockRuntime.InvokeModel"
-      },
-      body: JSON.stringify(requestBody)
+      headers,
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      throw new Error(`Bedrock API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(
+        `Bedrock API error: ${response.status} ${response.statusText} - ${errorText}`
+      );
     }
 
-    const data = await response.json();
-    
+    // Always get raw text first to handle both JSON and markdown-wrapped JSON
+    const rawText = await response.text();
+    // console.log("??????");
+    // console.log(rawText);
+    let data;
+
+    // Check if the response starts with markdown
+    if (rawText.trim().startsWith("```json")) {
+      const jsonMatch = rawText.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        try {
+          data = JSON.parse(jsonMatch[1]);
+        } catch (innerError) {
+          throw new Error(`Failed to parse extracted JSON: ${jsonMatch[1]}`);
+        }
+      } else {
+        throw new Error(
+          `Found markdown JSON block but couldn't extract it: ${rawText}`
+        );
+      }
+    } else {
+      // Try to parse as direct JSON
+      try {
+        data = JSON.parse(rawText);
+      } catch (jsonError) {
+        throw new Error(`Failed to parse response as JSON: ${rawText}`);
+      }
+    }
+
     return {
-      content: data.content?.[0]?.text || "No response generated",
+      content:
+        data.choices?.[0]?.message?.content ||
+        data.completion ||
+        data.text ||
+        data.response ||
+        "No response generated",
       usage: {
-        inputTokens: data.usage?.input_tokens || 0,
-        outputTokens: data.usage?.output_tokens || 0
+        inputTokens: data.usage?.prompt_tokens || data.usage?.input_tokens || 0,
+        outputTokens:
+          data.usage?.completion_tokens || data.usage?.output_tokens || 0,
       },
-      finishReason: data.stop_reason === "end_turn" ? "stop" : data.stop_reason
+      finishReason:
+        data.choices?.[0]?.finish_reason || data.finish_reason || "stop",
     };
   }
 }

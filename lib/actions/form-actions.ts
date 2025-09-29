@@ -214,14 +214,23 @@ function processStepData(
       if (processed.hasChildren) {
         processed.hasChildren = processed.hasChildren === "true";
       }
-      if (
-        processed.childrenAges &&
-        typeof processed.childrenAges === "string"
-      ) {
-        processed.childrenAges = processed.childrenAges
-          .split(",")
-          .map((age) => Number(age.trim()))
-          .filter((age) => !Number.isNaN(age));
+      // Handle childrenAges conversion from string to array
+      if (processed.childrenAges !== undefined) {
+        if (typeof processed.childrenAges === "string") {
+          // Handle empty string or whitespace-only string
+          if (processed.childrenAges.trim() === "") {
+            processed.childrenAges = [];
+          } else {
+            // Split by comma and convert to numbers, filtering out invalid values
+            processed.childrenAges = processed.childrenAges
+              .split(",")
+              .map((age) => Number(age.trim()))
+              .filter((age) => !Number.isNaN(age) && age >= 0 && age <= 25);
+          }
+        } else if (!Array.isArray(processed.childrenAges)) {
+          // If it's not a string or array, convert to empty array
+          processed.childrenAges = [];
+        }
       }
       break;
 

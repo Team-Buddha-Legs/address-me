@@ -76,7 +76,8 @@ export class AIService {
 export function createDefaultAIService(): AIService {
   const config: AIProviderConfig = {
     name: "aws-bedrock",
-    model: "anthropic.claude-3-sonnet-20240229-v1:0",
+    // model: "deepseek.v3-v1:0",
+    model: "openai.gpt-oss-120b-1:0",
     region: "us-west-2",
     apiKey: process.env.BEDROCK_API_KEY,
   };

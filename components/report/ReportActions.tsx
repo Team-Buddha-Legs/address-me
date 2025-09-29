@@ -10,9 +10,10 @@ import type { PersonalizedSummary } from "@/types";
 interface ReportActionsProps {
   summary: PersonalizedSummary;
   reportId: string;
+  onStartOver?: () => void;
 }
 
-export function ReportActions({ summary, reportId }: ReportActionsProps) {
+export function ReportActions({ summary, reportId, onStartOver }: ReportActionsProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [showRetakeConfirm, setShowRetakeConfirm] = useState(false);
@@ -44,16 +45,20 @@ export function ReportActions({ summary, reportId }: ReportActionsProps) {
   };
 
   const handleRetakeAssessment = () => {
-    try {
-      // Clear all assessment data from session
-      SessionManager.clearAssessmentData();
-
-      // Redirect to the start of the assessment
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Error clearing assessment data:", error);
-      // Fallback: still redirect but log the error
-      window.location.href = "/";
+    if (onStartOver) {
+      onStartOver();
+    } else {
+      // Fallback for legacy usage
+      try {
+        // Clear all assessment data from session
+        SessionManager.clearAssessmentData();
+        // Redirect to the start of the assessment
+        window.location.href = "/";
+      } catch (error) {
+        console.error("Error clearing assessment data:", error);
+        // Fallback: still redirect but log the error
+        window.location.href = "/";
+      }
     }
   };
 

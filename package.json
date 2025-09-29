@@ -12,7 +12,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:real-ai": "tsx scripts/test-real-ai.ts"
+    "test:real-ai": "tsx scripts/test-real-ai.ts",
+    "test:integration": "tsx scripts/test-integration.ts",
+    "test:journey": "tsx scripts/test-user-journey.ts",
+    "test:form": "tsx scripts/test-form-integration.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.716.0",

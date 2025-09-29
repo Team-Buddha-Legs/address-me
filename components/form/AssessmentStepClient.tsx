@@ -46,5 +46,22 @@ export default function AssessmentStepClient() {
     );
   }
 
-  return <FormStepWrapper step={stepConfig} />;
+  const handleStepComplete = (stepId: string, data: Record<string, unknown>) => {
+    // For the individual step flow, we would need to handle navigation
+    // This is a simplified implementation
+    console.log("Step completed:", stepId, data);
+  };
+
+  const handleBack = () => {
+    // Navigate back or to home
+    window.history.back();
+  };
+
+  return (
+    <FormStepWrapper 
+      step={stepConfig} 
+      onStepComplete={handleStepComplete}
+      onBack={handleBack}
+    />
+  );
 }

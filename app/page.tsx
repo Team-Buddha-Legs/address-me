@@ -69,7 +69,7 @@ export default function Home() {
             className="mb-12"
           >
             <Link
-              href={`/assessment/${firstStepId}`}
+              href="/assessment-new"
               className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-primary to-primary-dark rounded-lg hover:from-primary-dark hover:to-primary transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Start Your Assessment
@@ -250,7 +250,7 @@ export default function Home() {
               their personalized Policy Address insights.
             </p>
             <Link
-              href={`/assessment/${firstStepId}`}
+              href="/assessment-new"
               className="inline-flex items-center px-8 py-4 text-lg font-semibold text-primary bg-white rounded-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
               Start Assessment Now

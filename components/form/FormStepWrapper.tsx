@@ -21,10 +21,17 @@ import ProgressIndicator from "./ProgressIndicator";
 
 interface FormStepWrapperProps {
   step: Omit<FormStep, "validation">;
+  onStepComplete: (stepId: string, data: Record<string, unknown>) => void;
+  onBack: () => void;
+  initialData?: Record<string, unknown>;
 }
 
-export default function FormStepWrapper({ step }: FormStepWrapperProps) {
-  const router = useRouter();
+export default function FormStepWrapper({ 
+  step, 
+  onStepComplete, 
+  onBack, 
+  initialData = {} 
+}: FormStepWrapperProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
@@ -36,24 +43,10 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
     formState: { errors },
   } = useForm({
     mode: "onChange",
-    defaultValues: getStoredStepData(step.id),
+    defaultValues: initialData,
   });
 
   const watchedValues = watch();
-
-  // Real-time validation
-  // Remark: Causing infinite re-rendering bug
-  // useEffect(() => {
-  //   const currentData = getValues();
-  //   const errors = getStepValidationErrors(step.id, currentData);
-  //   setValidationErrors(errors);
-  // }, [watchedValues, step.id, getValues]);
-
-  // Save form data to session storage on change
-  useEffect(() => {
-    const currentData = getValues();
-    saveStepData(step.id, currentData);
-  }, [step.id, getValues]);
 
   const progress = calculateProgress(step.id);
   const currentStepNumber = getCompletedSteps(step.id);
@@ -61,6 +54,7 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
 
   const onSubmit = async (data: Record<string, unknown>) => {
     setIsSubmitting(true);
+    setValidationErrors([]);
 
     try {
       // Validate the data using Zod schema
@@ -71,36 +65,23 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
         return;
       }
 
-      // Save the step data
-      saveStepData(step.id, data);
+      // Process step data based on step type
+      const processedData = processStepData(step.id, data);
 
-      // Navigate to next step or completion
-      if (isLastStep(step.id)) {
-        // Redirect to processing page
-        router.push("/processing");
-      } else {
-        const nextRoute = getNextStepRoute(step.id);
-        if (nextRoute) {
-          router.push(nextRoute);
-        }
-      }
+      // Call parent handler to manage the data
+      onStepComplete(step.id, processedData);
     } catch (error) {
       console.error("Form submission error:", error);
-      setValidationErrors(["An unexpected error occurred. Please try again."]);
+      setValidationErrors([
+        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
+      ]);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleBack = () => {
-    if (!isFirstStep(step.id)) {
-      const previousRoute = getPreviousStepRoute(step.id);
-      if (previousRoute) {
-        router.push(previousRoute);
-      }
-    } else {
-      router.push("/");
-    }
+    onBack();
   };
 
   return (
@@ -239,24 +220,67 @@ export default function FormStepWrapper({ step }: FormStepWrapperProps) {
   );
 }
 
-// Helper functions for session storage
-function getStoredStepData(stepId: string): Record<string, unknown> {
-  if (typeof window === "undefined") return {};
+/**
+ * Process step data based on step type
+ */
+function processStepData(
+  stepId: string,
+  rawData: Record<string, unknown>,
+): Record<string, unknown> {
+  const processed = { ...rawData };
 
-  try {
-    const stored = sessionStorage.getItem(`form-step-${stepId}`);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
+  switch (stepId) {
+    case "personal-info":
+      if (processed.age) {
+        processed.age = Number(processed.age);
+      }
+      break;
+
+    case "family":
+      if (processed.hasChildren) {
+        processed.hasChildren = processed.hasChildren === "true";
+      }
+      // Handle childrenAges conversion from string to array
+      if (processed.childrenAges !== undefined) {
+        if (typeof processed.childrenAges === "string") {
+          // Handle empty string or whitespace-only string
+          if (processed.childrenAges.trim() === "") {
+            processed.childrenAges = [];
+          } else {
+            // Split by comma and convert to numbers, filtering out invalid values
+            processed.childrenAges = processed.childrenAges
+              .split(",")
+              .map((age) => Number(age.trim()))
+              .filter((age) => !Number.isNaN(age) && age >= 0 && age <= 25);
+          }
+        } else if (!Array.isArray(processed.childrenAges)) {
+          // If it's not a string or array, convert to empty array
+          processed.childrenAges = [];
+        }
+      }
+      break;
+
+    case "education-transport":
+      if (
+        processed.transportationMode &&
+        typeof processed.transportationMode === "string"
+      ) {
+        processed.transportationMode = processed.transportationMode.split(",");
+      }
+      break;
+
+    case "health":
+      if (
+        processed.healthConditions &&
+        typeof processed.healthConditions === "string"
+      ) {
+        processed.healthConditions = processed.healthConditions
+          .split(",")
+          .map((condition) => condition.trim())
+          .filter((condition) => condition.length > 0);
+      }
+      break;
   }
-}
 
-function saveStepData(stepId: string, data: Record<string, unknown>): void {
-  if (typeof window === "undefined") return;
-
-  try {
-    sessionStorage.setItem(`form-step-${stepId}`, JSON.stringify(data));
-  } catch (error) {
-    console.warn("Failed to save step data:", error);
-  }
+  return processed;
 }

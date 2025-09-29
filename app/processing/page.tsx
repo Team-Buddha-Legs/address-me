@@ -1,16 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { generateSummary } from "@/lib/actions/ai-actions";
 
-export default function ProcessingPage() {
+function ProcessingPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("Analyzing your profile...");
   const [error, setError] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [aiProcessingStarted, setAiProcessingStarted] = useState(false);
 
   const steps = [
     "Analyzing your profile...",
@@ -19,13 +22,65 @@ export default function ProcessingPage() {
     "Finalizing your report...",
   ];
 
+  // Get session ID from URL params
+  const sessionId = searchParams.get("session") || searchParams.get("sessionId");
+
   useEffect(() => {
+    if (!sessionId) {
+      setError("No session found. Please start over.");
+      return;
+    }
+
+    if (!aiProcessingStarted) {
+      setAiProcessingStarted(true);
+      
+      // Start the real AI processing
+      const processAI = async () => {
+        try {
+          // Create form data for the AI action
+          const formData = new FormData();
+          formData.append("sessionId", sessionId);
+          formData.append("clientId", `client_${Date.now()}`);
+          // Generate a simple CSRF token for this session
+          const csrfToken = `csrf_${sessionId}_${Date.now().toString(36)}`;
+          formData.append("csrfToken", csrfToken);
+
+          // Call the AI generation action
+          const result = await generateSummary(formData);
+          
+          if (result && !result.success) {
+            throw new Error(result.error || "AI generation failed");
+          }
+          
+          // If we get here, the action should have redirected to the report
+          // But if not, we'll handle it manually
+          setIsComplete(true);
+          setCurrentStep("Complete! Redirecting to your report...");
+          
+          setTimeout(() => {
+            router.push(`/report/${sessionId}`);
+          }, 1500);
+          
+        } catch (err) {
+          console.error("AI processing error:", err);
+          setError(
+            err instanceof Error 
+              ? err.message 
+              : "Failed to generate your personalized report. Please try again."
+          );
+        }
+      };
+
+      processAI();
+    }
+
+    // Progress simulation while AI is processing
     let interval: NodeJS.Timeout;
 
-    try {
+    if (!isComplete && !error) {
       interval = setInterval(() => {
         setProgress((prev) => {
-          const newProgress = prev + Math.random() * 15;
+          const newProgress = Math.min(prev + Math.random() * 8, 95); // Cap at 95% until AI completes
 
           // Update step based on progress
           if (newProgress < 25) {
@@ -38,46 +93,25 @@ export default function ProcessingPage() {
             setCurrentStep(steps[3]);
           }
 
-          // Complete at 100%
-          if (newProgress >= 100) {
-            clearInterval(interval);
-            setIsComplete(true);
-            setCurrentStep("Complete! Redirecting to your report...");
-
-            setTimeout(() => {
-              try {
-                router.push("/report/sample"); // Placeholder route
-              } catch (_err) {
-                setError("Failed to navigate to report. Please try again.");
-              }
-            }, 1500);
-            return 100;
-          }
-
           return newProgress;
         });
-      }, 500);
-    } catch (_err) {
-      setError(
-        "An error occurred while processing your assessment. Please try again.",
-      );
+      }, 800);
     }
 
-    // Timeout after 2 minutes as fallback
+    // Timeout after 3 minutes as fallback
     const timeout = setTimeout(() => {
       if (!isComplete) {
         setError(
           "Processing is taking longer than expected. Please try again.",
         );
-        clearInterval(interval);
       }
-    }, 120000);
+    }, 180000);
 
     return () => {
-      clearInterval(interval);
+      if (interval) clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [router, isComplete]);
+  }, [router, sessionId, aiProcessingStarted, isComplete, error]);
 
   if (error) {
     return (
@@ -227,5 +261,13 @@ export default function ProcessingPage() {
         </motion.p>
       </motion.div>
     </div>
+  );
+}
+
+export default function ProcessingPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <ProcessingPageContent />
+    </Suspense>
   );
 }

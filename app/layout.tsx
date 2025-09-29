@@ -4,6 +4,8 @@ import "./globals.css";
 import ErrorBoundaryProvider from "@/components/error/ErrorBoundaryProvider";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";
 
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
