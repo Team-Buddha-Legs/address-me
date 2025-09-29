@@ -16,12 +16,12 @@ export default function AvatarDisplay({ formData }: AvatarDisplayProps) {
     
     const gender = personalInfo.gender as string;
     const maritalStatus = personalInfo.maritalStatus as string;
-    const hasChildren = familyInfo.hasChildren as string;
+    const hasChildren = familyInfo.hasChildren;
 
     // Determine avatar based on selections (priority: children > married > male)
-    if (hasChildren === "true") {
+    if (hasChildren) {
       return {
-        src: "/images/family.png",
+        src: "/images/family.jpeg",
         alt: "Family avatar",
         title: "Family"
       };
@@ -76,12 +76,12 @@ export default function AvatarDisplay({ formData }: AvatarDisplayProps) {
 
   return (
     <div className="w-full flex flex-col items-center justify-center space-y-4">
-      <div className="relative w-32 h-40 sm:w-40 sm:h-48 lg:w-48 lg:h-64 rounded-lg overflow-hidden bg-white transition-all duration-300">
+      <div className="relative w-32 h-40 sm:w-40 sm:h-48 lg:w-48 lg:h-70 rounded-lg overflow-hidden bg-white transition-all duration-300">
         <Image
           src={avatarImage.src}
           alt={avatarImage.alt}
           fill
-          className="object-contain transition-opacity duration-300"
+          className="object-cover transition-opacity duration-300"
           priority
         />
       </div>

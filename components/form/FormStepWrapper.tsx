@@ -24,12 +24,12 @@ interface FormStepWrapperProps {
   onDataChange?: (stepId: string, data: Record<string, unknown>) => void;
 }
 
-export default function FormStepWrapper({ 
-  step, 
-  onStepComplete, 
-  onBack, 
+export default function FormStepWrapper({
+  step,
+  onStepComplete,
+  onBack,
   initialData = {},
-  onDataChange
+  onDataChange,
 }: FormStepWrapperProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -52,24 +52,29 @@ export default function FormStepWrapper({
     if (Object.keys(watchedValues).length > 0) {
       const processedData = processStepData(step.id, watchedValues);
       const dataString = JSON.stringify(processedData);
-      
+
       // Only update if data has actually changed
       if (dataString !== previousDataRef.current) {
         previousDataRef.current = dataString;
-        
+
         // Call parent callback to update avatar in real-time
         if (onDataChange) {
           onDataChange(step.id, processedData);
         }
-        
+
         // Also update session storage
         if (typeof window !== "undefined") {
-          const currentFormData = JSON.parse(sessionStorage.getItem("address-me-form-data") || "{}");
+          const currentFormData = JSON.parse(
+            sessionStorage.getItem("address-me-form-data") || "{}"
+          );
           const updatedFormData = {
             ...currentFormData,
-            [step.id]: processedData
+            [step.id]: processedData,
           };
-          sessionStorage.setItem("address-me-form-data", JSON.stringify(updatedFormData));
+          sessionStorage.setItem(
+            "address-me-form-data",
+            JSON.stringify(updatedFormData)
+          );
         }
       }
     }
@@ -97,15 +102,20 @@ export default function FormStepWrapper({
 
       // Save to session storage for avatar updates
       if (typeof window !== "undefined") {
-        const currentFormData = JSON.parse(sessionStorage.getItem("address-me-form-data") || "{}");
+        const currentFormData = JSON.parse(
+          sessionStorage.getItem("address-me-form-data") || "{}"
+        );
         const updatedFormData = {
           ...currentFormData,
-          [step.id]: processedData
+          [step.id]: processedData,
         };
-        sessionStorage.setItem("address-me-form-data", JSON.stringify(updatedFormData));
-        
+        sessionStorage.setItem(
+          "address-me-form-data",
+          JSON.stringify(updatedFormData)
+        );
+
         // Dispatch custom event to notify avatar of updates
-        window.dispatchEvent(new CustomEvent('formDataUpdated'));
+        window.dispatchEvent(new CustomEvent("formDataUpdated"));
       }
 
       // Call parent handler to manage the data
@@ -113,7 +123,9 @@ export default function FormStepWrapper({
     } catch (error) {
       console.error("Form submission error:", error);
       setValidationErrors([
-        error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again.",
       ]);
     } finally {
       setIsSubmitting(false);
@@ -265,7 +277,7 @@ export default function FormStepWrapper({
  */
 function processStepData(
   stepId: string,
-  rawData: Record<string, unknown>,
+  rawData: Record<string, unknown>
 ): Record<string, unknown> {
   const processed = { ...rawData };
 
@@ -277,8 +289,14 @@ function processStepData(
       break;
 
     case "family":
-      if (processed.hasChildren) {
-        processed.hasChildren = processed.hasChildren === "true";
+      if (processed.hasChildren !== undefined) {
+        // Handle both string and boolean values
+        if (typeof processed.hasChildren === "string") {
+          processed.hasChildren = processed.hasChildren === "true";
+        } else if (typeof processed.hasChildren === "boolean") {
+          // Already a boolean, keep as is
+          processed.hasChildren = processed.hasChildren;
+        }
       }
       // Handle childrenAges conversion from string to array
       if (processed.childrenAges !== undefined) {

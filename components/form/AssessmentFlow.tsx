@@ -11,6 +11,7 @@ import { ReportDisplay } from "../report/ReportDisplay";
 import Logo from "@/components/ui/Logo";
 import AvatarDisplay from "./AvatarDisplay";
 import type { UserProfile, PersonalizedSummary } from "@/types";
+import { motion } from "framer-motion";
 
 type AssessmentState = "form" | "processing" | "report" | "error";
 
@@ -54,7 +55,9 @@ export default function AssessmentFlow() {
         ...prevData,
         [stepId]: data,
       }));
-    }, []);
+    },
+    []
+  );
 
   const handleBack = () => {
     if (currentStepIndex > 0) {
@@ -224,7 +227,12 @@ export default function AssessmentFlow() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Avatar section - shows on top for mobile, sidebar for desktop */}
-            <div className="lg:col-span-1 lg:order-2">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="lg:col-span-1 lg:order-2"
+            >
               <div className="lg:sticky lg:top-8">
                 <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 h-fit">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
@@ -235,7 +243,7 @@ export default function AssessmentFlow() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Main content area */}
             <div className="lg:col-span-2 lg:order-1">
