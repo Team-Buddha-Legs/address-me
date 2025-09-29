@@ -12,8 +12,8 @@ export default function AvatarDisplay({ formData }: AvatarDisplayProps) {
     // Get values from form data
     const personalInfo = formData["personal-info"] || {};
     const familyInfo = formData["family"] || {};
-    console.log('familyInfo: ', familyInfo);
-    
+    console.log("familyInfo: ", familyInfo);
+
     const gender = personalInfo.gender as string;
     const maritalStatus = personalInfo.maritalStatus as string;
     const hasChildren = familyInfo.hasChildren;
@@ -23,23 +23,40 @@ export default function AvatarDisplay({ formData }: AvatarDisplayProps) {
       return {
         src: "/images/family.jpeg",
         alt: "Family avatar",
-        title: "Family"
+        title: "Family",
       };
     }
-    
+
     if (maritalStatus === "married") {
       return {
         src: "/images/married.png",
         alt: "Married couple avatar",
-        title: "Married"
+        title: "Married",
       };
     }
-    
+
     if (gender === "male") {
       return {
         src: "/images/single-man.png",
         alt: "Single man avatar",
-        title: "Single Male"
+        title: "Single Male",
+      };
+    }
+
+    if (gender === "female") {
+      return {
+        src: "/images/single-woman.png",
+        alt: "Single woman avatar",
+        title: "Single Female",
+      };
+    }
+
+    if (gender) {
+      // Gender selected, but unsupported, fallback to default avatar
+      return {
+        src: "/images/default-person.png",
+        alt: "Grey person avatar",
+        title: "Default Person",
       };
     }
 
