@@ -1,0 +1,59 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudFormationAccess",
+      "Effect": "Allow",
+      "Action": ["cloudformation:*"],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AmplifyAccess",
+      "Effect": "Allow",
+      "Action": [
+        "amplify:CreateApp",
+        "amplify:UpdateApp",
+        "amplify:DeleteApp",
+        "amplify:GetApp",
+        "amplify:ListApps",
+        "amplify:CreateBranch",
+        "amplify:UpdateBranch",
+        "amplify:DeleteBranch",
+        "amplify:GetBranch",
+        "amplify:ListBranches",
+        "amplify:CreateDomainAssociation",
+        "amplify:UpdateDomainAssociation",
+        "amplify:DeleteDomainAssociation",
+        "amplify:GetDomainAssociation",
+        "amplify:ListDomainAssociations",
+        "amplify:StartJob",
+        "amplify:StopJob",
+        "amplify:GetJob",
+        "amplify:ListJobs"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "IAMFullAccess",
+      "Effect": "Allow",
+      "Action": ["iam:*"],
+      "Resource": "*"
+    },
+    {
+      "Sid": "BedrockAccess",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream",
+        "bedrock:ListFoundationModels"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "STSAccess",
+      "Effect": "Allow",
+      "Action": ["sts:GetCallerIdentity"],
+      "Resource": "*"
+    }
+  ]
+}

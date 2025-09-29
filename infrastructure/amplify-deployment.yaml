@@ -1,0 +1,270 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS Amplify deployment for Address Me Next.js app with SSR'
+
+Parameters:
+  GitHubRepository:
+    Type: String
+    Description: 'GitHub repository URL (e.g., https://github.com/username/address-me)'
+    Default: 'https://github.com/your-username/address-me'
+  
+  GitHubBranch:
+    Type: String
+    Description: 'GitHub branch to deploy'
+    Default: 'main'
+  
+  GitHubToken:
+    Type: String
+    Description: 'GitHub personal access token'
+    NoEcho: true
+  
+  AppName:
+    Type: String
+    Description: 'Application name'
+    Default: 'address-me'
+  
+  Environment:
+    Type: String
+    Description: 'Environment stage'
+    Default: 'PRODUCTION'
+    AllowedValues:
+      - PRODUCTION
+      - BETA
+      - DEVELOPMENT
+      - EXPERIMENTAL
+  
+  BedrockApiKey:
+    Type: String
+    Description: 'AWS Bedrock API Key (use IAM roles in production)'
+    NoEcho: true
+    Default: ''
+
+Resources:
+  # IAM Role for Amplify Service
+  AmplifyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AppName}-amplify-service-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AmplifyServiceRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Basic Amplify permissions
+              - Effect: Allow
+                Action:
+                  - amplify:*
+                Resource: '*'
+              # CloudWatch Logs permissions
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogGroups
+                  - logs:DescribeLogStreams
+                Resource: '*'
+              # Lambda permissions for SSR
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                  - lambda:CreateFunction
+                  - lambda:UpdateFunctionCode
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:DeleteFunction
+                  - lambda:GetFunction
+                  - lambda:ListFunctions
+                  - lambda:AddPermission
+                  - lambda:RemovePermission
+                  - lambda:GetPolicy
+                  - lambda:PutProvisionedConcurrencyConfig
+                  - lambda:DeleteProvisionedConcurrencyConfig
+                  - lambda:GetProvisionedConcurrencyConfig
+                  - lambda:ListProvisionedConcurrencyConfigs
+                Resource: '*'
+              # IAM permissions for Lambda execution roles
+              - Effect: Allow
+                Action:
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:GetRole
+                  - iam:PassRole
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:GetRolePolicy
+                  - iam:ListRolePolicies
+                  - iam:ListAttachedRolePolicies
+                Resource: 
+                  - !Sub 'arn:aws:iam::${AWS::AccountId}:role/amplifyconsole-*'
+                  - !Sub 'arn:aws:iam::${AWS::AccountId}:role/amplify-*'
+              # CloudFormation permissions for Amplify deployments
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateStack
+                  - cloudformation:DeleteStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeStackResource
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:UpdateStack
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:ListChangeSets
+                  - cloudformation:ListStackResources
+                  - cloudformation:ValidateTemplate
+                Resource: '*'
+              # S3 permissions for build artifacts
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectAcl
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                Resource: '*'
+              # CloudFront permissions
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateDistribution
+                  - cloudfront:DeleteDistribution
+                  - cloudfront:GetDistribution
+                  - cloudfront:GetDistributionConfig
+                  - cloudfront:ListDistributions
+                  - cloudfront:UpdateDistribution
+                  - cloudfront:CreateInvalidation
+                  - cloudfront:GetInvalidation
+                  - cloudfront:ListInvalidations
+                Resource: '*'
+              # Bedrock permissions for AI features
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                  - bedrock:ListFoundationModels
+                Resource: '*'
+              # SSM permissions for environment variables
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:GetParametersByPath
+                Resource: '*'
+
+  # Amplify App
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Ref AppName
+      Repository: !Ref GitHubRepository
+      AccessToken: !Ref GitHubToken
+      Platform: WEB_COMPUTE
+      IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      BuildSpec: |
+        version: 1
+        applications:
+          - appRoot: .
+            frontend:
+              phases:
+                preBuild:
+                  commands:
+                    - npm ci
+                build:
+                  commands:
+                    - echo "BEDROCK_API_KEY=$BEDROCK_API_KEY" >> .env
+                    - npm run build
+              artifacts:
+                baseDirectory: .next
+                files:
+                  - '**/*'
+              cache:
+                paths:
+                  - node_modules/**/*
+                  - .next/cache/**/*
+      EnvironmentVariables:
+        - Name: AMPLIFY_MONOREPO_APP_ROOT
+          Value: .
+        - Name: AMPLIFY_DIFF_DEPLOY
+          Value: false
+        - Name: _LIVE_UPDATES
+          Value: '[{"name":"Next.js SSR","pkg":"@aws-amplify/cli-extensibility-helper","type":"feature","version":"latest"}]'
+        # Add your custom environment variables here
+        - Name: NODE_ENV
+          Value: production
+        - Name: NEXT_PUBLIC_APP_NAME
+          Value: !Ref AppName
+        - Name: BEDROCK_API_KEY
+          Value: !Ref BedrockApiKey
+      CustomRules:
+        - Source: '/<*>'
+          Target: '/index.html'
+          Status: '404-200'
+
+  # Amplify Branch
+  AmplifyBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref GitHubBranch
+      EnableAutoBuild: true
+      EnablePerformanceMode: true
+      Framework: Next.js - SSR
+      Stage: !Ref Environment
+      EnvironmentVariables:
+        - Name: AMPLIFY_MONOREPO_APP_ROOT
+          Value: .
+        - Name: _LIVE_UPDATES
+          Value: '[{"name":"Next.js SSR","pkg":"@aws-amplify/cli-extensibility-helper","type":"feature","version":"latest"}]'
+        # Branch-specific environment variables
+        - Name: BRANCH_NAME
+          Value: !Ref GitHubBranch
+
+  # Custom Domain (Optional - uncomment if you have a domain)
+  # AmplifyDomain:
+  #   Type: AWS::Amplify::Domain
+  #   Properties:
+  #     AppId: !GetAtt AmplifyApp.AppId
+  #     DomainName: your-domain.com
+  #     SubDomainSettings:
+  #       - Prefix: ''
+  #         BranchName: !GetAtt AmplifyBranch.BranchName
+
+Outputs:
+  AmplifyAppId:
+    Description: 'Amplify App ID'
+    Value: !GetAtt AmplifyApp.AppId
+    Export:
+      Name: !Sub '${AWS::StackName}-AmplifyAppId'
+  
+  AmplifyAppUrl:
+    Description: 'Amplify App URL'
+    Value: !Sub 'https://${GitHubBranch}.${AmplifyApp.DefaultDomain}'
+    Export:
+      Name: !Sub '${AWS::StackName}-AmplifyAppUrl'
+  
+  AmplifyConsoleUrl:
+    Description: 'Amplify Console URL'
+    Value: !Sub 'https://console.aws.amazon.com/amplify/home/apps/${AmplifyApp.AppId}'
+    Export:
+      Name: !Sub '${AWS::StackName}-AmplifyConsoleUrl'
+  
+  AmplifyServiceRoleArn:
+    Description: 'Amplify Service Role ARN'
+    Value: !GetAtt AmplifyServiceRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-AmplifyServiceRoleArn'

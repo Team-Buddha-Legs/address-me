@@ -156,6 +156,96 @@ Centralized configuration in `lib/form-steps.ts`:
 4. **Processing** - Watch the animated progress as your profile is analyzed
 5. **Get results** - Receive your personalized Policy Address insights
 
+## 🚀 Deployment
+
+### AWS Amplify Deployment
+
+This application is configured for deployment on AWS Amplify with SSR (Server-Side Rendering) support.
+
+#### Prerequisites
+- AWS CLI installed and configured
+- GitHub repository with your code
+- GitHub Personal Access Token with repo permissions
+- AWS account with appropriate permissions
+
+#### Environment Variables Setup
+
+Before deploying, you need to set the following environment variables:
+
+```bash
+# Required: GitHub Personal Access Token
+export GITHUB_TOKEN="ghp_your_github_token_here"
+
+# Required: AWS Bedrock API Key (for AI features)
+export BEDROCK_API_KEY="your_aws_bedrock_api_key"
+
+# Required: AWS login
+
+# Option 1: AWS_PROFILE
+export AWS_PROFILE="your-aws-profile"
+# Option 2: Login with access tokens
+aws configure
+```
+
+#### Deployment Steps
+
+1. **Check deployment variables**
+    Check `infrastructure/deploy-config.sh`.
+
+2. **Set required environment variables**
+   ```bash
+   export GITHUB_TOKEN="ghp_your_github_token_here"
+   export BEDROCK_API_KEY="your_aws_bedrock_api_key"
+   ```
+
+3. **Run the deployment script**
+   ```bash
+   chmod +x infrastructure/deploy.sh
+   ./infrastructure/deploy.sh
+   ```
+
+#### What Gets Deployed
+
+The deployment creates:
+- AWS Amplify App with Next.js SSR support
+- CloudFormation stack with all necessary resources
+- IAM roles with appropriate permissions
+- Environment variables configuration
+- Automatic builds from your GitHub repository
+
+#### Post-Deployment
+
+After successful deployment, you'll receive:
+- **App URL**: Your live application URL
+- **Amplify Console URL**: For monitoring builds and managing the app
+- **Build Status**: Initial build takes 5-10 minutes
+
+#### Managing Environment Variables
+
+You can update environment variables after deployment:
+
+**Via AWS CLI:**
+```bash
+aws amplify put-app \
+    --app-id YOUR_APP_ID \
+    --environment-variables "BEDROCK_API_KEY=new_value"
+```
+
+**Via Amplify Console:**
+1. Go to AWS Amplify Console
+2. Select your app
+3. Navigate to "App settings" > "Environment variables"
+4. Add or update variables
+
+#### Troubleshooting
+
+- **Build failures**: Check the Amplify Console build logs
+- **Permission errors**: Ensure your AWS credentials have the necessary permissions
+- **GitHub connection issues**: Verify your GitHub token has repo access
+- **Environment variables**: Check they're properly set in the Amplify Console
+
+For detailed troubleshooting, see `infrastructure/README.md`.
+
 ## 🔮 Future Enhancements
 
 - AI-powered content analysis integration
