@@ -6,16 +6,16 @@ interface OverallScoreDisplayProps {
 
 export function OverallScoreDisplay({ score }: OverallScoreDisplayProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-secondary-dark";
-    if (score >= 80) return "text-secondary";
+    if (score >= 90) return "text-primary-dark";
+    if (score >= 80) return "text-primary";
     if (score >= 70) return "text-accent";
     return "text-neutral-600";
   };
 
   const getScoreBackground = (score: number) => {
-    if (score >= 90) return "bg-secondary-50 border-secondary-200";
-    if (score >= 80) return "bg-secondary-50 border-secondary-200";
-    if (score >= 70) return "bg-accent-50 border-accent-200";
+    if (score >= 90) return "bg-white border-primary-200";
+    if (score >= 80) return "bg-white border-primary-200";
+    if (score >= 70) return "bg-white border-accent-200";
     return "bg-neutral-50 border-neutral-200";
   };
 
@@ -61,9 +61,9 @@ export function OverallScoreDisplay({ score }: OverallScoreDisplayProps) {
             <div
               className={`h-3 rounded-full transition-all duration-500 ${
                 score >= 90
-                  ? "bg-secondary"
+                  ? "bg-primary"
                   : score >= 80
-                    ? "bg-secondary-light"
+                    ? "bg-primary-light"
                     : score >= 70
                       ? "bg-accent"
                       : "bg-neutral-400"
