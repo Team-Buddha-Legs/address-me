@@ -64,11 +64,7 @@ const nextConfig: NextConfig = {
 
   // Additional security configurations
   poweredByHeader: false, // Remove X-Powered-By header
-
-  // Experimental features for security
-  experimental: {
-    serverComponentsExternalPackages: ["@aws-sdk/client-bedrock-runtime"],
-  },
+  serverExternalPackages: ["@aws-sdk/client-bedrock-runtime"],
 };
 
 export default nextConfig;
