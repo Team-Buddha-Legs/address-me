@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ReportDisplay } from "@/components/report/ReportDisplay";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getSession } from "@/lib/session";
+import Logo from "@/components/ui/Logo";
 
 interface ReportPageProps {
   params: Promise<{ id: string }>;
@@ -22,8 +23,16 @@ export default async function ReportPage({ params }: ReportPageProps) {
     // If no summary exists, redirect back to processing
     // This handles cases where user navigates directly to report URL
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <Logo size="md" />
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center px-4 py-8">
+          <div className="text-center">
           <h1 className="text-2xl font-semibold text-neutral-900 mb-4">
             Report Not Ready
           </h1>
@@ -36,16 +45,26 @@ export default async function ReportPage({ params }: ReportPageProps) {
           >
             Return to Processing
           </a>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <Suspense fallback={<LoadingSpinner />}>
-        <ReportDisplay summary={session.summary} reportId={id} />
-      </Suspense>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <Logo size="md" />
+        </div>
+      </header>
+
+      <div className="py-8">
+        <Suspense fallback={<LoadingSpinner />}>
+          <ReportDisplay summary={session.summary} reportId={id} />
+        </Suspense>
+      </div>
     </div>
   );
 }

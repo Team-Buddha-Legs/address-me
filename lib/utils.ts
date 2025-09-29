@@ -9,6 +9,12 @@ import type {
   UserProfile,
 } from "@/types";
 import { userProfileSchema } from "./validation";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 /**
  * Pure utility functions for data processing and validation

@@ -1,19 +1,39 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import ErrorBoundaryProvider from "@/components/error/ErrorBoundaryProvider";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";
 
 export const dynamic = 'force-dynamic';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const montserrat = localFont({
+  src: [
+    {
+      path: "../public/fonts/Montserrat-VariableFont_wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-montserrat",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const nunito = localFont({
+  src: [
+    {
+      path: "../public/fonts/Nunito-VariableFont_wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nunito-Italic-VariableFont_wght.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-nunito",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -80,7 +100,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
+        className={`${montserrat.variable} ${nunito.variable} antialiased font-nunito bg-background text-foreground`}
       >
         <NoScriptFallback />
         <ErrorBoundaryProvider enableGlobalNotifications={true}>

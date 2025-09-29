@@ -40,12 +40,11 @@ export default function ProcessingDisplay() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center"
-      >
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center"
+    >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -111,6 +110,5 @@ export default function ProcessingDisplay() {
           Estimated time: 30-60 seconds
         </motion.p>
       </motion.div>
-    </div>
   );
 }

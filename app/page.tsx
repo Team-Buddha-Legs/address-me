@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { formSteps } from "@/lib/form-steps";
+import Logo from "@/components/ui/Logo";
 
 export default function Home() {
   const firstStepId = formSteps[0]?.id || "personal-info";
@@ -16,12 +17,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between"
         >
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">AM</span>
-            </div>
-            <h1 className="text-xl font-bold text-gray-900">Address Me</h1>
-          </div>
+          <Logo size="md" priority={true} shadow={true} />
           <nav className="hidden sm:flex space-x-6">
             <a
               href="#features"
@@ -278,12 +274,7 @@ export default function Home() {
       <footer className="border-t border-gray-200 bg-white">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-              <div className="w-6 h-6 bg-gradient-to-r from-primary to-primary-dark rounded flex items-center justify-center">
-                <span className="text-white font-bold text-xs">AM</span>
-              </div>
-              <span className="text-gray-600">Address Me</span>
-            </div>
+            <Logo size="sm" className="mb-4 sm:mb-0" />
             <div className="flex space-x-6 text-sm text-gray-600">
               <a
                 href="/privacy"
