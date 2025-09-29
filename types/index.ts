@@ -249,3 +249,19 @@ export interface AvatarStateManager {
   shouldAnimate: (elementId: string) => boolean;
   markStepCompleted: (stepId: string) => void;
 }
+
+// Animation System Types
+export type AnimationType = 'fadeIn' | 'slideIn' | 'scale' | 'pulse';
+
+export interface AnimationConfig {
+  duration: number;
+  easing: string;
+  delay?: number;
+}
+
+export interface AnimationQueueItem {
+  elementId: string;
+  animationType: AnimationType;
+  config: AnimationConfig;
+  priority: number;
+}
