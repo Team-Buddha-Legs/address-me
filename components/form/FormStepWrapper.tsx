@@ -1,14 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   calculateProgress,
   getCompletedSteps,
-  getNextStepRoute,
-  getPreviousStepRoute,
   getTotalSteps,
   isFirstStep,
   isLastStep,
@@ -24,22 +21,24 @@ interface FormStepWrapperProps {
   onStepComplete: (stepId: string, data: Record<string, unknown>) => void;
   onBack: () => void;
   initialData?: Record<string, unknown>;
+  onDataChange?: (stepId: string, data: Record<string, unknown>) => void;
 }
 
 export default function FormStepWrapper({ 
   step, 
   onStepComplete, 
   onBack, 
-  initialData = {} 
+  initialData = {},
+  onDataChange
 }: FormStepWrapperProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const previousDataRef = useRef<string>("");
 
   const {
     handleSubmit,
     watch,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -47,6 +46,34 @@ export default function FormStepWrapper({
   });
 
   const watchedValues = watch();
+
+  // Update parent component and session storage when form values change
+  useEffect(() => {
+    if (Object.keys(watchedValues).length > 0) {
+      const processedData = processStepData(step.id, watchedValues);
+      const dataString = JSON.stringify(processedData);
+      
+      // Only update if data has actually changed
+      if (dataString !== previousDataRef.current) {
+        previousDataRef.current = dataString;
+        
+        // Call parent callback to update avatar in real-time
+        if (onDataChange) {
+          onDataChange(step.id, processedData);
+        }
+        
+        // Also update session storage
+        if (typeof window !== "undefined") {
+          const currentFormData = JSON.parse(sessionStorage.getItem("address-me-form-data") || "{}");
+          const updatedFormData = {
+            ...currentFormData,
+            [step.id]: processedData
+          };
+          sessionStorage.setItem("address-me-form-data", JSON.stringify(updatedFormData));
+        }
+      }
+    }
+  }, [watchedValues, step.id, onDataChange]);
 
   const progress = calculateProgress(step.id);
   const currentStepNumber = getCompletedSteps(step.id);
@@ -67,6 +94,19 @@ export default function FormStepWrapper({
 
       // Process step data based on step type
       const processedData = processStepData(step.id, data);
+
+      // Save to session storage for avatar updates
+      if (typeof window !== "undefined") {
+        const currentFormData = JSON.parse(sessionStorage.getItem("address-me-form-data") || "{}");
+        const updatedFormData = {
+          ...currentFormData,
+          [step.id]: processedData
+        };
+        sessionStorage.setItem("address-me-form-data", JSON.stringify(updatedFormData));
+        
+        // Dispatch custom event to notify avatar of updates
+        window.dispatchEvent(new CustomEvent('formDataUpdated'));
+      }
 
       // Call parent handler to manage the data
       onStepComplete(step.id, processedData);

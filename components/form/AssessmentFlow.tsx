@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formSteps } from "@/lib/form-steps";
 import { userProfileSchema } from "@/lib/validation";
@@ -9,6 +9,7 @@ import FormStepWrapper from "./FormStepWrapper";
 import ProcessingDisplay from "./ProcessingDisplay";
 import { ReportDisplay } from "../report/ReportDisplay";
 import Logo from "@/components/ui/Logo";
+import AvatarDisplay from "./AvatarDisplay";
 import type { UserProfile, PersonalizedSummary } from "@/types";
 
 type AssessmentState = "form" | "processing" | "report" | "error";
@@ -45,6 +46,15 @@ export default function AssessmentFlow() {
       setCurrentStepIndex(currentStepIndex + 1);
     }
   };
+
+  const handleDataChange = useCallback(
+    (stepId: string, data: Record<string, unknown>) => {
+      // Update form data in real-time for avatar updates
+      setFormData((prevData) => ({
+        ...prevData,
+        [stepId]: data,
+      }));
+    }, []);
 
   const handleBack = () => {
     if (currentStepIndex > 0) {
@@ -205,19 +215,39 @@ export default function AssessmentFlow() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-4">
+        <div className="max-w-6xl mx-auto px-4 py-4">
           <Logo size="md" />
         </div>
       </header>
 
       <div className="py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <FormStepWrapper
-            step={currentStep}
-            onStepComplete={handleStepComplete}
-            onBack={handleBack}
-            initialData={formData[currentStep.id] || {}}
-          />
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Avatar section - shows on top for mobile, sidebar for desktop */}
+            <div className="lg:col-span-1 lg:order-2">
+              <div className="lg:sticky lg:top-8">
+                <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 h-fit">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+                    Your Profile
+                  </h3>
+                  <div className="flex justify-center">
+                    <AvatarDisplay formData={formData} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main content area */}
+            <div className="lg:col-span-2 lg:order-1">
+              <FormStepWrapper
+                step={currentStep}
+                onStepComplete={handleStepComplete}
+                onBack={handleBack}
+                initialData={formData[currentStep.id] || {}}
+                onDataChange={handleDataChange}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
