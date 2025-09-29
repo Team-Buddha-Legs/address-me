@@ -23,7 +23,7 @@ export function getIcon<T extends IconCategory>(
   
   // Try exact match first
   if (normalizedKey in categoryMappings) {
-    return categoryMappings[normalizedKey as keyof typeof categoryMappings];
+    return (categoryMappings as any)[normalizedKey];
   }
   
   // Try partial matches for flexibility
@@ -32,7 +32,7 @@ export function getIcon<T extends IconCategory>(
   );
   
   if (partialMatch) {
-    return categoryMappings[partialMatch as keyof typeof categoryMappings];
+    return (categoryMappings as any)[partialMatch];
   }
   
   // Return fallback icon

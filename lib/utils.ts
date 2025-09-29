@@ -14,6 +14,11 @@ import { userProfileSchema } from "./validation";
  * Pure utility functions for data processing and validation
  */
 
+// Class name utility function
+export const cn = (...classes: (string | undefined | null | false)[]): string => {
+  return classes.filter(Boolean).join(' ');
+};
+
 // Profile processing utilities
 export const processUserProfile = (profile: UserProfile): ProcessedProfile => {
   const profileHash = generateProfileHash(profile);
