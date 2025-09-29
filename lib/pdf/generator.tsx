@@ -1,6 +1,5 @@
 import {
   Document,
-  Font,
   Page,
   pdf,
   StyleSheet,
@@ -9,26 +8,12 @@ import {
 } from "@react-pdf/renderer";
 import type { PersonalizedSummary } from "@/types";
 
-// Register fonts for better typography
-Font.register({
-  family: "Inter",
-  fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
-    },
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2",
-      fontWeight: 600,
-    },
-  ],
-});
-
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#ffffff",
     padding: 40,
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
     fontSize: 11,
     lineHeight: 1.4,
   },
@@ -39,7 +24,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#1e40af",
     marginBottom: 8,
   },
@@ -53,7 +38,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#1f2937",
     marginBottom: 12,
     borderBottom: "1px solid #e5e7eb",
@@ -68,7 +53,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 14,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#1e40af",
     textAlign: "center",
   },
@@ -81,7 +66,7 @@ const styles = StyleSheet.create({
   },
   policyTitle: {
     fontSize: 13,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#1f2937",
     marginBottom: 6,
   },
@@ -114,7 +99,7 @@ const styles = StyleSheet.create({
   },
   recommendationTitle: {
     fontSize: 12,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#92400e",
     marginBottom: 4,
   },
@@ -132,7 +117,7 @@ const styles = StyleSheet.create({
   },
   majorUpdateTitle: {
     fontSize: 12,
-    fontWeight: 600,
+    fontFamily: "Helvetica-Bold",
     color: "#1e40af",
     marginBottom: 4,
   },
@@ -166,12 +151,10 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
         <Text style={styles.title}>Your Personalized Policy Summary</Text>
         <Text style={styles.subtitle}>
           Generated on{" "}
-          {summary.generatedAt.toLocaleDateString("en-HK", {
+          {new Date(summary.generatedAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
           })}
         </Text>
         <Text style={styles.subtitle}>Report ID: {reportId}</Text>
@@ -180,36 +163,36 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       {/* Overall Score */}
       <View style={styles.scoreContainer}>
         <Text style={styles.scoreText}>
-          Overall Policy Relevance Score: {summary.overallScore}%
+          Overall Policy Relevance Score: {summary.overallScore || 0}%
         </Text>
       </View>
 
       {/* Policy Areas */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Relevant Policy Areas</Text>
-        {summary.relevantAreas.map((area, index) => (
+        {(summary.relevantAreas || []).map((area, index) => (
           <View
             key={`area-${index}-${area.title.slice(0, 10)}`}
             style={styles.policyArea}
           >
             <Text style={styles.policyTitle}>{area.title}</Text>
             <Text style={styles.policyScore}>
-              Relevance Score: {area.relevanceScore}% | Impact:{" "}
-              {area.impact.toUpperCase()}
+              Relevance Score: {area.relevanceScore || 0}% | Impact:{" "}
+              {(area.impact || 'medium').toUpperCase()}
             </Text>
-            <Text style={styles.policyContent}>{area.summary}</Text>
-            <Text style={styles.policyContent}>{area.details}</Text>
-            {area.actionItems.length > 0 && (
+            <Text style={styles.policyContent}>{area.summary || ''}</Text>
+            <Text style={styles.policyContent}>{area.details || ''}</Text>
+            {(area.actionItems || []).length > 0 && (
               <View style={styles.actionItems}>
                 <Text
                   style={[
                     styles.policyContent,
-                    { fontWeight: 600, marginBottom: 4 },
+                    { fontFamily: "Helvetica-Bold", marginBottom: 4 },
                   ]}
                 >
                   Action Items:
                 </Text>
-                {area.actionItems.map((item, itemIndex) => (
+                {(area.actionItems || []).map((item, itemIndex) => (
                   <Text
                     key={`item-${itemIndex}-${item.slice(0, 10)}`}
                     style={styles.actionItem}
@@ -226,19 +209,19 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       {/* Major Updates */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Major City Updates</Text>
-        {summary.majorUpdates.map((update, index) => (
+        {(summary.majorUpdates || []).map((update, index) => (
           <View
             key={`update-${index}-${update.title.slice(0, 10)}`}
             style={styles.majorUpdate}
           >
             <Text style={styles.majorUpdateTitle}>{update.title}</Text>
-            <Text style={styles.majorUpdateContent}>{update.description}</Text>
+            <Text style={styles.majorUpdateContent}>{update.description || ''}</Text>
             <Text style={styles.majorUpdateContent}>
-              Relevance: {update.relevanceToUser}
+              Relevance: {update.relevanceToUser || 'Not specified'}
             </Text>
             <Text style={styles.majorUpdateContent}>
-              Timeline: {update.timeline} | Impact:{" "}
-              {update.impact.toUpperCase()}
+              Timeline: {update.timeline || 'TBD'} | Impact:{" "}
+              {(update.impact || 'medium').toUpperCase()}
             </Text>
           </View>
         ))}
@@ -247,26 +230,26 @@ const PDFDocument = ({ summary, reportId }: PDFDocumentProps) => (
       {/* Recommendations */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Personalized Recommendations</Text>
-        {summary.recommendations.map((rec, index) => (
+        {(summary.recommendations || []).map((rec, index) => (
           <View
             key={`rec-${index}-${rec.title.slice(0, 10)}`}
             style={styles.recommendation}
           >
             <Text style={styles.recommendationTitle}>
-              {rec.title} (Priority: {rec.priority.toUpperCase()})
+              {rec.title || 'Recommendation'} (Priority: {(rec.priority || 'medium').toUpperCase()})
             </Text>
-            <Text style={styles.recommendationContent}>{rec.description}</Text>
-            {rec.actionSteps.length > 0 && (
+            <Text style={styles.recommendationContent}>{rec.description || ''}</Text>
+            {(rec.actionSteps || []).length > 0 && (
               <View>
                 <Text
                   style={[
                     styles.recommendationContent,
-                    { fontWeight: 600, marginBottom: 4 },
+                    { fontFamily: "Helvetica-Bold", marginBottom: 4 },
                   ]}
                 >
                   Action Steps:
                 </Text>
-                {rec.actionSteps.map((step, stepIndex) => (
+                {(rec.actionSteps || []).map((step, stepIndex) => (
                   <Text
                     key={`step-${stepIndex}-${step.slice(0, 10)}`}
                     style={styles.actionItem}
@@ -296,11 +279,27 @@ export async function generatePDF(
   reportId: string,
 ): Promise<Blob> {
   try {
-    const doc = <PDFDocument summary={summary} reportId={reportId} />;
+    // Validate input data
+    if (!summary || !reportId) {
+      throw new Error("Missing required data for PDF generation");
+    }
+
+    // Ensure generatedAt is a valid Date object
+    const validatedSummary = {
+      ...summary,
+      generatedAt: summary.generatedAt instanceof Date 
+        ? summary.generatedAt 
+        : new Date(summary.generatedAt)
+    };
+
+    const doc = <PDFDocument summary={validatedSummary} reportId={reportId} />;
     const pdfBlob = await pdf(doc).toBlob();
     return pdfBlob;
   } catch (error) {
     console.error("Error generating PDF:", error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to generate PDF report: ${error.message}`);
+    }
     throw new Error("Failed to generate PDF report");
   }
 }
