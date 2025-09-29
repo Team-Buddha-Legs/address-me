@@ -133,26 +133,6 @@
   --color-neutral-900: var(--neutral-900);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    /* Adjust colors for dark mode while maintaining brand identity */
-    --primary-blue: #3b82f6;
-    --primary-blue-light: #60a5fa;
-    --primary-blue-dark: #2563eb;
-
-    --secondary-green: #10b981;
-    --secondary-green-light: #34d399;
-    --secondary-green-dark: #059669;
-
-    --accent-orange: #f97316;
-    --accent-orange-light: #fb923c;
-    --accent-orange-dark: #ea580c;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
