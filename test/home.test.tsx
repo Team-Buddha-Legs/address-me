@@ -61,7 +61,7 @@ describe("Home Page", () => {
 
   it("should render the footer", () => {
     const { container } = render(<Home />);
-    expect(container.textContent).toContain("Address Me");
+    expect(container.textContent).toContain("AddressMe");
     expect(container.textContent).toContain("Privacy Policy");
     expect(container.textContent).toContain("Terms of Service");
   });

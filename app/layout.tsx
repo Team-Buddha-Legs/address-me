@@ -37,7 +37,7 @@ const nunito = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Address Me - Personalized Hong Kong Policy Address Summary",
+  title: "AddressMe - Personalized Hong Kong Policy Address Summary",
   description:
     "Get a personalized AI-powered summary of Hong Kong's Policy Address tailored to your circumstances. Understand what policies matter most to you.",
   keywords: [
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     "Government",
     "Policies",
   ],
-  authors: [{ name: "Address Me Team" }],
-  creator: "Address Me",
-  publisher: "Address Me",
+  authors: [{ name: "AddressMe Team" }],
+  creator: "AddressMe",
+  publisher: "AddressMe",
   formatDetection: {
     email: false,
     address: false,
@@ -60,16 +60,16 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
   ),
   openGraph: {
-    title: "Address Me - Personalized Hong Kong Policy Address Summary",
+    title: "AddressMe - Personalized Hong Kong Policy Address Summary",
     description:
       "Get a personalized AI-powered summary of Hong Kong's Policy Address tailored to your circumstances.",
     type: "website",
     locale: "en_HK",
-    siteName: "Address Me",
+    siteName: "AddressMe",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Address Me - Personalized Hong Kong Policy Address Summary",
+    title: "AddressMe - Personalized Hong Kong Policy Address Summary",
     description:
       "Get a personalized AI-powered summary of Hong Kong's Policy Address tailored to your circumstances.",
   },

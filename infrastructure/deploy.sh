@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AWS Amplify Deployment Script for Address Me
+# AWS Amplify Deployment Script for AddressMe
 # This script deploys your Next.js app to AWS Amplify with SSR support
 
 set -e
@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}🚀 Starting AWS Amplify deployment for Address Me${NC}"
+echo -e "${BLUE}🚀 Starting AWS Amplify deployment for AddressMe${NC}"
 
 # Load configuration
 CONFIG_FILE="infrastructure/deploy-config.sh"

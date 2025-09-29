@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deployment Configuration for Address Me
+# Deployment Configuration for AddressMe
 # Edit these values to match your setup
 
 # GitHub Configuration

@@ -1,7 +1,7 @@
 Context:
 We are a small Hong Kong based team building a small PoC webapp for demonstrating our ideas. Our idea came from recently released 2025-2026 HK Gov Policy Address. The full document is very long, and even the summarizes from the News is still very long. It's too long for normal HK citizen to read every portion of it, while many parts are unrelavant to themselves.
 
-We want to build a webapp called "Address Me", which provides tailor-made AI-powered summary of this year's Policy Address to each individual HK citizen. Users will be prompted to enter their own personal profile, such as age, gender, marriage status, district, income range, etc. Then our AI will tailor made a personalized summary for what he/she needs to know about this year's Policy Address.
+We want to build a webapp called "AddressMe", which provides tailor-made AI-powered summary of this year's Policy Address to each individual HK citizen. Users will be prompted to enter their own personal profile, such as age, gender, marriage status, district, income range, etc. Then our AI will tailor made a personalized summary for what he/she needs to know about this year's Policy Address.
 
 Main Requirements:
 1. User can fill in a form to answer some questions to provide a summary of their personal profile and status. (Questions depends on what we think is relavant when summarizing Policy Address)

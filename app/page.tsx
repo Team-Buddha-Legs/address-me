@@ -301,7 +301,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-gray-100 text-center text-sm text-gray-500">
-            © 2025 Address Me. Helping Hong Kong residents understand their
+            © 2025 AddressMe. Helping Hong Kong residents understand their
             Policy Address.
           </div>
         </div>

@@ -1,4 +1,4 @@
-# AWS Amplify Deployment for Address Me
+# AWS Amplify Deployment for AddressMe
 
 This directory contains Infrastructure as Code (IaC) templates and scripts to deploy your Next.js application to AWS Amplify with Server-Side Rendering (SSR) support.
 

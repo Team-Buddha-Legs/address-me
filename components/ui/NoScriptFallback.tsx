@@ -28,7 +28,7 @@ export default function NoScriptFallback() {
           </h1>
 
           <p className="text-gray-600 mb-6">
-            Address Me requires JavaScript to provide the interactive assessment
+            AddressMe requires JavaScript to provide the interactive assessment
             experience. Please enable JavaScript in your browser to continue
             with the personalized Policy Address summary.
           </p>
@@ -89,7 +89,7 @@ export default function NoScriptFallback() {
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-xs text-gray-500">
               For the best experience, we recommend using a modern browser with
-              JavaScript enabled. Address Me is designed as a progressive web
+              JavaScript enabled. AddressMe is designed as a progressive web
               application that requires JavaScript for core functionality.
             </p>
           </div>

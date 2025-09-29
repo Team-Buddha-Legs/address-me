@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS Amplify deployment for Address Me Next.js app with SSR'
+Description: 'AWS Amplify deployment for AddressMe Next.js app with SSR'
 
 Parameters:
   GitHubRepository:

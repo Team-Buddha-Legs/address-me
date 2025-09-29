@@ -1,6 +1,6 @@
-# Address Me - Personalized Policy Address Insights
+# AddressMe - Personalized Policy Address Insights
 
-Address Me is a Next.js web application that provides personalized insights from Hong Kong's Policy Address based on individual user profiles. Users complete a comprehensive assessment to receive tailored recommendations and actionable insights.
+AddressMe is a Next.js web application that provides personalized insights from Hong Kong's Policy Address based on individual user profiles. Users complete a comprehensive assessment to receive tailored recommendations and actionable insights.
 
 ## 🚀 Features
 

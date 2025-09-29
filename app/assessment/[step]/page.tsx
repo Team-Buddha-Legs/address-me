@@ -13,7 +13,7 @@ export default function AssessmentStepPage() {
 
 export function generateMetadata() {
   return {
-    title: "Assessment - Address Me",
+    title: "Assessment - AddressMe",
     description:
       "Complete your profile assessment to receive personalized Policy Address insights",
   };

@@ -45,7 +45,7 @@ export default function Logo({
     >
       <Image
         src="/logo.png"
-        alt="Address Me Logo"
+        alt="AddressMe Logo"
         width={
           size === "sm" ? 24 : size === "md" ? 32 : size === "lg" ? 48 : 64
         }
@@ -57,7 +57,7 @@ export default function Logo({
       />
       {showText && (
         <span className={cn("font-bold text-gray-900", textSizeClasses[size])}>
-          Address Me
+          AddressMe
         </span>
       )}
     </div>

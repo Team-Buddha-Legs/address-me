@@ -17,7 +17,7 @@ IAM_USER_NAME="address-me-deployer"
 POLICY_NAME="AddressMeAmplifyDeploymentPolicy"
 POLICY_FILE="infrastructure/iam-policy.json"
 
-echo -e "${BLUE}🔐 Creating IAM user for Address Me deployment${NC}"
+echo -e "${BLUE}🔐 Creating IAM user for AddressMe deployment${NC}"
 
 # Check if AWS CLI is installed
 if ! command -v aws &> /dev/null; then
@@ -68,7 +68,7 @@ else
     aws iam create-policy \
         --policy-name "$POLICY_NAME" \
         --policy-document file://"$POLICY_FILE" \
-        --description "Policy for deploying Address Me app to AWS Amplify"
+        --description "Policy for deploying AddressMe app to AWS Amplify"
     echo -e "${GREEN}✅ Created IAM policy: $POLICY_NAME${NC}"
 fi
 

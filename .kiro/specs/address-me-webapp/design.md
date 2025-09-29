@@ -2,7 +2,7 @@
 
 ## Overview
 
-Address Me is a mobile-first Next.js 15 web application that provides personalized AI-powered summaries of Hong Kong's Policy Address. The application follows a three-phase user journey: profile collection through a multi-page form, AI-powered analysis, and personalized report generation with download capabilities.
+AddressMe is a mobile-first Next.js 15 web application that provides personalized AI-powered summaries of Hong Kong's Policy Address. The application follows a three-phase user journey: profile collection through a multi-page form, AI-powered analysis, and personalized report generation with download capabilities.
 
 The design emphasizes user experience with smooth animations, professional styling, and responsive design optimized for mobile devices while maintaining desktop compatibility.
 

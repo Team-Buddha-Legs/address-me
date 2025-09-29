@@ -1,4 +1,4 @@
-// Core type definitions for Address Me webapp
+// Core type definitions for AddressMe webapp
 
 // Hong Kong specific enums
 export type HongKongDistrict =

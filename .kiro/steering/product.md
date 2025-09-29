@@ -1,6 +1,6 @@
 # Product Overview
 
-**Address Me** is a Next.js web application currently in early development (v0.1.0). 
+**AddressMe** is a Next.js web application currently in early development (v0.1.0). 
 
 The project appears to be a fresh Next.js application scaffold, suggesting it's being built as a modern React-based web application with server-side rendering capabilities.
 
