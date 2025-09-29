@@ -1,6 +1,6 @@
 import type { AIService } from "@/lib/ai/service";
 import { analyzePolicyForUser } from "@/lib/policy/analysis";
-import { mockPolicyContent } from "@/lib/policy/mock-data";
+import { getPolicyData } from "@/lib/policy/loader";
 import type { PolicyAnalysis } from "@/lib/policy/types";
 import type { UserProfile } from "@/types";
 import type {
@@ -23,7 +23,7 @@ export class SummaryGenerator {
    */
   async generateSummary(
     userProfile: UserProfile,
-    options: Partial<SummaryGenerationOptions> = {},
+    options: Partial<SummaryGenerationOptions> = {}
   ): Promise<SummaryGenerationResult> {
     const startTime = Date.now();
     const processingSteps: string[] = [];
@@ -37,15 +37,18 @@ export class SummaryGenerator {
         ...options,
       };
 
-      processingSteps.push("Starting policy analysis");
+      processingSteps.push("Loading real policy data");
 
-      // Step 1: Analyze policy relevance
-      const policyAnalysis = analyzePolicyForUser(
-        userProfile,
-        mockPolicyContent,
-      );
+      // Step 1: Load real policy data
+      const policyContent = await getPolicyData();
       processingSteps.push(
-        `Analyzed ${mockPolicyContent.sections.length} policy sections`,
+        `Loaded ${policyContent.sections.length} policy sections from real data`
+      );
+
+      // Step 2: Analyze policy relevance
+      const policyAnalysis = analyzePolicyForUser(userProfile, policyContent);
+      processingSteps.push(
+        `Analyzed ${policyContent.sections.length} policy sections`
       );
 
       // Step 2: Generate AI-enhanced content
@@ -53,7 +56,7 @@ export class SummaryGenerator {
       const relevantAreas = await this.generatePolicyAreas(
         userProfile,
         policyAnalysis,
-        fullOptions,
+        fullOptions
       );
 
       // Step 3: Generate major city updates
@@ -61,7 +64,7 @@ export class SummaryGenerator {
       const majorUpdates = await this.generateCityPlans(
         userProfile,
         policyAnalysis,
-        fullOptions,
+        fullOptions
       );
 
       // Step 4: Generate personalized recommendations
@@ -69,13 +72,15 @@ export class SummaryGenerator {
       const recommendations = await this.generateRecommendations(
         userProfile,
         policyAnalysis,
-        fullOptions,
+        fullOptions
       );
 
       const processingTimeMs = Date.now() - startTime;
 
       const summary: PersonalizedSummary = {
-        id: `summary-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `summary-${Date.now()}-${Math.random()
+          .toString(36)
+          .substring(2, 11)}`,
         userProfileId: `profile-${Date.now()}`,
         overallScore: policyAnalysis.overallScore,
         relevantAreas,
@@ -89,19 +94,21 @@ export class SummaryGenerator {
       return {
         summary,
         metadata: {
-          sectionsAnalyzed: mockPolicyContent.sections.length,
+          sectionsAnalyzed: policyContent.sections.length,
           relevantSectionsFound: policyAnalysis.relevantSections.length,
           processingSteps,
         },
       };
     } catch (error) {
       processingSteps.push(
-        `Error occurred: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Error occurred: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
       throw new SummaryGenerationError(
         "Failed to generate personalized summary",
         error instanceof Error ? error : new Error("Unknown error"),
-        processingSteps,
+        processingSteps
       );
     }
   }
@@ -112,16 +119,17 @@ export class SummaryGenerator {
   private async generatePolicyAreas(
     userProfile: UserProfile,
     policyAnalysis: PolicyAnalysis,
-    options: SummaryGenerationOptions,
+    options: SummaryGenerationOptions
   ): Promise<PolicyArea[]> {
     const areas: PolicyArea[] = [];
+    const policyContent = await getPolicyData();
 
     // Take top relevant sections (limit to 6 for better UX)
     const topSections = policyAnalysis.relevantSections.slice(0, 6);
 
     for (const relevantSection of topSections) {
-      const policySection = mockPolicyContent.sections.find(
-        (s) => s.id === relevantSection.sectionId,
+      const policySection = policyContent.sections.find(
+        (s) => s.id === relevantSection.sectionId
       );
 
       if (!policySection) continue;
@@ -135,11 +143,19 @@ export class SummaryGenerator {
           const aiPrompt = this.createPolicyAreaPrompt(
             userProfile,
             policySection,
-            relevantSection,
+            relevantSection
           );
-          enhancedSummary = await this.aiService.generateCompletion(aiPrompt);
 
-          // Fallback to original summary if AI fails
+          const systemPrompt = `You are an expert policy analyst specializing in Hong Kong government policies. 
+Your task is to create personalized, actionable summaries that help residents understand how policies affect them personally.
+Keep responses concise (2-3 sentences), practical, and focused on direct benefits.`;
+
+          enhancedSummary = await this.aiService.generateCompletion(
+            aiPrompt,
+            systemPrompt
+          );
+
+          // Fallback to original summary if AI fails or response is too short
           if (!enhancedSummary || enhancedSummary.length < 50) {
             enhancedSummary = policySection.summary;
           }
@@ -158,7 +174,12 @@ export class SummaryGenerator {
         };
 
         areas.push(policyArea);
-      } catch (_error) {
+      } catch (error) {
+        console.warn(
+          `AI enhancement failed for section ${policySection.id}:`,
+          error
+        );
+
         // Fallback to basic policy area if AI enhancement fails
         const basicArea: PolicyArea = {
           category: policySection.category,
@@ -185,9 +206,10 @@ export class SummaryGenerator {
   private async generateCityPlans(
     userProfile: UserProfile,
     policyAnalysis: PolicyAnalysis,
-    _options: SummaryGenerationOptions,
+    _options: SummaryGenerationOptions
   ): Promise<CityPlan[]> {
     const plans: CityPlan[] = [];
+    const policyContent = await getPolicyData();
 
     // Identify high-impact, large-scale initiatives
     const majorInitiatives = policyAnalysis.relevantSections
@@ -195,8 +217,8 @@ export class SummaryGenerator {
       .slice(0, 3); // Top 3 major updates
 
     for (const initiative of majorInitiatives) {
-      const policySection = mockPolicyContent.sections.find(
-        (s) => s.id === initiative.sectionId,
+      const policySection = policyContent.sections.find(
+        (s) => s.id === initiative.sectionId
       );
 
       if (!policySection) continue;
@@ -221,29 +243,67 @@ export class SummaryGenerator {
    * Generate personalized recommendations
    */
   private async generateRecommendations(
-    _userProfile: UserProfile,
+    userProfile: UserProfile,
     policyAnalysis: PolicyAnalysis,
-    options: SummaryGenerationOptions,
+    options: SummaryGenerationOptions
   ): Promise<Recommendation[]> {
     const recommendations: Recommendation[] = [];
+    const policyContent = await getPolicyData();
 
     // Use the recommended actions from policy analysis as base
     const baseActions = policyAnalysis.recommendedActions.slice(
       0,
-      options.maxRecommendations,
+      options.maxRecommendations
     );
 
     for (let i = 0; i < baseActions.length; i++) {
       const action = baseActions[i];
       const relevantSection = policyAnalysis.relevantSections[i];
-      const policySection = mockPolicyContent.sections.find(
-        (s) => s.id === relevantSection?.sectionId,
+      const policySection = policyContent.sections.find(
+        (s) => s.id === relevantSection?.sectionId
       );
+
+      // Use AI to enhance recommendation if available
+      let enhancedDescription = action;
+      try {
+        if (policySection) {
+          const aiPrompt = `Based on this Hong Kong policy: "${
+            policySection.title
+          }"
+          
+User profile: ${userProfile.age} years old, ${userProfile.maritalStatus}, ${
+            userProfile.hasChildren ? "has children" : "no children"
+          }, lives in ${userProfile.district}, income ${
+            userProfile.incomeRange
+          }, ${userProfile.employmentStatus}.
+
+Create a specific, actionable recommendation (1-2 sentences) for this user. Focus on concrete next steps they can take.`;
+
+          const systemPrompt =
+            "You are a helpful policy advisor. Provide specific, actionable recommendations that residents can immediately act upon.";
+
+          enhancedDescription = await this.aiService.generateCompletion(
+            aiPrompt,
+            systemPrompt
+          );
+
+          // Fallback if AI response is too short or fails
+          if (!enhancedDescription || enhancedDescription.length < 30) {
+            enhancedDescription = action;
+          }
+        }
+      } catch (error) {
+        console.warn(
+          `AI enhancement failed for recommendation ${i + 1}:`,
+          error
+        );
+        enhancedDescription = action;
+      }
 
       const recommendation: Recommendation = {
         id: `rec-${i + 1}`,
         title: this.generateRecommendationTitle(action),
-        description: action,
+        description: enhancedDescription,
         priority: i < 2 ? "high" : i < 4 ? "medium" : "low",
         category: policySection?.category || "housing",
         actionSteps: this.generateActionSteps(action, policySection),
@@ -263,15 +323,24 @@ export class SummaryGenerator {
   private createPolicyAreaPrompt(
     userProfile: UserProfile,
     policySection: any,
-    relevantSection: any,
+    relevantSection: any
   ): string {
-    return `Given this Hong Kong policy: "${policySection.title}" - ${policySection.summary}
+    return `Policy: "${policySection.title}"
+Summary: ${policySection.summary}
 
-User profile: ${userProfile.age} years old, ${userProfile.maritalStatus}, ${userProfile.hasChildren ? "has children" : "no children"}, lives in ${userProfile.district}, income ${userProfile.incomeRange}, ${userProfile.employmentStatus}.
+User Profile:
+- Age: ${userProfile.age}
+- Status: ${userProfile.maritalStatus}${
+      userProfile.hasChildren ? ", has children" : ""
+    }
+- Location: ${userProfile.district}
+- Income: ${userProfile.incomeRange}
+- Employment: ${userProfile.employmentStatus}
+- Housing: ${userProfile.housingType}
 
-Relevance score: ${relevantSection.score}/100
+Relevance Score: ${relevantSection.score}/100
 
-Please provide a concise, personalized summary (2-3 sentences) explaining how this policy specifically benefits this user. Focus on practical impacts and benefits.`;
+Task: Write a personalized 2-3 sentence summary explaining how this policy specifically benefits this user. Focus on practical, direct impacts and actionable benefits they can expect.`;
   }
 
   /**
@@ -279,14 +348,14 @@ Please provide a concise, personalized summary (2-3 sentences) explaining how th
    */
   private generateActionItems(
     policySection: any,
-    userProfile: UserProfile,
+    userProfile: UserProfile
   ): string[] {
     const items: string[] = [];
 
     // Generate action items based on policy benefits and user profile
     if (policySection.eligibilityCriteria) {
       items.push(
-        "Check eligibility requirements and gather necessary documents",
+        "Check eligibility requirements and gather necessary documents"
       );
     }
 
@@ -295,7 +364,7 @@ Please provide a concise, personalized summary (2-3 sentences) explaining how th
     }
 
     items.push(
-      `Monitor implementation progress starting ${policySection.implementationTimeline}`,
+      `Monitor implementation progress starting ${policySection.implementationTimeline}`
     );
 
     if (policySection.category === "housing" && userProfile.age <= 40) {
@@ -319,7 +388,7 @@ Please provide a concise, personalized summary (2-3 sentences) explaining how th
    */
   private generateImpactDescription(
     policySection: any,
-    userProfile: UserProfile,
+    userProfile: UserProfile
   ): string {
     const budget = policySection.budgetAllocation;
     const budgetText = budget
@@ -389,7 +458,7 @@ export class SummaryGenerationError extends Error {
   constructor(
     message: string,
     public originalError: Error,
-    public processingSteps: string[],
+    public processingSteps: string[]
   ) {
     super(message);
     this.name = "SummaryGenerationError";

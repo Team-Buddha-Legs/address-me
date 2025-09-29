@@ -11,7 +11,8 @@
     "ts-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:real-ai": "tsx scripts/test-real-ai.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.716.0",
@@ -37,6 +38,7 @@
     "@vitest/ui": "^3.2.4",
     "jsdom": "^27.0.0",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"

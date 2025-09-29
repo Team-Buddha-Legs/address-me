@@ -11,12 +11,12 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value: [
-              "default-src 'self'",
+              // "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-inline and unsafe-eval
               "style-src 'self' 'unsafe-inline'", // Tailwind requires unsafe-inline
               "img-src 'self' data: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://bedrock-runtime.*.amazonaws.com", // AWS Bedrock
+              // "connect-src 'self' https://bedrock-runtime.*.amazonaws.com", // AWS Bedrock
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
