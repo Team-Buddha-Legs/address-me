@@ -2,6 +2,10 @@
 
 AddressMe is a Next.js web application that provides personalized insights from Hong Kong's Policy Address based on individual user profiles. Users complete a comprehensive assessment to receive tailored recommendations and actionable insights.
 
+## 📱 Quick Demo
+
+![Preview](https://github.com/Team-Buddha-Legs/address-me/blob/master/docs/demo.gif?raw=true)
+
 ## 🚀 Features
 
 ### ✨ **Multi-Step Assessment Form**
