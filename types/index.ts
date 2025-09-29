@@ -200,3 +200,52 @@ export interface FormattedReport {
     version: string;
   };
 }
+
+// Avatar System Types
+export interface AvatarState {
+  // Personal characteristics
+  gender: 'male' | 'female' | 'other' | 'neutral' | null;
+  age: number | null;
+  
+  // Family structure
+  maritalStatus: 'single' | 'married' | 'divorced' | 'widowed' | null;
+  hasChildren: boolean;
+  childrenCount: number;
+  
+  // Location and lifestyle
+  district: HongKongDistrict | null;
+  incomeRange: IncomeRange | null;
+  educationLevel: EducationLevel | null;
+  transportationModes: TransportationMode[];
+  healthConditions: string[];
+  
+  // Visual state
+  isAnimating: boolean;
+  completedSteps: string[];
+}
+
+export interface AvatarConfig {
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    neutral: string;
+  };
+  animations: {
+    duration: number;
+    easing: string;
+  };
+  layout: {
+    containerSize: { width: number; height: number };
+    iconSizes: Record<string, number>;
+    spacing: number;
+  };
+}
+
+export interface AvatarStateManager {
+  state: AvatarState;
+  updateFromFormData: (formData: Partial<UserProfile>) => void;
+  getVisibleElements: () => string[];
+  shouldAnimate: (elementId: string) => boolean;
+  markStepCompleted: (stepId: string) => void;
+}
