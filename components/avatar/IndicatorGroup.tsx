@@ -25,6 +25,7 @@ interface IndicatorGroupProps {
   state: AvatarState;
   config: AvatarConfig;
   visibleElements: string[];
+  shouldElementAnimate?: (elementId: string) => boolean;
 }
 
 /**
@@ -34,6 +35,7 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
   state,
   config,
   visibleElements,
+  shouldElementAnimate = () => false,
 }) => {
   // Transportation icon mapping
   const transportationIcons = useMemo(() => {
@@ -102,7 +104,7 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
             animationType="slideIn"
             duration={config.animations.duration}
             delay={150}
-            trigger={state.isAnimating}
+            trigger={shouldElementAnimate('transportation')}
           >
             <div 
               className="flex flex-col space-y-1"
@@ -113,7 +115,7 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
                   <IconComponent
                     size={transportSize}
                     color={config.colors.secondary}
-                    animate={state.isAnimating}
+                    animate={shouldElementAnimate('transportation')}
                     className="drop-shadow-sm"
                   />
                 </div>
@@ -136,13 +138,13 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
             animationType="pulse"
             duration={config.animations.duration}
             delay={100}
-            trigger={state.isAnimating}
+            trigger={shouldElementAnimate('education')}
           >
             <div data-testid="education-icon">
               <EducationIcon
                 size={educationSize}
                 color={config.colors.accent}
-                animate={state.isAnimating}
+                animate={shouldElementAnimate('education')}
                 className="drop-shadow-sm"
               />
             </div>
@@ -164,7 +166,7 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
             animationType="fadeIn"
             duration={config.animations.duration}
             delay={200}
-            trigger={state.isAnimating}
+            trigger={shouldElementAnimate('health')}
           >
             <div 
               className="flex flex-col space-y-1"
@@ -175,7 +177,7 @@ export const IndicatorGroup: React.FC<IndicatorGroupProps> = ({
                   <IconComponent
                     size={healthSize}
                     color="#dc2626" // Red color for health indicators
-                    animate={state.isAnimating}
+                    animate={shouldElementAnimate('health')}
                     className="drop-shadow-sm"
                   />
                 </div>

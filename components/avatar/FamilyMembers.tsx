@@ -10,6 +10,7 @@ interface FamilyMembersProps {
   state: AvatarState;
   config: AvatarConfig;
   visibleElements: string[];
+  shouldElementAnimate?: (elementId: string) => boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ export const FamilyMembers: React.FC<FamilyMembersProps> = ({
   state,
   config,
   visibleElements,
+  shouldElementAnimate = () => false,
 }) => {
   // Determine spouse icon (assume opposite gender for simplicity)
   const SpouseIcon = useMemo(() => {
@@ -47,13 +49,13 @@ export const FamilyMembers: React.FC<FamilyMembersProps> = ({
             animationType="slideIn"
             duration={config.animations.duration}
             delay={100}
-            trigger={state.isAnimating}
+            trigger={shouldElementAnimate('spouse')}
           >
             <div data-testid="spouse-icon">
               <SpouseIcon
                 size={spouseSize}
                 color={spouseColor}
-                animate={state.isAnimating}
+                animate={shouldElementAnimate('spouse')}
                 className="drop-shadow-sm opacity-90"
               />
             </div>
@@ -74,7 +76,7 @@ export const FamilyMembers: React.FC<FamilyMembersProps> = ({
             animationType="scale"
             duration={config.animations.duration}
             delay={200}
-            trigger={state.isAnimating}
+            trigger={shouldElementAnimate('children')}
           >
             <div 
               className="flex items-center justify-center space-x-1"
@@ -85,7 +87,7 @@ export const FamilyMembers: React.FC<FamilyMembersProps> = ({
                   <NeutralIcon
                     size={childSize}
                     color={childColor}
-                    animate={state.isAnimating}
+                    animate={shouldElementAnimate('children')}
                     className="drop-shadow-sm opacity-80"
                   />
                 </div>

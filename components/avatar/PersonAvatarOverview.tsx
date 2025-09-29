@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react';
 import type { UserProfile } from '@/types';
-import { createAvatarStateManager } from '@/lib/avatar/state-manager';
 import { createAvatarConfig } from '@/lib/avatar/config';
+import { useFormAvatarSync } from '@/lib/avatar/useFormAvatarSync';
 import { AvatarContainer } from './AvatarContainer';
 
 interface PersonAvatarOverviewProps {
@@ -21,12 +21,13 @@ export const PersonAvatarOverview: React.FC<PersonAvatarOverviewProps> = ({
   currentStep,
   className = '',
 }) => {
-  // Create avatar state manager and update with form data
-  const avatarState = useMemo(() => {
-    const manager = createAvatarStateManager();
-    manager.updateFromFormData(formData);
-    return manager.state;
-  }, [formData]);
+  // Use form avatar sync hook for progressive building
+  const { 
+    avatarState, 
+    visibleElements, 
+    shouldElementAnimate, 
+    isAnimating 
+  } = useFormAvatarSync(currentStep, formData);
 
   // Create avatar configuration
   const config = useMemo(() => createAvatarConfig(), []);
@@ -52,15 +53,18 @@ export const PersonAvatarOverview: React.FC<PersonAvatarOverviewProps> = ({
           state={avatarState} 
           config={config}
           currentStep={currentStep}
+          visibleElements={visibleElements}
+          shouldElementAnimate={shouldElementAnimate}
+          isAnimating={isAnimating}
         />
       </div>
 
       {/* Progress Indicator */}
       <div className="mt-4 text-center">
         <div className="text-xs text-gray-500">
-          {avatarState.gender ? (
+          {visibleElements.length > 0 ? (
             <span className="text-blue-600 font-medium">
-              Profile building...
+              {isAnimating ? 'Updating avatar...' : `${visibleElements.length} element${visibleElements.length > 1 ? 's' : ''} visible`}
             </span>
           ) : (
             <span>

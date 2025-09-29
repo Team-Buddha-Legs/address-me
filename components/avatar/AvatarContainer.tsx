@@ -12,6 +12,9 @@ interface AvatarContainerProps {
   state: AvatarState;
   config: AvatarConfig;
   currentStep: string;
+  visibleElements?: string[];
+  shouldElementAnimate?: (elementId: string) => boolean;
+  isAnimating?: boolean;
 }
 
 /**
@@ -22,9 +25,14 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
   state,
   config,
   currentStep,
+  visibleElements: propVisibleElements,
+  shouldElementAnimate = () => false,
+  isAnimating = false,
 }) => {
-  // Determine which elements should be visible
+  // Use provided visible elements or determine from state
   const visibleElements = useMemo(() => {
+    if (propVisibleElements) return propVisibleElements;
+    
     const elements: string[] = [];
     
     if (state.gender) elements.push('main-person');
@@ -36,7 +44,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
     if (state.healthConditions.length > 0) elements.push('health');
     
     return elements;
-  }, [state]);
+  }, [state, propVisibleElements]);
 
   // Container dimensions from config
   const { width, height } = config.layout.containerSize;
@@ -69,7 +77,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
           <MainPersonIcon 
             state={state} 
             config={config}
-            shouldAnimate={state.isAnimating}
+            shouldAnimate={shouldElementAnimate('main-person')}
           />
         </div>
       )}
@@ -80,6 +88,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
           state={state} 
           config={config}
           visibleElements={visibleElements}
+          shouldElementAnimate={shouldElementAnimate}
         />
       )}
 
@@ -95,7 +104,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
           <LocationIndicator 
             state={state} 
             config={config}
-            shouldAnimate={state.isAnimating}
+            shouldAnimate={shouldElementAnimate('location')}
           />
         </div>
       )}
@@ -105,6 +114,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
         state={state} 
         config={config}
         visibleElements={visibleElements}
+        shouldElementAnimate={shouldElementAnimate}
       />
 
       {/* Placeholder when no elements are visible */}
