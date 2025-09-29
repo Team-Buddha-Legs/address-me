@@ -74,11 +74,11 @@ export const metadata: Metadata = {
       "Get a personalized AI-powered summary of Hong Kong's Policy Address tailored to your circumstances.",
   },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
     googleBot: {
-      index: true,
-      follow: true,
+      index: false,
+      follow: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
