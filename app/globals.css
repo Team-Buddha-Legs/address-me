@@ -5,20 +5,57 @@
   --foreground: #171717;
 
   /* Professional Blue - Primary Color */
-  --primary-blue: #1e40af;
+  /* --primary-blue: #1e40af;
   --primary-blue-light: #3b82f6;
   --primary-blue-dark: #1e3a8a;
   --primary-blue-50: #eff6ff;
   --primary-blue-100: #dbeafe;
-  --primary-blue-200: #bfdbfe;
+  --primary-blue-200: #bfdbfe; */
+
+  /* --primary-blue: #124170;       
+  --primary-blue-light: #26667F; 
+  --primary-blue-dark: #0E2F54;  
+  --primary-blue-50: #f2f7fc;    
+  --primary-blue-100: #d1e3f3;   
+  --primary-blue-200: #a3c7e7;    */
+
+  --primary-green: #67C090;       /* Base */
+  --primary-green-light: #7DD9A8; /* Light variant */
+  --primary-green-dark: #4EA77A;  /* Dark variant */
+
+  --primary-green-50:  #f2fbf7;   /* Very light tint */
+  --primary-green-100: #d3f0e2;   /* Soft tint */
+  --primary-green-200: #a7e1c6;   /* Light tint */
+  --primary-green-300: #7dd3aa;   /* Mid-light tone */
+  --primary-green-400: #5ec796;   /* Balanced light */
+  --primary-green-500: #45b982;   /* Mid-tone */
+  --primary-green-600: #3aa373;   /* Slightly darker */
+  --primary-green-700: #318d64;   /* Darker tone */
+  --primary-green-800: #297755;   /* Deep tone */
+  --primary-green-900: #1f5f44;   /* Very dark */
 
   /* Green - Secondary Color */
-  --secondary-green: #059669;
-  --secondary-green-light: #10b981;
-  --secondary-green-dark: #047857;
-  --secondary-green-50: #ecfdf5;
-  --secondary-green-100: #d1fae5;
-  --secondary-green-200: #a7f3d0;
+  /* --secondary-blue: #059669;
+  --secondary-blue-light: #10b981;
+  --secondary-blue-dark: #047857;
+  --secondary-blue-50: #ecfdf5;
+  --secondary-blue-100: #d1fae5;
+  --secondary-blue-200: #a7f3d0; */
+
+  --secondary-orange: #F77E2D;       /* Base */
+  --secondary-orange-light: #F9984F; /* Light variant */
+  --secondary-orange-dark: #D96A24;  /* Dark variant */
+
+  --secondary-orange-50:  #fff7f2;   /* Very light tint */
+  --secondary-orange-100: #ffe3d1;   /* Soft tint */
+  --secondary-orange-200: #ffc7a3;   /* Light tint */
+  --secondary-orange-300: #ffab75;   /* Mid-light tone */
+  --secondary-orange-400: #ff8f47;   /* Balanced light */
+  --secondary-orange-500: #F77E2D;   /* Mid-tone */
+  --secondary-orange-600: #e06f28;   /* Slightly darker */
+  --secondary-orange-700: #c25f22;   /* Darker tone */
+  --secondary-orange-800: #a4501d;   /* Deep tone */
+  --secondary-orange-900: #843f17;   /* Very dark */
 
   /* Orange - Accent Color */
   --accent-orange: #ea580c;
@@ -47,21 +84,33 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Primary Blue Colors */
-  --color-primary: var(--primary-blue);
-  --color-primary-light: var(--primary-blue-light);
-  --color-primary-dark: var(--primary-blue-dark);
-  --color-primary-50: var(--primary-blue-50);
-  --color-primary-100: var(--primary-blue-100);
-  --color-primary-200: var(--primary-blue-200);
+  /* Primary Colors */
+  --color-primary: var(--primary-green);
+  --color-primary-light: var(--primary-green-light);
+  --color-primary-dark: var(--primary-green-dark);
+  --color-primary-50: var(--primary-green-50);
+  --color-primary-100: var(--primary-green-100);
+  --color-primary-200: var(--primary-green-200);
+  --color-primary-300: var(--primary-green-300);
+  --color-primary-400: var(--primary-green-400);
+  --color-primary-500: var(--primary-green-500);
+  --color-primary-600: var(--primary-green-600);
+  --color-primary-700: var(--primary-green-700);
 
-  /* Secondary Green Colors */
-  --color-secondary: var(--secondary-green);
-  --color-secondary-light: var(--secondary-green-light);
-  --color-secondary-dark: var(--secondary-green-dark);
-  --color-secondary-50: var(--secondary-green-50);
-  --color-secondary-100: var(--secondary-green-100);
-  --color-secondary-200: var(--secondary-green-200);
+  /* Secondary Colors */
+  --color-secondary: var(--secondary-orange);
+  --color-secondary-light: var(--secondary-orange-light);
+  --color-secondary-dark: var(--secondary-orange-dark);
+  --color-secondary-50: var(--secondary-orange-50);
+  --color-secondary-100: var(--secondary-orange-100);
+  --color-secondary-200: var(--secondary-orange-200);
+  --color-secondary-300: var(--secondary-orange-300);
+  --color-secondary-400: var(--secondary-orange-400);
+  --color-secondary-500: var(--secondary-orange-500);
+  --color-secondary-600: var(--secondary-orange-600);
+  --color-secondary-700: var(--secondary-orange-700);
+  --color-secondary-800: var(--secondary-orange-800);
+  --color-secondary-900: var(--secondary-orange-900);
 
   /* Accent Orange Colors */
   --color-accent: var(--accent-orange);

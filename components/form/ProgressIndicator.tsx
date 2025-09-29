@@ -29,7 +29,7 @@ export default function ProgressIndicator({
         <motion.span
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-xs sm:text-sm font-medium text-blue-600"
+          className="text-xs sm:text-sm font-medium text-primary-600"
         >
           {progress}% Complete
         </motion.span>
@@ -38,7 +38,7 @@ export default function ProgressIndicator({
       {/* Progress bar */}
       <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 mb-4 sm:mb-6 overflow-hidden">
         <motion.div
-          className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full"
+          className="bg-gradient-to-r from-primary-500 to-primary-600 h-full rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.6, ease: "easeOut" }}
