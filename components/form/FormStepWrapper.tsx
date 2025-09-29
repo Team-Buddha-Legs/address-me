@@ -76,9 +76,17 @@ export default function FormStepWrapper({
             JSON.stringify(updatedFormData)
           );
         }
+
+        // Clear validation errors if the current data is now valid
+        if (validationErrors.length > 0) {
+          const currentErrors = getStepValidationErrors(step.id, processedData);
+          if (currentErrors.length === 0) {
+            setValidationErrors([]);
+          }
+        }
       }
     }
-  }, [watchedValues, step.id, onDataChange]);
+  }, [watchedValues, step.id, onDataChange, validationErrors.length]);
 
   const progress = calculateProgress(step.id);
   const currentStepNumber = getCompletedSteps(step.id);
