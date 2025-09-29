@@ -4,7 +4,7 @@ AddressMe is a Next.js web application that provides personalized insights from 
 
 ## 📱 Quick Demo
 
-![Preview](https://github.com/Team-Buddha-Legs/address-me/blob/master/docs/demo.gif?raw=true)
+![Preview](https://raw.githubusercontent.com/Team-Buddha-Legs/address-me/main/assets/demo.gif)
 
 ## 🚀 Features
 
