@@ -9,6 +9,7 @@ import FormStepWrapper from "./FormStepWrapper";
 import ProcessingDisplay from "./ProcessingDisplay";
 import { ReportDisplay } from "../report/ReportDisplay";
 import Logo from "@/components/ui/Logo";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 import AvatarDisplay from "./AvatarDisplay";
 import type { UserProfile, PersonalizedSummary } from "@/types";
 import { motion } from "framer-motion";
@@ -121,7 +122,10 @@ export default function AssessmentFlow() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-2xl mx-auto px-4 py-4">
-            <Logo size="md" />
+            <div className="flex items-center justify-between">
+              <Logo size="md" />
+              <LanguageToggle />
+            </div>
           </div>
         </header>
 
@@ -138,7 +142,10 @@ export default function AssessmentFlow() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-2xl mx-auto px-4 py-4">
-            <Logo size="md" />
+            <div className="flex items-center justify-between">
+              <Logo size="md" />
+              <LanguageToggle />
+            </div>
           </div>
         </header>
 
@@ -198,7 +205,10 @@ export default function AssessmentFlow() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            <Logo size="md" />
+            <div className="flex items-center justify-between">
+              <Logo size="md" />
+              <LanguageToggle />
+            </div>
           </div>
         </header>
 
@@ -219,7 +229,10 @@ export default function AssessmentFlow() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <Logo size="md" />
+          <div className="flex items-center justify-between">
+            <Logo size="md" />
+            <LanguageToggle />
+          </div>
         </div>
       </header>
 

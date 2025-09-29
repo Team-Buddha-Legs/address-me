@@ -6,6 +6,7 @@ import { useEffect, useState, Suspense } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { generateSummary } from "@/lib/actions/ai-actions";
 import Logo from "@/components/ui/Logo";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 
 function ProcessingPageContent() {
   const router = useRouter();
@@ -120,7 +121,10 @@ function ProcessingPageContent() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-2xl mx-auto px-4 py-4">
-            <Logo size="md" />
+            <div className="flex items-center justify-between">
+              <Logo size="md" />
+              <LanguageToggle />
+            </div>
           </div>
         </header>
 
@@ -183,7 +187,10 @@ function ProcessingPageContent() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4">
-          <Logo size="md" />
+          <div className="flex items-center justify-between">
+            <Logo size="md" />
+            <LanguageToggle />
+          </div>
         </div>
       </header>
 

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { formSteps } from "@/lib/form-steps";
 import Logo from "@/components/ui/Logo";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 
 export default function Home() {
   const firstStepId = formSteps[0]?.id || "personal-info";
@@ -18,20 +19,23 @@ export default function Home() {
           className="flex items-center justify-between"
         >
           <Logo size="md" priority={true} shadow={true} />
-          <nav className="hidden sm:flex space-x-6">
-            <a
-              href="#features"
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Features
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              How it Works
-            </a>
-          </nav>
+          <div className="flex items-center space-x-6">
+            <nav className="hidden sm:flex space-x-6">
+              <a
+                href="#features"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                How it Works
+              </a>
+            </nav>
+            <LanguageToggle />
+          </div>
         </motion.div>
       </header>
 

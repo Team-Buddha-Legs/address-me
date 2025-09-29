@@ -4,6 +4,7 @@ import { ReportDisplay } from "@/components/report/ReportDisplay";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getSession } from "@/lib/session";
 import Logo from "@/components/ui/Logo";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 
 interface ReportPageProps {
   params: Promise<{ id: string }>;
@@ -27,7 +28,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            <Logo size="md" />
+            <div className="flex items-center justify-between">
+              <Logo size="md" />
+              <LanguageToggle />
+            </div>
           </div>
         </header>
 
@@ -56,7 +60,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <Logo size="md" />
+          <div className="flex items-center justify-between">
+            <Logo size="md" />
+            <LanguageToggle />
+          </div>
         </div>
       </header>
 
